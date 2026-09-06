@@ -1,0 +1,101 @@
+% ============================================================
+\section{Ejercicio 5}
+% ============================================================
+
+\begin{tcolorbox}[enunciado]
+Propón un algoritmo de búsqueda completa para alguno de los problemas (de decisión) del ejercicio anterior. Da el análisis de complejidad de tiempo e ilustra la ejecución con un ejemplar pequeño
+\end{tcolorbox}
+
+% ------------------------- Solución -------------------------
+\subsection{Solución}
+
+\subsection*{El Concepto de Búsqueda Completa (\textit{Backtracking})}
+
+Un algoritmo de búsqueda completa para un problema de decisión en gráficas explora sistemáticamente el espacio de todos los subconjuntos posibles de vértices para encontrar uno que cumpla con la propiedad requerida. 
+
+Para \textbf{Vertex Cover}, el problema de decisión consiste en determinar: \textit{Dada una gráfica $G = (V, E)$ y un entero $k$, ¿existe un subconjunto de vértices $S \subseteq V$ de tamaño $|S| \le k$ que cubra todas las aristas de $G$?}
+
+Tenemos dos formas de plantear la búsqueda completa:
+
+\begin{itemize}
+    \item \textbf{Fuerza Bruta:} Generar absolutamente todos los subconjuntos de tamaño $k$ posibles en la gráfica y probar si alguno cubre todas las aristas. Hay $\binom{n}{k} \approx O(n^k)$ subconjuntos.
+    \item \textbf{Backtracking:} Utilizar la estructura del problema para ramificar decisiones de manera inteligente. Este enfoque es sumamente superior y es el que explicaremos a continuación. Aunque de manera simplificada, pues muchas de las afirmaciones o puntos de partida sobre nuestro análisis están basados directamente de la sección \textbf{10.1 Finding Small Vertex Covers} de la literatura de de Kleinberg y Tardos \cite{kleinberg2005}.
+\end{itemize}
+
+\subsection*{Propuesta del Algoritmo: Búsqueda Completa para \textit{Vertex Cover}}
+
+Este algoritmo se basa en una observación clave: \textbf{Si seleccionamos cualquier arista $e = (u, v)$ de la gráfica, en cualquier cubierta de vértices válida, al menos uno de sus extremos ($u$ o $v$) debe pertenecer a la cubierta.}
+
+Esto nos permite diseñar un algoritmo recursivo de ramificación simple:
+
+\subsubsection*{Pseudocódigo Formal:}
+\begin{verbatim}
+Algoritmo BusquedaCompletaVC(G, k):
+    // G = (V, E) es la gráfica actual, k es el presupuesto de vértices
+    
+    1. Si G no tiene aristas:
+           Retornar VERDADERO (el conjunto vacío cubre todas las aristas)
+           
+    2. Si G tiene más de k * |V| aristas:
+           Retornar FALSO (un vértice de grado máximo |V|-1 solo puede 
+           cubrir a lo más k*(|V|-1) aristas)
+           
+    3. Si k <= 0 y aún quedan aristas:
+           Retornar FALSO (nos quedamos sin presupuesto pero quedan 
+           aristas sin cubrir)
+           
+    4. Seleccionar cualquier arista e = (u, v) de la gráfica G
+    
+    5. // Caso 1: Decidimos incluir al vértice 'u' en la cubierta
+       G_u = G sin el vértice 'u' y sin sus aristas incidentes
+       Rama_u = BusquedaCompletaVC(G_u, k - 1)
+       
+    6. // Caso 2: Decidimos incluir al vértice 'v' en la cubierta
+       G_v = G sin el vértice 'v' y sin sus aristas incidentes
+       Rama_v = BusquedaCompletaVC(G_v, k - 1)
+
+       // Si alguna de las ramas tiene éxito, hay solución
+    7. Retornar (Rama_u O Rama_v) 
+\end{verbatim}
+
+\subsection*{Análisis de Complejidad Temporal}
+
+Para analizar la complejidad de este algoritmo, debemos comprender su \textbf{árbol de recursión}:
+
+\begin{enumerate}
+    \item \textbf{Profundidad del Árbol:} En cada llamada recursiva que ramifica, el valor de $k$ disminuye en exactamente 1 unidad ($k-1$). Por lo tanto, el árbol de llamadas recursivas tiene una profundidad máxima de \textbf{$k$}.
+    \item \textbf{Número de Nodos (Llamadas):} Como cada nodo que no es una hoja se divide en exactamente 2 llamadas (una para $u$ y otra para $v$), el número máximo de llamadas en el árbol es la suma de una progresión geométrica:
+    \[ 1 + 2 + 4 + 8 + \dots + 2^k = 2^{k+1} - 1 = O(2^k) \]
+    \item \textbf{Costo en cada Nodo:} En cada llamada recursiva, necesitamos verificar si quedan aristas, contar aristas, seleccionar una arista y crear una nueva subgráfica eliminando un vértice. Con una representación adecuada (como listas de adyacencia), esto se puede realizar en tiempo lineal respecto a los vértices, es decir, \textbf{$O(|V|)$} o $O(|V| + |E|)$.
+\end{enumerate}
+
+\subsubsection*{Complejidad Total:}
+La complejidad temporal total es:
+\[ \mathbf{O(2^k \cdot |V|)} \]
+
+Mientras que la fuerza bruta toma tiempo polinomial de alto grado con exponente variable $O(|V|^k)$, este algoritmo mantiene la base exponencial dependiente exclusivamente de $k$ ($2^k$) y el tamaño de la gráfica entra de manera estrictamente lineal ($|V|$). Esto hace que sea perfectamente viable para valores de $k$ pequeños (como $k \le 15$), incluso si la gráfica tiene miles de vértices.
+
+\subsubsection*{Ilustración del Algoritmo}
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=1\linewidth]{imagenes//algoritmos/parte1.png}
+%     \caption{Primera parte de la ejecución del algoritmo}
+% \end{figure}
+
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=1\linewidth]{imagenes//algoritmos/parte2.png}
+%     \caption{Segunda parte de la ejecución del algoritmo}
+% \end{figure}
+
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=1\linewidth]{imagenes//algoritmos/parte3.png}
+%     \caption{Tercera parte de la ejecución del algoritmo}
+% \end{figure}
+
+% \begin{figure}
+%     \centering
+%     \includegraphics[width=1\linewidth]{imagenes//algoritmos/parte4.png}
+%     \caption{Última parte de la ejecución del algoritmo}
+% \end{figure}

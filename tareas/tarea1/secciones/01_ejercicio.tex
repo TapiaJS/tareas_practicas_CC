@@ -1,0 +1,225 @@
+% ============================================================
+\section{Ejercicio 1}
+% ============================================================
+
+\begin{tcolorbox}[enunciado]
+Se sabe que un algoritmo de ordenamiento Q con complejidad $O(f(n))$ y tiempo de procesamiento $T(n)=cf(n)$, tarda 0.4 segundos en ejecutarse cuando la lista a ordenar tiene 10,000 elementos.
+\begin{enumerate}
+    \item Estima el tiempo de ejecución para una lista de 60,000 elementos.
+    \item Estima el tiempo de ejecución para una lista de 1,500,000 elementos.
+    \item Determina el tamaño máximo de la lista que puede ser ordenada en menos de 10 segundos.
+\end{enumerate}
+Puedes asumir que el tiempo de ejecución del algoritmo Q tiene una complejidad $O(n \log n)$
+\end{tcolorbox}
+
+% ------------------------- Solución -------------------------
+\subsection{Solución}
+
+\begin{enumerate}
+    %============================PUNTO 1============================
+    \item 
+    El \textbf{primer punto} pide estimar el tiempo de ejecución del algoritmo $Q$ cuando la lista a ordenar tiene $n = 60,000$ elementos.
+
+    La complejidad del algoritmo es $O(n \log n)$ y el tiempo real se modela como:
+    $$T(n) = c \cdot n \log(n)$$
+    Utilizamos el caso base proporcionado para determinar el valor de $c$: con $n = 10,000$, el tiempo es $T(10,000) = 0.4$ segundos. 
+
+    \subsubsection*{Elección de la Base del Logaritmo}
+
+    Antes de continuar creemos necesario señalar que \textbf{la base que elijamos no afecta en absoluto a las predicciones de tiempo}. Esto ocurre porque el cambio de base de un logaritmo es una conversión lineal que la constante $c$ absorbe por completo.
+    
+    \textbf{Demostración formal:}\\
+    Si cambiamos el logaritmo de una base $a$ a una base $b$, usamos la propiedad:
+    $$\log_a(n) = \frac{\log_b(n)}{\log_b(a)}$$
+    
+    Si planteamos la ecuación con la base $a$:
+    $$T(n) = c_a \cdot n \log_a(n) = c_a \cdot n \frac{\log_b(n)}{\log_b(a)} = \left( \frac{c_a}{\log_b(a)} \right) \cdot n \log_b(n)$$
+    
+    Definiendo una nueva constante $c_b = \frac{c_a}{\log_b(a)}$, la ecuación se convierte en:
+    $$T(n) = c_b \cdot n \log_b(n)$$
+    
+    Al despejar la constante utilizando el caso base $T(10,000) = 0.4$ s, el valor de $c$ se ajustará automáticamente según la base que elijamos, y cualquier cálculo posterior para otro valor de $n$ dará exactamente el mismo tiempo en segundos.
+
+    \subsubsection*{Encontrar el valor de la contante $c$}
+
+    Usando logaritmo en base 10 (por simplicidad de cálculo manual).
+
+    Sustituimos los valores en el modelo:
+    $$0.4 = c \cdot 10,000 \cdot \log_{10}(10,000)$$
+    $$0.4 = c \cdot (10,000 \cdot 4)$$
+    $$0.4 = c \cdot 40,000$$
+    $$c = \frac{0.4}{40,000} = 10^{-5} = 0.00001$$
+    
+    \subsubsection*{Estimar el tiempo para $n = 60,000$ elementos}
+    Ahora que conocemos la constante $c$, evaluamos el tiempo de ejecución en $n = 60,000$.
+    
+    Sustituimos en la ecuación:
+    $$T(60,000) = 10^{-5} \cdot 60,000 \cdot \log_{10}(60,000)$$
+    $$T(60,000) = 0.6 \cdot \log_{10}(60,000)$$
+    Calculamos $\log_{10}(60,000)$:
+    $$\log_{10}(60,000) = \log_{10}(6 \cdot 10^4) = \log_{10}(6) + \log_{10}(10^4) \approx 0.77815 + 4 = 4.77815$$
+    Multiplicamos:
+    $$T(60,000) \approx 0.6 \cdot 4.77815 \approx \mathbf{2.867} \text{ \textbf{segundos}}$$
+    
+    
+    \subsubsection*{Conclusión:}
+    El tiempo estimado de ejecución para una lista de $60,000$ elementos es de aproximadamente \textbf{2.867 segundos} (o $2.87$ segundos si redondeamos a dos decimales).
+
+    \vspace{0.4cm}
+    %============================PUNTO 2============================
+    
+    \item 
+    Para resolver el \textbf{segundo punto} debemos estimar el tiempo de ejecución del algoritmo $Q$ cuando la lista tiene: \textbf{$n = 1,500,000$ elementos}.
+    
+    Utilizaremos el valor de la constante $c$ que calculamos y la base logarítmicas 10.
+    
+    \subsubsection*{Valor de la constante $c$}
+    
+    Sabemos que el tiempo de ejecución del algoritmo se modela como:
+    $$T(n) = c \cdot n \log(n)$$
+    
+    Donde, a partir de nuestro caso base ($T(10,000) = 0.4$ s) y utilizando logaritmo en base 10:
+    $$c = 10^{-5} = 0.00001$$
+    
+    \subsubsection*{Estimar el tiempo para $n = 1,500,000$ elementos}
+    Sustituimos $n = 1,500,000$ y $c = 10^{-5}$ en nuestra ecuación:
+    $$T(1,500,000) = 10^{-5} \cdot 1,500,000 \cdot \log_{10}(1,500,000)$$
+    
+    Simplificamos el producto de la constante $c$ por $n$:
+    $$10^{-5} \cdot 1,500,000 = 15$$
+    
+    Ahora, calculamos $\log_{10}(1,500,000)$. 
+    $$\log_{10}(1,500,000) = \log_{10}(1.5 \cdot 10^6) = \log_{10}(1.5) + \log_{10}(10^6)$$
+    Sabiendo que $\log_{10}(1.5) \approx 0.17609$ y $\log_{10}(10^6) = 6$:
+    $$\log_{10}(1,500,000) \approx 0.17609 + 6 = 6.17609$$
+    
+    Multiplicamos por el factor restante:
+    $$T(1,500,000) \approx 15 \cdot 6.17609 \approx \mathbf{92.641} \text{ \textbf{segundos}}$$
+    
+    \subsubsection*{Conclusión:}
+    El tiempo estimado de ejecución para una lista de $1,500,000$ elementos es de aproximadamente \textbf{92.64 segundos} (o \textbf{1 minuto y 32.64 segundos}).
+    
+    Este resultado refleja el comportamiento de la complejidad $O(n \log n)$: aunque el tamaño de la lista aumentó \textbf{150 veces} (de $10,000$ a $1,500,000$), el tiempo de procesamiento solo aumentó unas \textbf{231 veces} (de $0.4$ s a $92.64$ s).
+
+    \vspace{0.4cm}
+
+    %============================PUNTO 3============================
+    \item 
+    Para resolver el \textbf{tercer punto} de manera exacta, utilizaremos la \textbf{función $W$ de Lambert \cite{herrera2025lambert}}. Este método evita las aproximaciones por tanteo y proporciona una solución analítica cerrada para la ecuación.
+    
+    \subsubsection*{1. Formulación de la Desigualdad}
+    El objetivo es encontrar el tamaño máximo de la lista $n$ tal que el tiempo de ejecución del algoritmo sea estrictamente menor a 10 segundos:
+    $$T(n) < 10$$
+    
+    A partir de los resultados obtenidos con el caso base $T(10,000) = 0.4$ s, podemos plantear la ecuación utilizando cualquier base logarítmica. 
+    
+    \textbf{Usamos Base 10 (donde $c = 10^{-5}$):}
+    $$10^{-5} \cdot n \log_{10}(n) < 10 \implies n \log_{10}(n) < 10^6$$
+    Cambiando el logaritmo a base natural ($\log_{10}(n) = \frac{\ln(n)}{\ln(10)}$):
+    $$n \frac{\ln(n)}{\ln(10)} < 10^6 \implies n \ln(n) < 10^6 \ln(10)$$
+    
+    
+    La ecuación que define el límite exacto es:
+    $$n \ln(n) = 10^6 \ln(10)$$
+    
+    \subsubsection*{2. Transformación a la Forma de Lambert}
+    La \textbf{función $W$ de Lambert} es la función inversa de $f(w) = w e^w$. Es decir:
+    $$w e^w = z \iff w = W(z)$$
+
+    Para llevar nuestra ecuación $n \ln(n) = 10^6 \ln(10)$ a esta forma exacta, aplicamos la identidad algebraica de la función exponencial, escribiendo $n$ como $e^{\ln(n)}$:
+    $$e^{\ln(n)} \ln(n) = 10^6 \ln(10)$$
+    
+    Reordenando los términos del lado izquierdo:
+    $$\ln(n) \cdot e^{\ln(n)} = 10^6 \ln(10)$$
+    
+    Esta ecuación ya tiene exactamente la estructura $w e^w = z$, donde:
+    \begin{itemize}[leftmargin=*]
+        \item La variable incógnita es $w = \ln(n)$
+        \item El término constante es $z = 10^6 \ln(10)$
+    \end{itemize}
+    
+    \subsubsection*{3. Aplicación de la Función $W$ de Lambert}
+    Aplicamos la función $W$ (específicamente la rama principal $W_0$, ya que nuestro argumento $z$ es positivo) en ambos lados de la ecuación para despejar $\ln(n)$, es decir:
+
+    \vspace{0.4cm}
+    \begin{tcolorbox}[
+        colback=gray!10!white,
+        colframe=gray!60!black,
+        fonttitle=\bfseries,
+        title=Nota,
+        arc=4pt,
+        boxrule=0.5pt,
+        left=6pt, right=6pt, top=4pt, bottom=4pt
+    ]
+    La \textbf{función $W$ de Lambert} se define matemáticamente con un único propósito: ser la función inversa de la expresión $f(x) = x e^x$. Es decir, $W$ es la herramienta diseñada para ``deshacer'' la operación de multiplicar una variable por su propia exponencial.
+    
+    Por la propiedad de cualquier función inversa, sabemos que al aplicar la inversa a la función original, estas se cancelan dejando únicamente el argumento:
+    $$f^{-1}(f(x)) = x$$
+    
+    Si aplicamos esto a nuestra definición:
+    \begin{enumerate}[leftmargin=*]
+        \item La función directa es: \textbf{$f(x) = x e^x$}
+        \item La función inversa es: \textbf{$f^{-1}(z) = W(z)$}
+        \item Al componerlas, obtenemos la identidad fundamental de Lambert: 
+    \end{enumerate}
+    $$W(x \cdot e^x) = x$$
+    \end{tcolorbox}
+
+    $$W(\ln(n) \cdot e^{\ln(n)}) = W(10^6 \ln(10))$$
+    $$\ln(n) = W(10^6 \ln(10))$$
+    
+    Para despejar finalmente $n$, aplicamos la función exponencial (base $e$) a ambos miembros:
+    $$n = e^{W(10^6 \ln(10))}$$
+    
+    \textbf{Simplificar la expresión}\\
+    Existe una propiedad fundamental de la función $W$ de Lambert que establece que:
+    $$W(z) \cdot e^{W(z)} = z \implies e^{W(z)} = \frac{z}{W(z)}$$
+    
+    Sustituyendo esta propiedad en nuestra solución para $n$ (donde $z = 10^6 \ln(10)$), reducimos la expresión exponencial a una división mucho más sencilla:
+    $$n = \frac{10^6 \ln(10)}{W(10^6 \ln(10))}$$
+    
+    \subsubsection*{4. Evaluación Numérica de la Solución}
+    Ahora evaluamos los valores numéricos:
+    \begin{enumerate}[leftmargin=*]
+        \item Calculamos el argumento $z$:
+        $$z = 10^6 \ln(10) \approx 1,000,000 \cdot 2.30258509 = 2,302,585.09$$
+        \item Evaluamos la función $W_0$ de Lambert para este argumento. Dado que es una función trascendente, su valor se obtiene mediante aproximaciones numéricas de alta precisión (por ejemplo, con métodos de Newton-Raphson, librerías científicas como SciPy o en este caso utilizamos WolframAlpha \cite{pensando2021lambert}):
+        $$W_0(2,302,585.09) = ProductLogW(10^6 \ln(10)) $$
+        $$W_0(2,302,585.09) \approx 12.151944$$
+        \textbf{Nota:} La función $W$ de Lambert aparece como ProductLog() en \textbf{WolframAlpha}.
+        \item Calculamos el valor final de $n$:
+        $$n \approx \frac{2,302,585.09}{12.151944} \approx 189,481.28$$
+    \end{enumerate}
+
+    % \begin{figure}[H]
+    %     \centering
+    %     \includegraphics[width=0.8\linewidth]{ejercicio1_punto3_resultado_final.png}
+    %     \caption{Captura de pantalla de la obtención del resultado final}
+    % \end{figure}
+    
+    \subsubsection*{5. Conclusión}
+    Dado que $n$ representa el número de elementos físicos de una lista, este debe ser necesariamente un \textbf{número entero}. 
+    
+    \begin{itemize}[leftmargin=*]
+        \item Para $n = 189,481$, el tiempo estimado de ejecución es de \textbf{9.99998 segundos} (cumple estrictamente con $T(n) < 10 \implies n \log_{10}(n) < 10^6$).
+
+        % \begin{figure}[H]
+        %     \centering
+        %     \includegraphics[width=0.6\linewidth]{1_03_primera_aproximacion.png}
+        %     \caption{Captura de pantalla de la primera aproximación numérica}
+        % \end{figure}
+
+        \item Para $n = 189,482$, el tiempo estimado de ejecución es de \textbf{10.00004 segundos} (excede el límite de 10 segundos).
+
+        % \begin{figure}[H]
+        %     \centering
+        %     \includegraphics[width=0.6\linewidth]{1_03_segunda_aproximacion.png}
+        %     \caption{Captura de pantalla de la segunda aproximación numérica}
+        % \end{figure}
+        
+    \end{itemize}
+    
+    Por lo tanto, la solución exacta y justificada analíticamente para el tamaño máximo de la lista es:
+    $$\mathbf{n = 189,481 \text{ \textbf{elementos}}}$$
+
+\end{enumerate}

@@ -1,0 +1,323 @@
+% ============================================================
+\section{Ejercicio 4}
+% ============================================================
+
+\begin{tcolorbox}[enunciado]
+Investiga en qué consisten los problemas de:
+\begin{itemize}
+    \item Máximo Corte (MAX CUT)
+    \item Cubierta de Vértices
+    \item Conjunto Independiente
+\end{itemize}
+Para cada uno de los problemas:
+\begin{enumerate}
+    \item Da la definición en su forma canónica, en su versión de decisión.
+    \item Ilustra un ejemplar concreto pequeño (no trivial), y da la respuesta a la pregunta de decisión. Usar parámetros completamente diferentes para cada problema.
+    \item Da la definición del problema en su versión de optimización.
+\end{enumerate}
+
+Responde las siguientes preguntas sobre la gráfica no dirigida de la Figura 1:
+\begin{itemize}
+    \item ¿Tiene un ciclo Hamiltoniano?
+    \item ¿Cuál es el clan más grande?
+    \item ¿Cuál es el conjunto independiente más grande?
+    \item ¿Cuál es la cubierta de vértices más pequeña?
+    \item Suponiendo que todas las aristas tienen peso 1, ¿Cuál es el corte máximo?
+\end{itemize}
+\end{tcolorbox}
+
+\begin{figure}[H]
+    \centering
+    % \includegraphics[width=0.6\textwidth]{imagenes/figura1_ejercicio4.png}
+    \caption{Gráfica Ejercicio 4}
+    \label{fig:ejercicio4}
+\end{figure}
+
+% ------------------------- Solución -------------------------
+\subsection{Solución}
+
+Investiga en qué consisten los problemas de:
+\begin{itemize}
+    \item Máximo Corte (MAX CUT)
+    \item Cubierta de Vértices
+    \item Conjunto Independiente
+\end{itemize}
+
+Para cada uno de los problemas:
+\begin{enumerate}[label=\arabic*.]
+    \item Da la definición en su forma canónica, en su versión de decisión.
+    \item Ilustra un ejemplar concreto pequeño (no trivial), y da la respuesta a la pregunta de decisión. Usar parámetros completamente diferentes para cada problema.
+    \item Da la definición del problema en su versión de optimización.
+\end{enumerate}
+
+
+\begin{enumerate}
+    \item \textbf{Maximo Corte (MAX CUT)}:
+    
+    El problema del CORTE MÁXIMO (MAX-CUT) es uno de los problemas de partición de gráficas más sencillos de conceptualizar, y sin embargo, uno de los problemas de optimización combinatoria más difíciles de resolver. El objetivo de MAX-CUT es particionar el conjunto de vértices de una gráfica en dos subconjuntos, de manera que la suma de los pesos de las aristas con un extremo en cada subconjunto sea máxima. \cite{POLJAK1995249}
+
+    \textbf{Definición:} \\ 
+    Sea $(G, w)$ una gráfica, donde $G$ es una gráfica y $w$ una función de peso en sus aristas. Un \emph{corte} es una partición $(S, V \setminus S)$ del conjunto de vértices $V$ en las partes $S$ y $V \setminus S$. El peso $w(S, V \setminus S)$ de un corte está dado por
+    
+    \[
+    w(S, V \setminus S) := \sum_{i \in S, \, j \in V \setminus S} w(i, j).
+    \]
+    
+    El corte de peso máximo se denomina \emph{corte máximo} (abreviado como \emph{max-cut}), y su peso se denota por $\text{mc}(G, w)$, es decir,
+    
+    \[
+    \text{mc}(G, w) := \max_{S \subseteq V} w(S, V \setminus S).
+    \]
+    
+    Observamos que permitimos $S = \emptyset$ o $S = V$, es decir, una de las clases de la partición $(S, V \setminus S)$ puede estar vacía. Tal corte puede ser máximo, por ejemplo, cuando todos los pesos $w(i, j)$ son negativos.
+    
+    \textbf{Definición en Forma Canónica:}\\
+    CORTE MÁXIMO (MAX-CUT)
+    \begin{itemize}
+        \item Datos: Una gráfica $G$, con una función de pesos en sus aristas $w$, con sus respectivas particiones $(S, V \setminus S)$.
+        \item Pregunta: ¿Existe una gráfica $(G,w)$ tal que la partición $(S, V \setminus S)$ resulta en un corte máximo?
+    \end{itemize}
+    
+    
+    \textbf{Definición en Versión de Decisión:}\\
+    \textbf{CORTE MÁXIMO (MAX-CUT)}
+\begin{itemize}
+    \item \textbf{Datos:} Una gráfica $G = (V, E)$, una función de pesos en las aristas $w$ y un número entero $k$.
+    \item \textbf{Pregunta:} ¿Existe una partición $(S, V \setminus S)$ del conjunto de vértices $V$, para una gráfica $G$, no dirigida y no vacía, tal que el peso total del corte sea al menos $k$? Es decir, ¿se cumple que
+    \[
+    \sum_{i \in S, \, j \in V \setminus S} w(i, j) \ge k \quad ?
+    \]
+\end{itemize}
+    
+    \textbf{Ejemplar concreto}\\
+    \begin{itemize}
+        \item \textbf{Entrada:} $(G, w)$, donde $G = (V, E)$ es un gráfica definida por:
+            \begin{itemize}
+                \item Conjunto de vértices: $V = \{A, B, C, D, E, F\}$
+            \item Conjunto de aristas $E$ con su respectiva función de peso $w$
+            \end{itemize}
+
+        \[
+        E = \{ (A,B), (A,C), (B,D), (C,D), (C,E), (D,F), (E,F) \}
+        \]
+        donde los pesos para cada arista son:
+        \begin{align*}
+        w(A,B) &= 3, \quad w(A,C) = 5, \quad w(B,D) = 2, \\
+        w(C,D) &= 4, \quad w(C,E) = 6, \quad w(D,F) = 1, \quad w(E,F) = 3
+        \end{align*}
+        \item \textbf{Respuesta}: Si, Partición óptima: $S = \{A, D, E\}$ y $V \setminus S = \{B, C, F\}$, peso total máximo: $mc(G, w) = 3 + 5 + 2 + 4 + 6 + 1 + 3 = 24$ 
+    \end{itemize}
+    
+    \textbf{Definición en Forma de Optimización:}\\ 
+    CORTE MÁXIMO (MAX-CUT)
+    \begin{itemize}
+    \item \textbf{Datos:} Una gráfica $G = (V, E)$ y una función de pesos en sus aristas $w$, y una partición $S$ de $G$ y $V \setminus S$.
+    \item \textbf{Pregunta:} ¿Cuál es la partición $(S, V \setminus S)$ del conjunto de vértices $V$ que maximiza el peso total del corte, es decir, que maximiza la expresión?:
+    \[
+    w(S, V \setminus S) = \sum_{i \in S, \, j \in V \setminus S} w(i, j) \quad 
+    \]
+\end{itemize}
+        
+    \item \textbf{Cubierta de Vértices} 
+    
+    \textbf{Definición:} \\
+    Sea $G = (V, E)$ una gráfica. Una \emph{cobertura de vértices} de $G$ es un subconjunto $W$ de $V$ tal que cada arista de $G$ es incidente con al menos un vértice en $W$. 
+
+    \textbf{Definición en Forma Canónica:}\\
+    \textbf{CUBIERTA DE VÉRTICES}
+    \begin{itemize}
+    \item \textbf{Datos:} Una gráfica $G = (V, E)$ y un entero positivo $k \le |V|$.
+    \item \textbf{Pregunta:} ¿Existe una cobertura o cubierta de vértices $W \subseteq V$ de tamaño $|W| \le k$, es decir, un subconjunto $W$ tal que para toda arista $\{u, v\} \in E$ se cumpla $u \in W$ o $v \in W$?
+\end{itemize}
+
+    \textbf{Definición en Versión de Decisión:}\\
+        \textbf{CUBIERTA DE VÉRTICES}
+    \begin{itemize}
+    \item \textbf{Datos:} Una gráfica $G = (V, E)$ y un entero $k \ge 1$.
+    \item \textbf{Pregunta:} ¿Admite $G$ un subconjunto de vértices $W \subseteq V$ tal que $|W| \le k$ y $W \cap \{u, v\} \neq \emptyset$ para todo $\{u, v\} \in E$?
+\end{itemize}
+    
+    \textbf{Ejemplar concreto}\\
+    \begin{itemize}
+    \item \textbf{Entrada:}
+    \begin{itemize}
+        \item Gráfica $G = (V, E)$, y un entero $k$:
+        \begin{itemize}
+            \item $V = \{v_1, v_2, v_3, v_4, v_5, v_6, v_7\}$
+            \item $E = \{ \{v_1, v_2\}, \{v_2, v_3\}, \{v_3, v_4\}, \{v_4, v_5\}, \{v_5, v_1\}, \{v_6, v_7\}, \{v_1, v_6\},$
+            $$ \{v_2, v_6\}, \{v_4, v_6\}, \{v_5, v_6\}, \{v_2, v_7\}, \{v_3, v_7\}, \{v_4, v_7\}, \{v_5, v_7\} \}$$
+        \end{itemize}
+        \item Cota máxima de vértices permitida: $k = 5$.
+    \end{itemize}
+
+    \item \textbf{Respuesta:} Si.
+    Existe el subconjunto $W = \{v_1, v_3, v_4, v_6, v_7\}$ de tamaño $|W| = 5 \le 5$. Se comprueba que todas las aristas del gráfica están cubiertas:
+    \begin{itemize}
+        \item \textbf{Aristas internas y centrales:} Todas las aristas que conectan hacia o entre los nodos centrales $(\{v_6, v_7\}, \{v_1, v_6\}, \{v_2, v_6\}, \dots)$ quedan automáticamente cubiertas dado que $v_6, v_7 \in W$.
+        \item \textbf{Aristas del ciclo exterior:}
+        \begin{itemize}
+            \item $\{v_1, v_2\}$ se cubre por $v_1 \in W$.
+            \item $\{v_2, v_3\}$ se cubre por $v_3 \in W$.
+            \item $\{v_3, v_4\}$ se cubre por $v_3, v_4 \in W$.
+            \item $\{v_4, v_5\}$ se cubre por $v_4 \in W$.
+            \item $\{v_5, v_1\}$ se cubre por $v_1 \in W$.
+        \end{itemize}
+    \end{itemize}
+    Dado que toda arista en $E$ posee al menos un extremo en $W$, el conjunto $W$ constituye una cubierta de vértices válida de tamaño 5.
+\end{itemize}
+    
+    \textbf{Definición en Forma de Optimización:}\\
+    \textbf{CUBIERTA DE VÉRTICES}
+    \begin{itemize}
+    \item \textbf{Datos:} Una gráfica $G = (V, E)$.
+    \item \textbf{Pregunta:} ¿Cuál es el subconjunto de vértices $W \subseteq V$ de cardinalidad mínima que cubre todas las aristas de $G$? Es decir, encontrar \cite{jungnickel2005graphs}:
+    \[
+    \min_{W \subseteq V} |W| \quad \text{sujeto a} \quad \forall \{u, v\} \in E, \; \{u, v\} \cap W \neq \emptyset
+    \]
+\end{itemize}
+    
+    \item \textbf{Conjunto Independiente}
+    
+    \textbf{Definición:} \\
+    Finalmente, un \emph{conjunto independiente} (o \emph{conjunto estable}) es un subconjunto $S$ de $V$ tal que no hay dos vértices en $S$ que sean adyacentes.
+    
+    \textbf{Definición en Forma Canónica:}\\
+    \textbf{CONJUNTO INDEPENDIENTE}
+    \begin{itemize}
+    \item \textbf{Entrada:} Una gráfica $G = (V, E)$.
+    \item \textbf{Pregunta:} ¿Existe un subconjunto de vértices $S \subseteq V$ para $G$ de mayor tamaño, tal que para todo par de vértices $u, v \in S$, no exista una arista $\{u, v\} \in E$?
+\end{itemize}
+
+    
+    \textbf{Definición en Versión de Decisión:}\\
+    \textbf{CONJUNTO INDEPENDIENTE}
+    \begin{itemize}
+    \item \textbf{Entrada:} Una gráfica $G = (V, E)$ y un entero positivo $k \le |V|$.
+    \item \textbf{Pregunta:} ¿Existe un subconjunto de vértices $S \subseteq V$ de mayor tamaño $|S| \ge k$ tal que para todo par de vértices $u, v \in S$, no exista una arista $\{u, v\} \in E$?
+    \end{itemize}
+    \textbf{Ejemplar concreto}\\
+
+\begin{itemize}
+    \item \textbf{Entrada:} Gráfica $G = (V, E)$ y un entero $k$ donde:
+        \begin{itemize}
+            \item $V = \{v_1, v_2, v_3, v_4, v_5, v_6\}$
+            \item $E = \{\{v_1,v_2\}, \{v_1,v_3\}, \{v_2,v_3\}, \{v_3,v_4\}, \{v_4,v_5\}, \{v_5,v_6\}\}$
+            \item Tamaño mínimo requerido: $k = 3$.
+        \end{itemize}
+
+    \item \textbf{Respuesta:} Si.
+    Existe el subconjunto $S = \{v_1, v_4, v_6\}$ de tamaño $|S| = 3 \ge 3$. Ninguna de las parejas formadas por sus elementos pertenece al conjunto de aristas $E$:
+    \[
+    \{v_1, v_4\} \notin E, \quad \{v_1, v_6\} \notin E, \quad \{v_4, v_6\} \notin E
+    \]
+    Por lo tanto, $S$ cumple la condición de ser un conjunto independiente válido de tamaño 3.
+\end{itemize}
+
+    
+    \textbf{Definición en Forma de Optimización:}\\
+    \textbf{CONJUNTO INDEPENDIENTE}
+    \begin{itemize}
+    \item \textbf{Entrada:} Una gráfica $G = (V, E)$.
+    \item \textbf{Pregunta:} ¿Cuál es el subconjunto de vértices $S \subseteq V$ de tamaño máximo tal que ningún par de vértices en $S$ sea adyacente entre sí?
+    \end{itemize}
+
+
+\end{enumerate}
+
+
+% \begin{figure}[H]
+% \centering
+% \includegraphics[]{imagenes/gráficas/Gráfica Ejercicio 4.png}
+% \caption{Gráfica Ejercicio 4}
+% \label{fig:grafica4}
+% \end{figure}
+
+Responde las siguientes preguntas sobre la gráfica no dirigida de la Figura \ref{fig:grafica4}: 
+\begin{itemize}
+    \item ¿Tiene un ciclo Hamiltoniano?
+    
+    \textbf{Respuesta:}
+    Si, existe un camino tal que, comenzando desde el vertice: $$\{a1,a2,a4,a5...a19,a22,a1\}$$, logra recorrer todos los vértices; por lo tanto, es verdad.
+
+    % \begin{figure}[h!]
+    %     \centering
+    %     \includegraphics[width=0.5\linewidth]{imagenes/gráficas/Ciclo-hamiltoniano.png}
+    %     \caption{Ciclo Hamiltoniano}
+    % \end{figure}
+    
+    \item ¿Cuál es el clan más grande?
+    
+    \textbf{Respuesta:} Definimos a un clan, un subgrafo conexo, en el que el diámetro del subgrafo (el camino más corto de mayor longitud entre dos vértices cualesquiera dentro del grupo) no es mayor que un valor k. También hay que tener en cuenta la definición de clique, el cual una \emph{clique} (o \emph{clica}) es un subconjunto $C$ de $V$ tal que todos los pares de vértices en $C$ son adyacentes.\\
+    
+    
+    Con esto en cuenta, el tamaño del clan máximo es 2. Para que exista un clan de tamaño 3 tendría que haber al menos un triángulo ($K_3$) en la gráfica (tres vértices donde todos se conecten entre sí). Por lo tanto, al no existir ningún triángulo ($K_3$). Así, cualquier par de vértices cumple la definición de clan; asimismo, tomamos el conjunto $\{a4,a5\}$
+
+        % \begin{figure}[h!]
+        %     \centering
+        %     \includegraphics[width=0.5\linewidth]{imagenes/gráficas/Clan-dos.png}
+        %     \caption{Clan de tamaño 2}
+        % \end{figure}
+    
+    \item ¿Cuál es el conjunto independiente más grande?
+    
+    \textbf{Respuesta:} Se define como el conjunto independiente mas grande de una gráfica si y solo si no contiene un par de vértices adyacentes, el conjunto independiente mas grande seria: $I=\{a1,a2,a5,a7,a9,a11,a12,a15,a17,a19,a21\}$
+
+    % \begin{figure}[h!]
+    %     \centering
+    %     \includegraphics[width=0.5\linewidth]{imagenes/gráficas/Conjunto independiente.png}
+    %     \caption{Conjunto independiente}
+    %     \label{fig:Clan}
+    % \end{figure}
+    
+    \vspace{1cm}
+
+    \item ¿Cuál es la cubierta de vértices más pequeña?
+    
+    \textbf{Respuesta:} Se considera como un conjunto de elementos (vértices o aristas) que 'toca' o conecta a todos los elementos del otro tipo en la gráfica. Dado que toma el conjunto independiente de vértices que conecta a todos los elementos, entonces los vértices para la cubierta mas pequeña es en este caso equivalente al conjunto independiente del caso anterior. Pero la cubierta mínima no es el mismo conjunto independiente, sino su complemento, en ese caso:
+    \[
+    V \setminus I = \{a_3, a_4, a_6, a_8, a_{10}, a_{13}, a_{14}, a_{16}, a_{18}, a_{20}, a_{22}\}
+    \] \cite{jungnickel2005graphs}
+    \vspace{1cm}
+
+    % \begin{figure}[h!]
+    %     \centering
+    %     \includegraphics[width=0.5\linewidth]{imagenes/gráficas/cubierta.png}
+    %     \caption{Cubierta de vértices mas pequeña}
+    % \end{figure}
+
+    \item Suponiendo que todas las aristas tienen peso 1, ¿Cuál es el corte máximo?
+    
+    \textbf{Respuesta:}Suponiendo que el peso para cada arista es 1, la cardinalidad de $|V|= $22 vértices ($a_1, a_2, \dots, a_{22}$) y aristas ($\vert{}E\vert{} = 33$). Una gráfica admite un corte que divida el total de sus aristas si y solo si es bipartito. \cite{bondy2008graph} \\
+
+    Como una gráfica se considera bipartita cuando sus vértices (puntos o nodos) se pueden dividir en dos grupos separados de tal forma que las líneas o conexiones (aristas) solo van de un grupo al otro, de este modo existe una partición de los vértices en dos conjuntos disjuntos $V_1$ y $V_2$ de tamaño $\vert{}V_1\vert{} = \vert{}V_2\vert{} = 11$, tales que no existen aristas con ambos extremos dentro de un mismo conjunto.\\
+
+    Dado que $G$ es 3-regular (el numero de aristas para cada vértice es de grado 3). $3|V1|=3|V2|$, y por tanto $|V1|=|V2|$. Como $|V1|+|V2|=22$, se obtiene $|V1|=|V2|=11$. \cite{bondy2008graph} \\
+
+    % \begin{figure}[h!]
+    %     \centering
+    %     \includegraphics[width=0.75\linewidth]{max-cut.png}
+    %     \caption{Conjuntos V1 y V2 para encontrar el corte maximo de $G_{22}$}
+    % \end{figure}
+
+    
+    Tomando el conjunto de vértices, denotamos a $G$ como $G_{22}$ dado el numero de vértices que posee. 
+    Para demostrar que $G_{22}$ es bipartito, consideramos la siguiente partición de sus vértices:
+\[
+V_1 = \{a_1, a_2, a_5, a_8, a_9, a_{11}, a_{12}, a_{14}, a_{15}, a_{20}, a_{21}\},
+\]
+\[
+V_2 = \{a_3, a_4, a_6, a_7, a_{10}, a_{13}, a_{16}, a_{17}, a_{18}, a_{19}, a_{22}\}.
+\]
+
+Se observa, a partir de las adyacencias para $G_{22}$, toda arista tiene un extremo en $V_1$ y el otro en $V_2$. Por lo tanto,
+\[
+E[V_1] = E[V_2] = \emptyset,
+\]
+y, por definición, $G_{22}$ es bipartito.
+    
+    Asimismo que la gráfica $G_{22}$ es bipartito, todas las 33 aristas conectan un vértice de $V_1$ con uno de $V_2$. Por consiguiente, el valor del corte máximo coincide exactamente con la cardinalidad del conjunto de aristas:$$\text{Max-Cut}(G_{22}) = w(V_1, V_2) = \vert{}E\vert{} = 33$$
+    
+    Al tomar (V1,V2) como corte, todas las 33 aristas son cortadas. Como ningún corte puede contener más aristas que las existentes en el grafo, se concluye lo anterior. \cite{GODDARD2013839}
+    
+    \vspace{1cm}
+\end{itemize}

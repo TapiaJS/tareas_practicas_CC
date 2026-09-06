@@ -1,0 +1,177 @@
+% ============================================================
+\section{Ejercicio 7}
+% ============================================================
+
+\begin{tcolorbox}[enunciado]
+Para cada par de expresiones $f(n)$ y $g(n)$ indica si $f$ es $O, \Omega, \Theta$ de $g(n)$. Asume que $k\ge1$ y $c>1$. Hay que llenar la tabla con un sí o un no en cada celda, pero se debe agregar la justificación para cada caso.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{f} & \textbf{g} & $O$ & $\Omega$ & $\Theta$ \\ \hline
+$100n^2+3n$ & $n^3+1$ & & & \\ \hline
+$n^k$ & $c^n$ & & & \\ \hline
+$2^n$ & $2^{n/2}$ & & & \\ \hline
+$\log n$ & $\sqrt{n}$ & & & \\ \hline
+$n!$ & $2^n$ & & & \\ \hline
+\end{tabular}
+\end{center}
+
+* Resolver al menos un inciso con límites, y al menos uno utilizando las definiciones explícitas de la Notación Asintótica correspondiente.
+\end{tcolorbox}
+
+\subsection{Solución}
+
+\begin{table}[htbp]
+\centering
+\renewcommand{\arraystretch}{1.8}
+\begin{tabular}{|m{4.5cm}|m{3.5cm}|m{2cm}|m{2cm}|m{2cm}|}
+\hline
+\centering \textbf{$f(n)$} & \centering \textbf{$g(n)$} & \centering \textbf{$O$} & \centering \textbf{$\Omega$} & \centering \textbf{$\Theta$} \tabularnewline
+\hline
+$100n^2 + 3n$ & $n^3 + 1$ & \centering Sí & \centering No & \centering No \tabularnewline
+\hline
+$n^k$ & $c^n$ & \centering Sí & \centering No & \centering No \tabularnewline
+\hline
+$2^n$ & $2^{n/2}$ & \centering No & \centering Sí & \centering No \tabularnewline
+\hline
+$\log n$ & $\sqrt{n}$ & \centering Sí & \centering No & \centering No \tabularnewline
+\hline
+$n!$ & $2^n$ & \centering No & \centering Sí & \centering No \tabularnewline
+\hline
+\end{tabular}
+\end{table}
+
+Usamos las definiciones de $O$, $o$, $\omega$ y $\Omega$ para cada ejercicio.
+
+\begin{enumerate}
+    \item $f(n) = 100n^2 + 3n$ y $g(n) = n^3 + 1$
+    \begin{itemize}
+        \item \textbf{¿$f(n) = O(g(n))$?: Sí.}  
+        Buscamos constantes $c > 0$ y $n_0 \in \mathbb{N}$ tales que:
+        \[
+        0 \le 100n^2 + 3n \le c(n^3 + 1), \quad \forall n \ge n_0
+        \]
+        Para todo $n \ge 1$, se cumple:
+        \[
+        100n^2 + 3n \le 100n^2 + 3n^2 = 103n^2 \le 103n^3 \le 103(n^3 + 1)
+        \]
+        Tomando $c = 103$ y $n_0 = 1$:
+        \[
+        \exists c > 0, \; \exists n_0 \in \mathbb{N} : 0 \le 100n^2 + 3n \le c(n^3 + 1), \quad \forall n \ge n_0 \implies f(n) = O(g(n))
+        \]
+    
+        \item \textbf{¿$f(n) = \Omega(g(n))$?: No.}  
+        Supongamos por contradicción que $f(n) = \Omega(g(n))$, es decir:
+        \[
+        \exists c > 0, \; \exists n_0 \in \mathbb{N} : 0 \le c(n^3 + 1) \le 100n^2 + 3n, \quad \forall n \ge n_0
+        \]
+        Se deriva lo siguiente para todo $n \ge 1$ y $n \ge n_0$:
+        \begin{align*}
+        c(n^3 + 1) \le 100n^2 + 3n 
+        &\implies c(n^3 + 1) \le 100n^2 + 3n^2 = 103n^2 \\
+        &\implies n^3 \le n^3 + 1 \le \frac{103n^2}{c} \\
+        &\implies n \le \frac{103}{c} \quad \text{--- una contradicción.}
+        \end{align*}
+        Por tanto, $f(n) \neq \Omega(g(n))$.
+    
+        \item \textbf{¿$f(n) = \Theta(g(n))$?: No.}  
+        De ambos resultados se sigue que $f(n) \neq \Theta(g(n))$.
+    \end{itemize}
+
+    \item $f(n) = n^k$ y $g(n) = c^n$
+    \begin{itemize}
+        \item \textbf{¿$f(n) = O(g(n))$?: Sí.}  
+        Evaluamos el límite aplicando la regla de L'Hôpital $k$ veces:
+        \[
+        \lim_{n \to \infty} \frac{n^k}{c^n} 
+        = \lim_{n \to \infty} \frac{\frac{d^k}{dn^k} n^k}{\frac{d^k}{dn^k} c^n} 
+        = \lim_{n \to \infty} \frac{k!}{(\ln c)^k c^n} = 0
+        \]
+        Dado que el límite es $0$, se tiene que $f(n) = o(g(n)) \implies f(n) = O(g(n))$.
+    
+        \item \textbf{¿$f(n) = \Omega(g(n))$?: No.}  
+        Por definición de $o$-notación y $\Omega$-notación:
+        \[
+        f(n) = o(g(n)) \implies f(n) \neq \Omega(g(n))
+        \]
+    
+        \item \textbf{¿$f(n) = \Theta(g(n))$?: No.}  
+        De ambos resultados se sigue que $f(n) \neq \Theta(g(n))$.
+    \end{itemize}
+
+    \item $f(n) = 2^n$ y $g(n) = 2^{n/2}$
+    \begin{itemize}
+
+        \item \textbf{¿$f(n) = \Omega(g(n))$?: Sí.}  
+        Evaluamos el límite siguiente:
+        \[
+        \lim_{n \to \infty} \frac{2^n}{2^{n/2}} 
+        = \lim_{n \to \infty} 2^{n - n/2} 
+        = \lim_{n \to \infty} 2^{n/2} = \infty
+        \]
+        Se concluye  que $f(n) = \omega(g(n)) \implies f(n) = \Omega(g(n))$.
+    
+        \item \textbf{¿$f(n) = O(g(n))$?: No.}  
+        Por definición de $\omega$-notación y $O$-notación:
+        \[
+        f(n) = \omega(g(n)) \implies f(n) \neq O(g(n))
+        \]
+    
+        \item \textbf{¿$f(n) = \Theta(g(n))$?: No.}  
+        De ambos resultados se sigue que $f(n) \neq \Theta(g(n))$.
+    \end{itemize}
+
+    \item $f(n) = \log n$ y $g(n) = \sqrt{n} = n^{1/2}$
+    \begin{itemize}
+        \item \textbf{¿$f(n) = O(g(n))$?: Sí.}  
+        Evaluamos el límite aplicando la regla de L'Hôpital:
+        \[
+        \lim_{n \to \infty} \frac{\log n}{n^{1/2}} 
+        = \lim_{n \to \infty} \frac{\frac{d}{dn} \log n}{\frac{d}{dn} n^{1/2}} 
+        = \lim_{n \to \infty} \frac{\frac{1}{n \ln 2}}{\frac{1}{2} n^{-1/2}} 
+        = \frac{2}{\ln 2} \lim_{n \to \infty} \frac{1}{n \cdot n^{-1/2}} 
+        = \frac{2}{\ln 2} \lim_{n \to \infty} \frac{1}{n^{1/2}} = 0
+        \]
+        Dado que el límite es $0$, se cumple que $f(n) = o(g(n)) \implies f(n) = O(g(n))$.
+    
+        \item \textbf{¿$f(n) = \Omega(g(n))$?: No.}  
+        Por definición de $o$-notación y $\Omega$-notación:
+        \[
+        f(n) = o(g(n)) \implies f(n) \neq \Omega(g(n))
+        \]
+    
+        \item \textbf{¿$f(n) = \Theta(g(n))$?: No.}  
+        De ambos resultados se sigue que $f(n) \neq \Theta(g(n))$.
+    \end{itemize}
+
+    \item $f(n) = n!$ y $g(n) = 2^n$
+    \begin{itemize}
+    
+        \item \textbf{¿$f(n) = \Omega(g(n))$?: Sí.}  
+        Expandimos el cociente y observamos que $\frac{n}{2} \ge 2$ para todo $n \ge 4$:
+        \[
+        \frac{n!}{2^n} = \left(\frac{1}{2} \cdot \frac{2}{2} \cdot \frac{3}{2}\right) \left(\frac{4}{2} \cdot \frac{5}{2} \cdots \frac{n}{2}\right) \ge \frac{3}{4} \cdot 2^{n-3}
+        \]
+        Evaluamos el límite
+        \[
+        \lim_{n \to \infty} \left(\frac{3}{4} \cdot 2^{n-3}\right) = \frac{3}{4} \lim_{n \to \infty} 2^{n-3} = \infty
+        \]
+        Usando límite evaluado y la desigualdad planteada tenemos que
+        \[
+        \lim_{n \to \infty} \frac{n!}{2^n} = \infty \implies f(n) = \omega(g(n)) \implies f(n) = \Omega(g(n))
+        \]
+
+        \item \textbf{¿$f(n) = O(g(n))$?: No.}  
+        Por definición de $\omega$-notación y $O$-notación:
+        \[
+        f(n) = \omega(g(n)) \implies f(n) \neq O(g(n))
+        \]
+    
+        \item \textbf{¿$f(n) = \Theta(g(n))$?: No.}  
+        De ambos resultados se sigue que $f(n) \neq \Theta(g(n))$. \cite{clrs2022}
+    \end{itemize}
+
+\end{enumerate}
+

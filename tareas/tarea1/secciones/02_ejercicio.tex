@@ -1,0 +1,154 @@
+% ============================================================
+\section{Ejercicio 2}
+% ============================================================
+
+\begin{tcolorbox}[enunciado]
+¿Cuáles de las siguientes afirmaciones son verdades y cuáles falsas? Justifica tu respuesta en cada caso
+\begin{enumerate}
+    \item Si $f(n)=n^{k}$ y $g(n)=c^{n}$, para algunas constantes $c>1$, $k\ge0$, entonces $g(n) = \Omega(f(n))$
+    \item Si $f(n) = n!$ y $g(n) = 2^n$, $f(n)=O(g(n))$
+    \item Si $f(n) = O(n)$ y $g(n) = \Theta(n)$, entonces:
+    \begin{itemize}
+        \item $f(n)+g(n)=O(n)$
+        \item $f(n)g(n)=O(n^{2})$
+        \item $f(n)-g(n)=O(1)$
+    \end{itemize}
+    \item Existen funciones $f, g$ tales que no se cumple que $f(n)=O(g(n))$ ni $f(n)=\Omega(g(n))$
+\end{enumerate}
+\end{tcolorbox}
+
+% ------------------------- Solución -------------------------
+\subsection{Solución} 
+
+¿Cuáles de las siguientes afirmaciones son verdaderas y cuáles falsas? Justifica tu respuesta en cada caso:
+
+\begin{enumerate}[label=\arabic*.]
+    \item Si $f(n)=n^k$ y $g(n)=c^n$, para algunas constantes $c>1$, $k\ge 0$, entonces $g(n)=\Omega(f(n))$.
+    
+    La afirmación es verdadera.
+
+    Evaluamos el siguiente límite aplicando la regla de L'Hôpital $k$ veces:
+    
+    \[
+    \lim_{n \to \infty} \frac{n^k}{c^n} = \lim_{n \to \infty} \frac{k!}{c^n (\ln c)^k} = 0
+    \]
+    donde el numerador es una constante finita que depende únicamente de $k$, mientras que el denominador tiende a infinito debido al factor $c^n$ con $c > 1$. 
+    
+    Por definición (en forma de limite) de $\omega$-notación 
+    \[
+    g(n) = \omega (f(n)) \implies g(n) = \Omega(f(n))
+    \]
+
+    \item Si $f(n) = n!$ y $g(n) = 2^n$, entonces $f(n)=O(g(n))$.
+    
+    La afirmación es falsa.
+
+    Expandimos el cociente y observamos que $\frac{n}{2} \ge 2$ para todo $n \ge 4$:
+        \[
+        \frac{n!}{2^n} = \left(\frac{1}{2} \cdot \frac{2}{2} \cdot \frac{3}{2}\right) \left(\frac{4}{2} \cdot \frac{5}{2} \cdots \frac{n}{2}\right) \ge \frac{3}{4} \cdot 2^{n-3}
+        \]
+        Evaluamos el límite
+        \[
+        \lim_{n \to \infty} \left(\frac{3}{4} \cdot 2^{n-3}\right) = \frac{3}{4} \lim_{n \to \infty} 2^{n-3} = \infty
+        \]
+        Usando límite evaluado y la desigualdad planteada tenemos que
+        \[
+        \lim_{n \to \infty} \frac{n!}{2^n} = \infty \implies f(n) = \omega(g(n)) \implies f(n) \neq O(g(n))
+        \]
+
+    \item Si $f(n) = O(n)$ y $g(n) = \Theta(n)$, entonces:
+    \begin{itemize}
+        
+        \item $f(n) + g(n) = O(n)$
+
+        La afirmación es verdadera.
+        
+        Por definición de $f(n) = O(n)$, existen constantes $c_1 > 0$ y $n_1 \in \mathbb{N}$ tales que:
+        \[
+        0 \le f(n) \le c_1 n, \quad \forall n \ge n_1
+        \]
+        
+        Por definición de $g(n) = \Theta(n)$, en particular $g(n) = O(n)$, existen constantes $c_2 > 0$ y $n_2 \in \mathbb{N}$ tales que:
+        \[
+        0 \le g(n) \le c_2 n, \quad \forall n \ge n_2
+        \]
+        
+        Tomando $n_0 = \max(n_1, n_2)$ y la constante $c_3 = c_1 + c_2 > 0$, sumamos ambas desigualdades para todo $n \ge n_0$:
+        \[
+        0 \le f(n) + g(n) \le c_1 n + c_2 n = (c_1 + c_2)n = c_3 n
+        \]
+        
+        Por tanto, existen $c_3 > 0$ y $n_0 \in \mathbb{N}$ que satisfacen la definición, concluyendo que:
+        \[
+        f(n) + g(n) = O(n)
+        \]
+        
+        \item $f(n)g(n) = O(n^2)$
+
+        La afirmación es verdadera.
+        
+        Por definición de $f(n) = O(n)$, existen constantes $c_1 > 0$ y $n_1 \in \mathbb{N}$ tales que:
+        \[
+        0 \le f(n) \le c_1 n, \quad \forall n \ge n_1
+        \]
+        
+        Por definición de $g(n) = \Theta(n)$, en particular $g(n) = O(n)$, existen constantes $c_2 > 0$ y $n_2 \in \mathbb{N}$ tales que:
+        \[
+        0 \le g(n) \le c_2 n, \quad \forall n \ge n_2
+        \]
+        
+        Tomando $n_0 = \max(n_1, n_2)$ y la constante $c_3 = c_1 c_2 > 0$, multiplicamos ambas desigualdades término a término para todo $n \ge n_0$:
+        \[
+        0 \le f(n)g(n) \le (c_1 n)(c_2 n) = c_1 c_2 n^2 = c_3 n^2
+        \]
+        
+        Por tanto, existen $c_3 > 0$ y $n_0 \in \mathbb{N}$ que satisfacen la definición, concluyendo que:
+        \[
+        f(n)g(n) = O(n^2)
+        \]
+
+        \item $f(n)-g(n)=O(1)$
+        
+        La afirmación es falsa.
+                
+        Consideremos como contraejemplo $f(n) = 5n$ y $g(n) = n$, las cuales satisfacen claramente que $f(n) = O(n)$ y $g(n) = \Theta(n)$.
+        
+        Tenemos que:
+        \[
+        f(n) - g(n) = 5n - n = 4n
+        \]
+        
+        Para que $f(n) - g(n) = O(1)$, deberían existir constantes $c > 0$ y $n_0 \in \mathbb{N}$ tales que:
+        \[
+        0 \le 4n \le c \cdot 1, \quad \forall n \ge n_0 \implies n \le \frac{c}{4}, \quad \forall n \ge n_0
+        \]
+        lo cual es una contradicción, pues el conjunto $\{n \in \mathbb{N} \mid n \ge n_0\}$ no está acotado superiormente por ninguna constante $\frac{c}{4}$. Por lo tanto:
+        \[
+        f(n) - g(n) \neq O(1)
+        \]
+    \end{itemize}
+
+    \item Existen funciones $f, g$ tales que no se cumple que $f(n)=O(g(n))$ ni $f(n)=\Omega(g(n))$.
+
+    La afirmación es verdadera.
+        
+    El orden asintótico \textbf{no} satisface la propiedad de tricotomía y podemos dar un ejemplo donde existen pares de funciones que son asintóticamente incomparables \cite{clrs2022}.
+        
+    Consideremos:
+    \[
+    f(n) = n \qquad \text{y} \qquad g(n) = n^{1 + \sin n}
+    \]
+        
+    Dado que el valor de $\sin n$ oscila continuamente entre $-1$ y $1$ conforme $n$ tiende a infinito, el exponente de $g(n)$ varía indefinidamente en el intervalo $[0, 2]$.
+        
+    \begin{itemize}
+        \item \textbf{$f(n) \neq O(g(n))$:}  
+        Cuando $\sin n \approx -1$, la función $g(n)$ cae cerca de $n^0 = 1$. Para cualquier constante $c > 0$, la desigualdad $n \le c \cdot 1$ se vuelve falsa para valores grandes de $n$. Por lo tanto, $f(n)$ no puede estar acotada por arriba por $c \cdot g(n)$.
+    
+        \item \textbf{$f(n) \neq \Omega(g(n))$:}  
+        Cuando $\sin n \approx 1$, la función $g(n)$ se acerca a $n^2$. Para cualquier constante fija $c > 0$, la desigualdad $c \cdot n^2 \le n \implies n \le \frac{1}{c}$ es falsa para valores grandes de $n$. Por lo tanto, $f(n)$ no puede ser acotada por abajo por $c \cdot g(n)$.
+    \end{itemize}
+        
+    Se concluye que $f(n) \neq O(g(n))$ y $f(n) \neq \Omega(g(n))$.
+
+\end{enumerate}

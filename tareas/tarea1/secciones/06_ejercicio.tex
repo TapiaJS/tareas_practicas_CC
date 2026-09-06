@@ -1,0 +1,76 @@
+% ============================================================
+\section{Ejercicio 6}
+
+% ============================================================
+
+\begin{tcolorbox}[enunciado]
+Supón que un algoritmo A, que resuelve un problema $\Pi$, tiene un tiempo de ejecución de $T_{A}(n)=20n^{3}+10n+16$, además supón que un algoritmo B, que resuelve el mismo problema $\Pi$, tiene un tiempo de ejecución de $T_{B}(n)=22n^{2}\log_{2}(8n)$.
+\begin{enumerate}
+    \item ¿Qué algoritmo es mejor?
+    \item ¿Para qué valores de n el algoritmo A es mejor que el B?
+    \item ¿Para qué valores de n el algoritmo B es mejor que el A?
+\end{enumerate}
+\end{tcolorbox}
+
+% ------------------------- Solución -------------------------
+\subsection{Solución}
+
+\begin{enumerate}
+    \item ¿Qué algoritmo es mejor? Tenemos lo siguiente:
+    \begin{align*}
+        \lim_{n \to \infty} \frac{T_A(n)}{T_B(n)} &= \lim_{n \to \infty} \frac{20n^3 + 10n + 16}{22n^2(3 + \log_2 n)} \\
+        &= \lim_{n \to \infty} \frac{20n^3 \left(1 + \frac{10}{20n^2} + \frac{16}{20n^3}\right)}{22n^2 \log_2 n \left(1 + \frac{3}{\log_2 n}\right)} \\
+        &= \lim_{n \to \infty} \left(\frac{20}{22}\right) \cdot \frac{n^3}{n^2 \log_2 n} \cdot \frac{1 + \frac{10}{20n^2} + \frac{16}{20n^3}}{1 + \frac{3}{\log_2 n}} \\
+        &= \frac{10}{11} \lim_{n \to \infty} \frac{n^3}{n^2 \log_2 n} \cdot \frac{1 + 0 + 0}{1 + 0} \\
+        &= \frac{10}{11} \lim_{n \to \infty} \frac{n}{\log_2 n} \stackrel{\text{L'H}}{=} \frac{10}{11} \lim_{n \to \infty} n \ln 2 = \infty
+    \end{align*}
+
+    Por la definición de $\omega$-notación, el algoritmo $B$ es mejor.
+    
+    \vspace{2em}
+    Tabulamos valores de $n$ para ambos algoritmos:
+    
+    \begin{center}
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+    $n$ & $T_A(n) = 20n^3 + 10n + 16$ & $T_B(n) = 22n^2 \log_2(8n)$ & Mejor algoritmo \\ \hline
+    1 & $46$ & $66$ & $A$ \\ \hline
+    2 & $196$ & $352$ & $A$ \\ \hline
+    3 & $586$ & $\approx 907.82$ & $A$ \\ \hline
+    4 & $1336$ & $1760$ & $A$ \\ \hline
+    5 & $2566$ & $\approx 2927.06$ & $A$ \\ \hline
+    6 & $4396$ & $\approx 4423.29$ & $A$ \\ \hline
+    7 & $6946$ & $\approx 6260.33$ & $B$ \\ \hline
+    8 & $10336$ & $8448$ & $B$ \\ \hline
+    9 & $14686$ & $\approx 10994.80$ & $B$ \\ \hline
+    \end{tabular}
+    \end{center}
+
+    Para confirmar que para todo $n \ge 7$ el algoritmo $B$ es mejor que el $A$, consideramos la función
+    \[
+    d(n) = T_A(n) - T_B(n)
+    \]
+    y mostramos que $d(n)$ es estrictamente creciente para todo $n \ge 7$.
+    
+    Derivamos $d$ con respecto a $n$:
+    \[
+    d'(n) = 60n^2 + 10 - 22n\left(2 \log_2 (8n) + \frac{1}{\ln 2}\right)
+    \]
+    
+    Dado que $T'_A(n)$ crece cuadráticamente y domina sobre el crecimiento lineal-logarítmico de $T'_B(n)$, se cumple que $d'(n) > 0$. Por el criterio de la primera derivada, $d(n)$ es estrictamente creciente y como $d(7) = 6946 - 6260.33 \approx 685.67 > 0$, se sigue por monotonía que:
+    \[
+    d(n) \ge d(7) > 0, \quad \forall n \ge 7
+    \]
+    Por lo tanto, $T_A(n) > T_B(n)$ para todo $n \ge 7$.
+    \item Valores de $n$ tal que $A$ es mejor:
+    \[
+    \{n \in \mathbb{N} \mid 1 \le n \le 6\}
+    \]
+
+    \item Valores de $n$ tal que $B$ es mejor:
+    \[
+    \{n \in \mathbb{N} \mid n \ge 7\}
+    \]
+\end{enumerate}
+
+\newpage

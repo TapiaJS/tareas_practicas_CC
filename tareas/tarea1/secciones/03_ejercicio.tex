@@ -1,0 +1,110 @@
+% ============================================================
+\section{Ejercicio 3}
+% ============================================================
+
+\begin{tcolorbox}[enunciado]
+Considera los siguientes dos problemas sobre CLANES en gráficas. En el problema de decisión, la pregunta a resolver es si existe o no un clan de cierto tamaño. El otro es el problema de búsqueda, en el que queremos de hecho encontrar cuáles son los vértices que conforman el clan.
+
+Supón que existe un oráculo que nos dice, por el precio de una moneda por pregunta, si una gráfica tiene o no clan de cierto tamaño.
+\begin{itemize}
+    \item Demuestra que haciendo una serie de preguntas al oráculo, podemos resolver el problema de optimización utilizando solo una cantidad de monedas que crece polinomialmente como una función del número de vértices.
+    \item Concluye que podemos resolver el problema de decisión en tiempo polinomial sí y sólo sí podemos resolver el problema de búsqueda también en tiempo polinomial.
+\end{itemize}
+\end{tcolorbox}
+
+% ------------------------- Solución -------------------------
+\subsection{Solución}
+
+Considera los siguientes dos problemas sobre CLANES en gráficas. En el problema de decisión, la pregunta a resolver es si existe o no un clan de cierto tamaño. El otro es el problema de búsqueda, en el que queremos de hecho encontrar cuáles son los vértices que conforman el clan.
+
+Supón que existe un oráculo que nos dice, por el precio de una moneda por pregunta, si una gráfica tiene o no clan de cierto tamaño.
+
+\begin{itemize}
+    \item Demuestra que haciendo una serie de preguntas al oráculo, podemos resolver el problema de optimización utilizando solo una cantidad de monedas que crece polinomialmente como una función del número de vértices.
+
+    El costo para cada llamada al oráculo de "una moneda" lo consideramos como una operación de tiempo constante $O(1)$.
+
+    Consideramos el siguiente pseudocódigo:
+    \begin{algorithmic}[1]
+    \Require Gráfica $G = (V, E)$
+    \Ensure k' el tamaño del clan más grande en G
+    \Function{TamañoClanMasGrande}{$G$}
+        \State $high \gets |V|$
+        \State $low \gets 0$
+        \State $k' \gets 0$
+        \While{$low \le high$}
+            \State $middle \gets \lfloor (high + low) / 2 \rfloor$
+            \If{$G$ \text{tiene un clan de tamaño} $middle$ \text{(oráculo)}}
+                \State $k' \gets middle$
+                \State $low \gets middle + 1$
+            \Else{}
+                \State $high \gets middle - 1$
+            \EndIf
+        \EndWhile{}
+        \State \Return $k'$
+    \EndFunction
+    \end{algorithmic}
+
+    \textbf{Proposición 1}: Si existe un clan de tamaño $k$, entonces existe un clan de tamaño $k - 1$.
+
+    \textbf{Demostración}: Por contradicción, supongamos que tenemos un clan $C$ de tamaño $k$, pero no de tamaño $k - 1$. Para un $v \in C$ arbitrario, consideramos la gráfica $C -\{v\}$. Por definición de gráfica completa, cada $v' \in C - \{v\}$ tiene ahora grado $k - 2$, i.e., sigue siendo adyacente a los vértices de $C - \{v\}$, siendo una gráfica completa y por tanto un clan, lo cual es una contradicción. Por tanto, existe un clan de tamaño $k - 1$.
+
+    \textbf{Proposición 2}: Si no existe un clan de tamaño $k$, entonces no existe un clan de tamaño $k + 1$.
+    
+    \textbf{Demostración}: Por contrapositiva de la proposición 1.
+
+    Estas dos proposiciones nos garantizan que el algoritmo anterior solo descarta porciones del arreglo que no nos brindan información para encontrar el clan más grande de tamaño $k'$. Además, el algoritmo solo es una versión modificada de búsqueda binaria. Entonces, tiene complejidad $O(\log |V|)$.
+
+    Teniendo el $k'$. Consideramos el siguiente pseudocódigo:
+    \begin{algorithmic}[1]
+    \Require Gráfica $G = (V, E)$, k' el tamaño del clan más grande en G
+    \Ensure $G'$ el clan más grande de $G$
+    \Function{ClanMasGrande}{$G, k'$}
+        \State $G' \gets G$
+        \ForAll{$v \in V$}
+            \If{$G'-\{v\}$ \text{tiene un clan de tamaño} $k'$}
+                \State $G' \gets G' - \{v\}$
+            \EndIf{}
+        \EndFor{}
+        \State \Return $G'$
+    \EndFunction
+    \end{algorithmic}
+
+    El algoritmo solo considera en $G'$ los vértices que sí forman parte de un clan de tamaño $k'$. Para todo vértice que no figura dentro del clan, se descarta usando el oráculo. Al iterar sobre los vértices $V$, la complejidad del algoritmo es $O(|V|)$
+
+    La complejidad conjunta de ambos algortimos es de $O(\log |V| + |V|) = O(|V|)$.
+
+    Por tanto, solo gastando una cantidad polinomial de monedas podemos encontrar el clan de tamaño máximo de una gráfica.
+
+    \item Concluye que podemos resolver el problema de decisión en tiempo polinomial sí y sólo sí podemos resolver el problema de búsqueda también en tiempo polinomial.
+
+    \textbf{Demostración}: Para toda $G = (V, E)$ gráfica
+
+    \begin{itemize}
+        \item Si podemos resolver el problema de decisión en tiempo polinomial, entonces podemos resolver el problema de búsqueda también en tiempo polinomial.
+        
+        \vspace{0.5em}
+        
+        Supongamos que el algoritmo de decisión tiene complejidad polinomial: \textit{complejidad\_decision}.
+
+        Iteramos por cada $n \in \{|V|, |V| -1, |V| -2, \dots, 1\}$ y usamos el algoritmo de decisión para saber si existe un clan de tamaño $n$. Nos quedamos con el primer resultado positivo, digamos $n'$. Este paso nos toma $O(|V| \cdot complejidad\_decision)$, que es un polinomio.
+        
+        Usando el algoritmo \textit{ClanMasGrande},pero con el algoritmo de decisión en lugar del oráculo, con $G$ y $n'$ obtenemos el clan respectivo $G'$. Toma $O(|V| \cdot complejidad\_decision)$.
+
+        En total, podemos resolver el problema en tiempo polinomial: 
+        \begin{align*}
+        O(|V| \cdot \text{complejidad\_decision} &+ |V| \cdot \text{complejidad\_decisionl}) \\
+        &= O(|V| \cdot \text{complejidad\_decision})
+        \end{align*}
+        
+        \item Si podemos resolver el problema de búsqueda en tiempo polinomial, entonces podemos resolver el problema de decisión también en tiempo polinomial.
+        
+        \vspace{0.5em}
+        
+        Supongamos que el algoritmo de búsqueda tiene complejidad polinomial.
+
+        Ejecutamos el algoritmo de búsqueda. Si la respuesta es un clan de tamaño $\ge k$, regresamos 'SÍ' y en otro caso 'NO'. Se justifica por las proposiciones 1 y 2 del inciso anterior. La complejidad final es la misma que la del algoritmo de búsqueda, es decir, polinomial.
+    \end{itemize}
+
+    Por tanto, podemos resolver el problema de decisión en tiempo polinomial sí y sólo sí podemos resolver el problema de búsqueda también en tiempo polinomial.
+\end{itemize}
