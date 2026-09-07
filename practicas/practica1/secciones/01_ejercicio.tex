@@ -20,6 +20,8 @@ Para el caso de ``DeliCiencias'', la versión de búsqueda se expresaría formal
 Dado un catálogo de pedidos pendientes donde cada pedido $i$ tiene un peso físico $w_i$ y una ganancia económica $v_i$, una capacidad máxima de mochila $W$ y una ganancia meta $V$, \textbf{encuentra y devuelve} un subconjunto específico de pedidos $S$ tal que la suma de sus pesos no exceda $W$ ($\sum_{i \in S} w_i \le W$) y la suma de sus ganancias alcance o supere la meta $V$ ($\sum_{i \in S} v_i \ge V$). Si no existe ninguna combinación que cumpla ambas condiciones, el algoritmo debe reportarlo.
 
     \item Si, tiene sentido, ya que se busca maximizar la ganancia del repartidor aprovechando al máximo la capacidad $W$ de la mochila, sin depender de un umbral fijo $V$.
+    
+    La versión de optimización modificaría la estructura del problema al eliminar el parámetro de entrada $V$. El algoritmo ya no se limitaría a buscar una combinación que simplemente cruce un umbral, sino que evaluaría el catálogo para encontrar el subconjunto exacto de pedidos cuya suma de pesos no exceda $W$ y cuya suma de ganancias sea el máximo absoluto posible. 
     \item \textbf{OPTIMIZACIÓN DE ENTREGAS - VERSIÓN DE DESICIÓN.}\\
     \textbf{Datos: } Un conjunto de $n$ pedidos $\{1,2,\dots,n\}$, donde cada pedido $i$ tiene un peso $w_i \in \mathbb{Z}^+$ y una ganancia $v_i \in \mathbb{Z}^+$. Una capacidad máxima $W\in \mathbb{Z^+}$ y una ganancia objetivo $V \in \mathbb{Z}^+$.\\
     \textbf{Pregunta: } ¿Existe un subconjunto de pedidos $S \subseteq \{1, 2, \dots, n\}$ tal que $\sum_{i \in S} w_i \le W$ y $\sum_{i \in S} v_i \ge V$?
