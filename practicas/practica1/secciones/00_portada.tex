@@ -1,0 +1,91 @@
+% --- CREACIÓN Y ORGANIZACIÓN DE OBJETOS ---
+\newgeometry{left=4cm, right=2.5cm, top=3cm, bottom=3cm}
+% --- CARACTERÍSTICAS ---
+\newgeometry{
+	hmargin = {1.7cm, 1.7cm}, 	% Margen horizontal izquierdo, derecho
+	vmargin = {1cm, 1cm},	    % Margen vertical superior, inferior
+	headsep = 4mm,				% Separación entre el encabezado y el texto
+	head = .2cm,				% Tamaño del encabezado
+	marginparsep = 5mm, 		% Seperación entre las notas y el texto
+	marginpar = 1.5cm,		    % Tamaño de las notas
+}
+\begin{titlepage}
+\begin{tikzpicture}[remember picture, overlay]
+    
+    % Logo UNAM 
+    \node[anchor=north] (unam) at ($(current page.north west) + (2.6cm, -2cm)$) {
+        \includegraphics[width=2.8cm]{unam.png} 
+    };
+
+    % Logo Ciencias
+    \node[anchor=south] (ciencias) at ($(current page.south west) + (2.6cm, 2cm)$) {
+        \includegraphics[width=2.8cm]{fc.png} 
+    };
+
+    % Coordenada X (Horizontal) donde irán las líneas
+    \coordinate (posXAzul) at ($(current page.north west) + (2.5cm, 0)$);
+    \coordinate (posXDorada) at ($(current page.north west) + (2.65cm, 0)$);
+    
+    % TRAMO 1: Del Techo -> Borde Superior Logo UNAM 
+    \draw[unamBlue, line width=5pt] 
+        (posXAzul) -- (posXAzul |- unam.north);
+    \draw[unamGold, line width=1.5pt] 
+        (posXDorada) -- (posXDorada |- unam.north);
+
+    % TRAMO 2: Borde Inferior Logo UNAM (.south) -> Borde Superior Logo Ciencias 
+    \draw[unamBlue, line width=5pt] 
+        (posXAzul |- unam.south) -- (posXAzul |- ciencias.north);
+    \draw[unamGold, line width=1.5pt] 
+        (posXDorada |- unam.south) -- (posXDorada |- ciencias.north);
+
+    % TRAMO 3: Borde Inferior Logo Ciencias -> Suelo
+    \draw[unamBlue, line width=5pt] 
+        (posXAzul |- ciencias.south) -- (posXAzul |- current page.south);
+    \draw[unamGold, line width=1.5pt] 
+        (posXDorada |- ciencias.south) -- (posXDorada |- current page.south);
+        
+\end{tikzpicture}
+
+% --- CONTENIDO DE TEXTO DE LA PORTADA---
+\begin{center}
+    {\Large \color{unamBlue} \textbf{\textsc{Universidad Nacional Autónoma de México}}}\\[0.3cm]
+    {\large \color{darkGray} \textbf{Facultad de Ciencias}}\\[0.2cm]
+    \rule{10cm}{0.5pt}
+    \vspace{3cm} 
+    
+    % --- NÚMERO DE LA PRÁCTICA ---
+    {\fontsize{40}{36}\selectfont \textbf{Reporte 01}}\\[0.8cm]
+    
+    % Título largo con ancho controlado
+    {\Large \color{unamBlue} \textit{
+        \parbox{0.9\textwidth}{%  Valor para ajustar lo ancho
+            \centering
+            Esquemas de Codificación
+        }
+    }}\\[5cm]
+    
+    % --- INTEGRANTES ---
+    \begin{center}
+        \renewcommand{\arraystretch}{1.5}
+        \setlength{\tabcolsep}{12pt}
+        {\large
+        \begin{tabular}{c | c}
+            \color{unamBlue}\textbf{No. de cuenta} & \color{unamBlue}\textbf{Nombre} \\
+            \hline
+            % De preferencia que la lista esté ordenada alfabéticamente
+            \textbf{320325775} & Hernández Vázquez Carlos Arturo \\
+            \textbf{320148204} & González Lucero Alan Uriel\\
+            \textbf{321225087} & Rivera Jiménez Isaac \\
+            \textbf{321306102} & Tapia Sánchez Jesús 
+        \end{tabular}
+        }
+    \end{center}
+    
+    \vfill
+    
+    % --- NOMBRE DE LA MATERIA ---
+    {\Large \textbf{Complejidad Computacional}}\\[0.5cm]
+    \color{unamGold}\rule{5cm}{2pt}\color{black}\\[0.5cm]
+    {\large Semestre 2027-1}
+\end{center}
+\end{titlepage}

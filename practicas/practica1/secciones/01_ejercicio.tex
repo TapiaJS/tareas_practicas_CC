@@ -1,0 +1,21 @@
+% ============================================================
+% Ejercicio 1
+% ============================================================
+\section{Ejercicio 1}
+
+\begin{tcolorbox}[enunciado]
+\begin{enumerate}[label=(\alph*), leftmargin=*]
+    \item ¿Cómo podemos expresar este problema en su versión de búsqueda?
+    \item ¿Tiene sentido plantearse una versión de optimización?
+    \item Plantea el problema en su versión de decisión, y enúncialo en su forma canónica.
+\end{enumerate}
+\end{tcolorbox}
+
+\subsection{Solución}
+\begin{enumerate}[label=(\alph*), leftmargin=*]
+    \item \textbf{Un problema de búsqueda} consiste es encontrar y devolver la estructura exacta que cumple con las condiciones establecidas.
+
+Para el caso de ``DeliCiencias'', la versión de búsqueda se expresaría formalmente de la siguiente manera:
+
+Dado un catálogo de pedidos pendientes donde cada pedido $i$ tiene un peso físico $w_i$ y una ganancia económica $v_i$, una capacidad máxima de mochila $W$ y una ganancia meta $V$, \textbf{encuentra y devuelve} un subconjunto específico de pedidos $S$ tal que la suma de sus pesos no exceda $W$ ($\sum_{i \in S} w_i \le W$) y la suma de sus ganancias alcance o supere la meta $V$ ($\sum_{i \in S} v_i \ge V$). Si no existe ninguna combinación que cumpla ambas condiciones, el algoritmo debe reportarlo.
+\end{enumerate}

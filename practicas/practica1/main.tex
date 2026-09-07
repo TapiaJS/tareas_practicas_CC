@@ -1,0 +1,114 @@
+\documentclass[letterpaper,12pt]{article}
+
+% --- PAQUETES ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish, provide=*]{babel}
+\usepackage{lmodern}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\setlength{\headheight}{24.64995pt}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\setlist{itemsep=0.5em, topsep=0.3em}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{parskip}
+\usepackage{setspace}
+\usepackage{tikz}
+\usepackage{eso-pic}
+\usetikzlibrary{calc, positioning}
+\usepackage{xltabular}
+\usepackage{caption}
+\usepackage{float}  
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage[most]{tcolorbox} % Para las cajas de colores
+
+% --- COLORES ---
+\definecolor{unamBlue}{RGB}{0, 43, 122}
+\definecolor{unamGold}{RGB}{213, 159, 15}
+\definecolor{darkGray}{RGB}{70, 70, 70}
+
+% Definición del estilo de la caja de comandos
+\newtcolorbox{terminal}{
+    colback=gray!30,       % Color de fondo (gris al 10%)
+    colframe=gray!30,      % Color del borde
+    arc=3pt,               % Redondeo de las esquinas
+    boxrule=0.5pt,         % Grosor del borde
+    fontupper=\ttfamily,   % Fuente tipo código (monospace)
+    enhanced,
+    breakable,             % Por si el comando es muy largo y cambia de página
+    width=0.85\linewidth,  % 1. Reduce el ancho de la caja (85% del espacio de la lista)
+    %center,                % 2. Centra la caja misma dentro del margen de la lista
+    halign=center          % 3. Centra el comando (texto) dentro de la caja
+}
+
+% Estilo de caja de enunciado
+\tcbset{
+  enunciado/.style={
+    colback=blue!4!white,
+    colframe=blue!50!black,
+    fonttitle=\bfseries,
+    title=Enunciado,
+    arc=4pt,
+    boxrule=0.5pt,
+    left=6pt, right=6pt, top=4pt, bottom=4pt
+  }
+}
+
+% --- MÁRGENES ---
+\geometry{left=2.5cm, right=2.5cm, top=3cm, bottom=2.5cm}
+
+% === PIE DE FIGURA ===
+% --- espacio entre la figura y el caption ---
+% \captionsetup[figure]{skip=8pt}
+% --- espacio entre el caption y el párrafo siguiente ---
+% \setlength{\belowcaptionskip}{-10pt}
+
+% Encabezado y pie de pagina
+\pagestyle{fancy}
+\fancyhf{}
+
+% Encabezado
+\fancyhead[L]{\textsc{\color{unamBlue}Tarea 01:} Complejidad Computacional}
+\fancyhead[R]{\color{unamBlue}\thepage}
+\renewcommand{\headrulewidth}{0.8pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{unamBlue}\leaders\hrule height \headrulewidth\hfill}}
+
+% Formato de secciones con color 
+\titleformat{\section}{\Large\bfseries\color{unamBlue}}{}{0em}{}
+\titleformat{\subsection}{\large\bfseries\color{unamBlue!80!black}}{}{0em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries}{}{0em}{}
+
+\graphicspath{
+    {imagenes/logos_unam/}
+}
+%===================================DOCUMENTO================================
+\begin{document}
+
+%====================================PORTADA=================================
+\input{secciones/00_portada}
+\restoregeometry  % Vuelve a la configuración global
+%====================================ÍNDICE=================================
+\newpage
+\tableofcontents
+\newpage
+
+%===================================CONTENIDO===============================
+
+\input{secciones/0x_enunciado}
+\input{secciones/01_ejercicio}
+\input{secciones/02_ejercicio}
+\input{secciones/03_ejercicio}
+\input{secciones/04_ejercicio}
+\input{secciones/05_ejercicio}
+\input{secciones/08_referencias}
+
+%======================================END==================================
+\end{document}
