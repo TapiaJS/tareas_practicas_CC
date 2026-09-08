@@ -108,6 +108,12 @@ Al ejecutar el algoritmo calculará que en la mochila solo caben 2 pedidos enter
     \end{terminal}
 \end{center}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{imagenes/pruebas/ejemplar_si.png}
+    \caption{Captura de pantalla de la salida en terminal al ejecutar el algoritmo \texttt{mochila\_pesos\_identicos.py} con el \texttt{ejemplar\_si.txt}}
+\end{figure}
+
 \textbf{Ejemplar 2: Caso Negativo (Respuesta ``NO'')}
 
 Aquí plantearemos un escenario restrictivo. La mochila es pequeña y, aunque el repartidor tome el pedido más caro, no será suficiente para alcanzar su meta.
@@ -153,6 +159,11 @@ La mochila solo puede transportar 1 pedido (800 dividido entre 500). El mejor pe
     \end{terminal}
 \end{center}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{imagenes/pruebas/ejemplar_no.png}
+    \caption{Captura de pantalla de la salida en terminal al ejecutar el algoritmo \texttt{mochila\_pesos\_identicos.py} con el \texttt{ejemplar\_si.txt}}
+\end{figure}
 
 \subsubsection*{4. Análisis del Segundo Algoritmo Propuesto de Bajo Consumo}
 Se sabe que los pesos para cada pedido $p$ son de igual cantidad; de esta manera $p_{w1}=p_{w2}=p_{w3}.. $, por lo tanto, lo único que posee un valor independiente $p_v$ son los valores para cada $p$. Teniendo esto en cuenta, se podría generar una suma de las cantidades de $p_v$ hasta que se alcance un $V$ de ganancias, siempre y cuando no sobrepase $W$. Esto se puede lograr gracias a un $max-heap$, ya que podemos ordenar los valores de los pedidos dependiendo de la cantidad de ganancia que se pueda ir generando. Para esto se utilizó la biblioteca \textit{heapq} de Python, que ayuda a poder utilizar los montículos mínimos. \cite{python_heapq}
