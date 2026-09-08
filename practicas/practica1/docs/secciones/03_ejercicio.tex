@@ -37,4 +37,68 @@ La decodificación y validación de pesos del ejercicio anterior es: $O(n)$, al 
 
 La complejidad en espacio del método es $O(n)$, donde $n$ es la cantidad total de pedidos. Lista de pedidos: Almacena las $n$ tuplas (peso, ganancia) procesadas por desbinarizar ($O(n)$). Estructura max-heap: Crea una nueva lista con $n$ tuplas $(-ganancia, peso)$ para la cola de prioridad ($O(n)$). Variables auxiliares: Variables como maxsum, maxweight, W y V ocupan un espacio constante e independiente del tamaño de la entrada ($O(1)$). Así $O(n)$.
 
+El ejemplar que se toman en cuenta, para el si tiene los datos $ejemplar3$:
+
+\begin{verbatim}
+    Nombre del archivo a guardar (ej. ejemplar.txt): ejemplar3
+¿Cuántos pedidos deseas ingresar? 6
+Pedido 1:
+Peso (en gramos): 300
+Ganancia (en pesos): 40
+Pedido 2:
+Peso (en gramos): 300
+Ganancia (en pesos): 24
+Pedido 3:
+Peso (en gramos): 300
+Ganancia (en pesos): 17
+Pedido 4:
+Peso (en gramos): 300
+Ganancia (en pesos): 26
+Pedido 5:
+Peso (en gramos): 300
+Ganancia (en pesos): 8
+Pedido 6:
+Peso (en gramos): 300
+Ganancia (en pesos): 10
+Capacidad máxima de la mochila W (en gramos): 900
+Ganancia mínima requerida V (en pesos): 75
+
+Cadena binaria generada:
+
+00000001001011000000000000101000000000010010110000000000000110000000000
+1001011000000000000010001000000010010110000000000000
+11010000000010010110000000000000010000000000100101100000000000000
+101000000011100001000000000001001011
+\end{verbatim}
+
+El ejemplar que se toman en cuenta, para el si tiene los datos $ejemplar2$:
+
+\begin{verbatim}
+    Nombre del archivo a guardar (ej. ejemplar.txt): ejemplar2
+¿Cuántos pedidos deseas ingresar? 4
+Pedido 1:
+Peso (en gramos): 300
+Ganancia (en pesos): 40
+Pedido 2:
+Peso (en gramos): 200
+Ganancia (en pesos): 30
+Pedido 3:
+Peso (en gramos): 350
+Ganancia (en pesos): 17
+Pedido 4:
+Peso (en gramos): 299
+Ganancia (en pesos): 19.5
+[Error] Entrada inválida. Por favor, ingresa un número entero.
+Ganancia (en pesos): 19
+Capacidad máxima de la mochila W (en gramos): 800
+Ganancia mínima requerida V (en pesos): 88
+
+Cadena binaria generada:
+00000001001011000000000000
+101000000000001100100000000000000
+111100000000101011110000000000001000
+100000001001010110000000000010011
+00000011001000000000000001011000
+
+\end{verbatim}
 
