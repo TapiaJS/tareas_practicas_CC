@@ -63,3 +63,30 @@
     
     La implementación del algoritmo se encuentra en el archivo \texttt{lector.py}
 \end{enumerate}
+
+\begin{enumerate}[label=(\alph*), leftmargin=*]
+    \item \textbf{Esquema de codificación binaria de longitud fija.}
+    Para codificar las instancias de este problema se usa un \textbf{esquema de codificación en binario puro} ($\Sigma = \{0,1\}$) con \textbf{longitud fija de 16 bits} ($2$ bytes) por entero:
+    \begin{itemize}[leftmargin=*]
+        \item \textbf{Dominio y Rango:} Cada número entero no negativo ($x \in \mathbb{Z}_{\ge 0}$) se convierte a su representación binaria de 16 bits con relleno de ceros a la izquierda (\textit{zero-padding}), lo que permite representar valores en el rango $[0, 65\, 535]$.
+        \item \textbf{Estructura de la Cadena Binaria:} La cadena $C\in \{0,1\}^*$ se compone de $n$ bloques de 32 bits para los $n$ pedidos, seguidos por 2 bloqes finales de 16 bits para los parámetros globales $W$ y $V$:
+        \[
+        C = \underbrace{\text{bin}_{16}(w_1) \, \text{bin}_{16}(v_1) \dots \text{bin}_{16}(w_n) \, \text{bin}_{16}(v_n)}_{n \text{ bloques de } 32 \text{ bits para pedidos}} \, \underbrace{\text{bin}_{16}(W)}_{16 \text{ bits}} \, \underbrace{\text{bin}_{16}(V)}_{16 \text{ bits}}
+        \]
+        \item \textbf{Decodificación Unívoca:}
+        Debido a que la longitud total del archivo satisface $|C|= 32n + 32$, los últimos $32$ bits corresponden a la capacidad máxima $W$ (bits $|C|-32$ a $|C|-16$) y a la ganancia meta $V$ (bits $|C|-16$ a $|C|$). Los bits anteriores se procesan en parejas de $16$ bits para reconstruir cada tupla de pedido $(w_i, v_i)$.
+    \end{itemize}
+    \item \textbf{Descripción del Algoritmo e Implementación.}
+    El algoritmo lee la cadena binaria almacenada en el archivo especificado, extrae los datos mediante cortes exactos de bits (\textit{slicing}) y despliega la información requerida.
+    \textbf{Pasos del Algoritmo:}
+    \begin{enumerate}[label=\arabic*.]
+        \item Solicitar por consola el nombre del archivo de entrada y abrirlo en modo lectura de texto.
+        \item Separar la cadena $C$: los últimos $16$ bits se convierten a entero base 2 ara obtener $V$, los $16$ bits precedentes para $W$, y el subsegmento anterior $C[0 : |C|-32]$ representa el conjunto de pedidos.
+        \item Iterar sobre el subsegmento en saltos de $32$ bits, convirtiendo los primeros $16$ bits a peso $w_i$ y los siguientes $16$ bits a ganancia $v_i$.
+        \item Imprimir en consola: el número total de pedidos $n$, la lista completa de los pedidos, la capacidad $W$, la ganancia meta $V$ y dos ejemplos representativos de los pedidos con información más detallada.
+    \end{enumerate}
+    \item \textbf{Implementación en Python.}
+    La implementación del algoritmo se encuentra en el archivo \textbf{ejercicio2.py}
+    
+    
+\end{enumerate}
