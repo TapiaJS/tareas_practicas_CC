@@ -24,7 +24,7 @@ Dado un catálogo de pedidos pendientes donde cada pedido $i$ tiene un peso fís
     La versión de optimización modificaría la estructura del problema al eliminar el parámetro de entrada $V$. El algoritmo ya no se limitaría a buscar una combinación que simplemente cruce un umbral, sino que evaluaría el catálogo para encontrar el subconjunto exacto de pedidos cuya suma de pesos no exceda $W$ y cuya suma de ganancias sea el máximo absoluto posible. 
     
     \item \textbf{OPTIMIZACIÓN DE ENTREGAS - VERSIÓN DE DESICIÓN.}\\
-    \textbf{Datos (parámetros):} Un conjunto finito de pedidos pendientes $P = \{p_1, p_2, \dots, p_n\}$. Para cada pedido $p_i \in P$, un peso físico $w_i \in \mathbb{Z}^+$ y una ganancia económica $v_i \in \mathbb{Z}^+$. Una capacidad máxima de la mochila $W \in \mathbb{Z}^+$ y una ganancia meta $V \in \mathbb{Z}^+$.
-
+    \textbf{Datos (parámetros):} Un conjunto finito de \underline{pedidos pendientes} $P = \{p_1, p_2, \dots, p_n\}$. Para cada pedido $p_i \in P$, un \underline{peso físico} $w_i \in \mathbb{Z}^+$ y una \underline{ganancia económica} $v_i \in \mathbb{Z}^+$. Una \underline{capacidad máxima} de la mochila $W \in \mathbb{Z}^+$ y una \underline{ganancia meta} $V \in \mathbb{Z}^+$.
+    
     \textbf{Pregunta (objetivo):} ¿Existe un subconjunto $S \subseteq P$ tal que la suma de los pesos de los pedidos en $S$ sea menor o igual a $W$ ($\sum_{p_i \in S} w_i \le W$) y la suma de sus ganancias sea mayor o igual a $V$ ($\sum_{p_i \in S} v_i \ge V$)?
 \end{enumerate}
