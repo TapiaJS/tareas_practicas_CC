@@ -26,4 +26,31 @@ Al menos deben agregar ejemplos de los siguientes casos
 \end{tcolorbox}
 
 \subsection{Solución}
-% --- Escribe aquí tu solución ---
+\subsubsection*{1. Análisis}
+Dado que cada pedido pesa exactamente lo mismo (llamémosle $w_{const}$), el límite de la mochila $W$ ya no restringe combinaciones complejas de pesos, sino simplemente la \textbf{cantidad máxima de pedidos} que se pueden llevar.
+
+La cantidad máxima de paquetes $k$ que caben en la mochila se calcula con una división entera:
+$$k = \lfloor \frac{W}{w_{const}} \rfloor$$
+
+Al saber que solo podemos llevar a lo mucho $k$ pedidos y que todos consumen exactamente el mismo espacio, la estrategia óptima es seleccionar los $k$ pedidos que ofrezcan la mayor ganancia individual.
+
+\subsubsection*{Diseño del Algoritmo Eficiente}
+
+
+\textbf{Lectura de Datos:} Se lee el archivo utilizando el esquema que diseñamos en el Ejercicio 2. Se asume que todos los pedidos tienen el mismo peso, por lo que tomamos ese valor como $w_{const}$.
+
+\textbf{Cálculo de Límite de Artículos:} Se determina cuántos pedidos caben calculando $k = \lfloor W / w_{const} \rfloor$. Si resulta que $k$ es mayor que el número total de pedidos disponibles $n$, ajustamos $k = n$ (el repartidor tiene espacio para llevar todo el catálogo).
+
+\textbf{Ordenamiento (Sorting):} Se ordena la lista de ganancias de los pedidos en orden descendente (del más lucrativo al menos lucrativo).
+
+\textbf{Selección:} Se toman los primeros $k$ elementos de esta lista ordenada y se suman para obtener la ganancia máxima posible ($V_{max}$).
+
+\textbf{Evaluación Final:}
+\begin{itemize}[leftmargin=*]
+    \item Si $V_{max} \ge V$, el algoritmo imprime ``SÍ'' y reporta el peso total transportado, el cual será exactamente la cantidad de artículos seleccionados multiplicada por $w_{const}$.
+    \item Si $V_{max} < V$, el algoritmo imprime ``NO''.
+\end{itemize}
+
+
+\subsubsection*{Ventaja de Complejidad}
+En este caso donde los pesos son idénticos, la complejidad de nuestro algoritmo está dominada únicamente por el paso de ordenamiento de las ganancias, lo que nos da un tiempo de ejecución de $O(n \log n)$. Por lo que se puede considerar un algoritmo ``eficiente''.
