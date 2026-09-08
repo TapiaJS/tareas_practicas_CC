@@ -3,6 +3,15 @@ import sys
 BITS = 16
 
 def pedir_entero(mensaje, min_val=0):
+    """
+    Pide una entrada al usuario y comrpueba que sea un número entero válido
+    mayor o igual al valor mpinimo especificado.
+
+    :param mensaje: El texto que se le mostrará al usuario en consola.
+    :param min_val: El valor mínimo permitido para la entrada (por defecto 0).
+    :return: El número entero válido ingresado por el usuario.
+
+    """
     while True:
         entrada = input(mensaje).strip()
         try:
@@ -15,9 +24,28 @@ def pedir_entero(mensaje, min_val=0):
             print("[Error] Entrada inválida. Por favor, ingresa un número entero.")
 
 def binarizar(decimal, bits=BITS):
+    """
+    Convierte a binario el decimal otorgado y crea el bloque de bits para el número.
+
+    :param decimal: El decimal a transformar a binario.
+    :param bits: La cantidad de bits asignada para representar cada número binario.
+    :return: Una cadena de texto (string) que representa el número en binario. 
+
+    """
     return bin(decimal)[2:].zfill(bits)
 
 def optimización_entregas(pedidos, W, V, bits=BITS):
+    """
+    
+    Recibe los elementos del problema de entregas y los codifica en una sola cadena binaria..
+
+    :param pedidos: Lista de tuplas, donde cada una contiene (peso wi, valor vi) de un pedido.
+    ;param W: La capacidad máxima de peso de la mochila.
+    :param V: La meta mínima de ganancias a cumplir.
+    :bits: La cantidad de bits asignada para representar cada número binario.
+    :return: Una cadena de texto (string) que contiene todos los datos concatenados en binario.
+
+    """
     cadena_binaria = ""
     for w_i, v_i in pedidos:
         cadena_binaria += binarizar(w_i, bits)
@@ -28,6 +56,15 @@ def optimización_entregas(pedidos, W, V, bits=BITS):
     return cadena_binaria
 
 def desbinarizar(binarios, bits=BITS):
+    """
+    Decodifica una cadena binaria para reconstruir los datos originales del problema de optimización.
+
+    :param binarios: La cadena de texto binaria que contiene toda la información empaquetada.
+    :param bits: La cantidad de bits asignada para representar cada número binario.
+    :return: Una tupla con (contador de pedidos, lista de pedidos, peso W, ganancia V).
+    :raises ValueError: Si la longitud de la cadena binaria no es válida o es menor al mínimo requerido.
+
+    """
     if len(binarios) < bits * 2 or len(binarios) % bits != 0:
         raise ValueError("La cadena binaria no tiene un formato o lóngitud válida.")
 
@@ -53,6 +90,15 @@ def desbinarizar(binarios, bits=BITS):
     return contador, pedidos, W, V
 
 def guardar_ejemplar(nombre_archivo, pedidos, W, V):
+    """
+    Convierte la instancia del problema a su representación binaria y la guarda en un archivo de texto.
+
+    :param nombre_archivo: Nombre del archivo donde se almacenará la información.
+    :param pedidos: Lista de tuplas (w_i, v_i) con el peso y valor de cada pedido.
+    ;param W: La capacidad máxima de peso de la mochila.
+    :param V: La meta mínima de ganancias a cumplir.
+
+    """
     cadena = optimización_entregas(pedidos, W, V)
     with open(nombre_archivo, "w", encoding="utf-8") as f:
         f.write(cadena)
@@ -60,6 +106,11 @@ def guardar_ejemplar(nombre_archivo, pedidos, W, V):
     print(f"Cadena binaria generada:\n{cadena}\n")
 
 def crear_archivo():
+    """
+    Interactúa con el usuario desde la consola para capturar los datos de un ejemplar del problema
+    Con cuantos pedidos creará, (lista de pedidos con peso / ganancia, capacidad W y ganancia mínima V)
+    de forma validada, solicitando posteriormente su almacenamiento en disco mediante la función guardar_ejemplar.
+    """
     print("\n --- CREAR NUEVO EJEMPLAR ---")
     nombre_archivo = input("Nombre del archivo a guardar (ej. ejemplar.txt): ").strip()
 
@@ -75,6 +126,14 @@ def crear_archivo():
     guardar_ejemplar(nombre_archivo, pedidos, W, V)
     
 def leer_imprimir_ejemplar(nombre_archivo):
+    """
+    Lee un archivo codificado en binario, procesa sus datos a través de la función
+    desbinarizar e imprime en la consola la información reconstruida del ejemplar
+    (pedidos, capacidad W y ganancia V), gestionando errores de lectura o formato.
+
+    :param nombre_archivo: Nombre del archivo que contiene la cadena binaria.
+    
+    """
     try:
         with open(nombre_archivo, "r", encoding="utf-8") as f:
             binarios = f.read().strip()
@@ -90,11 +149,22 @@ def leer_imprimir_ejemplar(nombre_archivo):
         print(f"{e}\n")
 
 def abrir_archivo():
+    """
+    
+    Solicita al usuario el nombre del archivo de entrada mediante la consola
+    y ejecuta la lectura e impresión de los datos llamando a leer_imprimir_ejemplar.
+
+    """
     print("\n --- LECTURA DE ARCHIVO ---")
     nombre_archivo = input("Ingrese el nombre del archivo a abrir: ").strip()
     leer_imprimir_ejemplar(nombre_archivo)
 
 def menu_principal():
+    """
+    Despliega el menú interactivo principal en consola que coordina las acciones del programa:
+    creación de nuevos ejemplares, lecturas de archivos guardados y salir del programa.
+    
+    """
     while True:
         print("=" * 10)
         print(" SISTEMA DE ENTREGAS DELICIENCIAS ")
