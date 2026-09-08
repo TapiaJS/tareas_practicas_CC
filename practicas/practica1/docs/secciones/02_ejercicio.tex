@@ -28,4 +28,17 @@
 \end{tcolorbox}
 
 \subsection{Solución}
-% --- Escribe aquí tu solución ---
+\begin{enumerate}[label=(\alph*), leftmargin=*]
+    \item Ya que el diseño de un esquema de codificación consiste en establecer reglas exactas para traducir los parámetros de un ejemplar a una cadena de texto que un programa pueda procesar, y debido a que en la práctica se nos prohíbe utilizar formatos estructurados ya establecidos, vamos a crear un formato posicional basado en saltos de línea y un delimitador simple (como el espacio).
+    
+    Así que, para la versión de decisión, necesitamos almacenar el total de pedidos ($n$), la capacidad máxima ($W$), la ganancia meta ($V$), y las características de cada pedido ($w_i \text{ y } v_i$).
+
+    Obteniendo la siguiente estructura para el archivo de texto plano:
+
+    \begin{itemize}[leftmargin=*]
+        \item Línea 1: Un número entero $n$ que define el total de pedidos disponibles.
+        \item Línea 2: Un número entero $W$ que defina la capacidad máxima de la mochila (en gramos).
+        \item Línea 3: Un númeroo entero $V$ que define la ganancia meta (en pesos).
+        \item Línea 4 a la $n + 3$: Dos números enteros separados por un espacio, correspondientes a $w_i$ (pesos) y $v_i$ (ganancias) del pedido $i$.
+    \end{itemize}
+\end{enumerate}
