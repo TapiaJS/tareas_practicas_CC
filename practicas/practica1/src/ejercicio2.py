@@ -143,6 +143,14 @@ def leer_imprimir_ejemplar(nombre_archivo):
         print(f"Pedidos (peso, ganancia): {pedidos}")
         print(f"Capacidad máxima (W): {W} gramos")
         print(f"Ganancia mínima (V): {V} pesos")
+
+        print("\nEjemplos de pedidos disponibles: ")
+        if n >= 1:
+            print(f"  - Pedido 1: Peso = {pedidos[0][0]} g, Ganancia = ${pedidos[0][1]}")
+        if n >= 2:
+            print(f"  - Pedido 2: Peso = {pedidos[1][0]} g, Ganancia = ${pedidos[1][1]}")
+        elif n < 1:
+            print(" - No hay pedidos registrados en el ejemplar.")
     except FileNotFoundError:
         print(f"Error: El archivo '{nombre_archivo}' no existe.\n")
     except ValueError as e:

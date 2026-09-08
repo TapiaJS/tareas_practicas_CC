@@ -57,3 +57,176 @@ En este caso donde los pesos son idénticos, la complejidad de nuestro algoritmo
 
 \subsubsection*{2. Implementación en Python}
 La implementación del algoritmo se encuentra en el archivo \texttt{mochila\_pesos\_identicos.py}
+
+
+\subsubsection*{3. Descripción de los Ejemplos Visuales de los Ejemplares}
+\textbf{Ejemplar 1: Caso Afirmativo (Respuesta ``SÍ'')}
+
+Para este caso, diseñaremos un catálogo donde el repartidor tiene espacio limitado, pero al aplicar nuestro algoritmo, los paquetes más rentables logran superar la ganancia meta.
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Total de pedidos ($n$):} 4
+    \item \textbf{Capacidad de la mochila ($W$):} 1200 gramos
+    \item \textbf{Ganancia meta ($V$):} 150 pesos
+\end{itemize}
+
+\textbf{Representación visual (sin codificar):}
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{ccc}
+\toprule
+\textbf{Pedido} & \textbf{Peso} & \textbf{Ganancia} \\
+\midrule
+1 & 500g & 30 pesos \\
+2 & 500g & 100 pesos \\
+3 & 500g & 50 pesos \\
+4 & 500g & 80 pesos \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Cadena que codifica al ejemplar (\texttt{ejemplar\_si.txt}):}
+\begin{center}
+\begin{terminal}
+4\\
+1200\\
+150\\
+500 100\\
+500 80\\
+500 50\\
+500 30
+\end{terminal}
+\end{center}
+
+\textbf{Resultado de la ejecución:}\\
+Al ejecutar el algoritmo calculará que en la mochila solo caben 2 pedidos enteros (1200 divido entre 500). Tomará las ganancias mayores (100 y 80), sumando 180 pesos. Como 180 es mayor a la meta de 150 pesos, la salida en consola será:
+
+\begin{center}
+    \begin{terminal}
+    SÍ\\
+    1000
+    \end{terminal}
+\end{center}
+
+\textbf{Ejemplar 2: Caso Negativo (Respuesta ``NO'')}
+
+Aquí plantearemos un escenario restrictivo. La mochila es pequeña y, aunque el repartidor tome el pedido más caro, no será suficiente para alcanzar su meta.
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Total de pedidos ($n$):} 3
+    \item \textbf{Capacidad de la mochila ($W$):} 800 gramos
+    \item \textbf{Ganancia meta ($V$):} 120 pesos
+\end{itemize}
+
+\textbf{Representación visual (sin codificar):}
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{ccc}
+\toprule
+\textbf{Pedido} & \textbf{Peso} & \textbf{Ganancia} \\
+\midrule
+1 & 500g & 40 pesos \\
+2 & 500g & 90 pesos \\
+3 & 500g & 70 pesos \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Cadena que codifica al ejemplar (\texttt{ejemplar\_no.txt}):}
+\begin{center}
+    \begin{terminal}
+    3\\
+    800\\
+    120\\
+    500 90\\
+    500 70\\
+    500 40
+    \end{terminal}
+\end{center}
+
+\textbf{Resultado de la ejecución:}\\
+La mochila solo puede transportar 1 pedido (800 dividido entre 500). El mejor pedido disponible ofrece 90 pesos. Dado que 90 es menor que la meta de 120 pesos, es imposible cumplir el objetivo. La salida en consola será:
+
+\begin{center}
+    \begin{terminal}
+    NO
+    \end{terminal}
+\end{center}
+
+
+\subsubsection*{4. Análisis del Segundo Algoritmo Propuesto de Bajo Consumo}
+Se sabe que los pesos para cada pedido $p$ son de igual cantidad; de esta manera $p_{w1}=p_{w2}=p_{w3}.. $, por lo tanto, lo único que posee un valor independiente $p_v$ son los valores para cada $p$. Teniendo esto en cuenta, se podría generar una suma de las cantidades de $p_v$ hasta que se alcance un $V$ de ganancias, siempre y cuando no sobrepase $W$. Esto se puede lograr gracias a un $max-heap$, ya que podemos ordenar los valores de los pedidos dependiendo de la cantidad de ganancia que se pueda ir generando. Para esto se utilizó la biblioteca \textit{heapq} de Python, que ayuda a poder utilizar los montículos mínimos. \cite{python_heapq}
+
+Una vez implementados los montículos para las tuplas de pedidos, se convirtieron los valores de ganancias de cada pedido en valores negativos, para que el montículo mínimo tomara los valores negativos como los mejores valores; después se transformaba a un entero positivo con la función $abs()$ que convierte en valor absoluto.
+
+La complejidad en tiempo está dada por $O(nlog(m))$, donde
+
+La decodificación y validación de pesos del ejercicio anterior es: $O(n)$, al recorrer la lista de pedidos una vez para verificar que todos tengan el mismo peso $w$. Construcción del Max-Heap $(heapify):$ $O(n)$, tiempo lineal para organizar los $n$ elementos en la estructura del montículo. Selección de los mejores elementos: $O(m \log n)$, ya que el bucle realiza como máximo $m$ extracciones, y cada reordenamiento en un montículo de tamaño $n$ toma $O(\log n)$. De esta manera, $O(m\log n)$.
+
+La complejidad en espacio del método es $O(n)$, donde $n$ es la cantidad total de pedidos. Lista de pedidos: Almacena las $n$ tuplas (peso, ganancia) procesadas por desbinarizar ($O(n)$). Estructura max-heap: Crea una nueva lista con $n$ tuplas $(-ganancia, peso)$ para la cola de prioridad ($O(n)$). Variables auxiliares: Variables como maxsum, maxweight, W y V ocupan un espacio constante e independiente del tamaño de la entrada ($O(1)$). Así $O(n)$.
+
+El ejemplar que se toman en cuenta, para el si tiene los datos $ejemplar3$:
+
+\begin{verbatim}
+    Nombre del archivo a guardar (ej. ejemplar.txt): ejemplar3
+¿Cuántos pedidos deseas ingresar? 6
+Pedido 1:
+Peso (en gramos): 300
+Ganancia (en pesos): 40
+Pedido 2:
+Peso (en gramos): 300
+Ganancia (en pesos): 24
+Pedido 3:
+Peso (en gramos): 300
+Ganancia (en pesos): 17
+Pedido 4:
+Peso (en gramos): 300
+Ganancia (en pesos): 26
+Pedido 5:
+Peso (en gramos): 300
+Ganancia (en pesos): 8
+Pedido 6:
+Peso (en gramos): 300
+Ganancia (en pesos): 10
+Capacidad máxima de la mochila W (en gramos): 900
+Ganancia mínima requerida V (en pesos): 75
+
+Cadena binaria generada:
+
+00000001001011000000000000101000000000010010110000000000000110000000000
+1001011000000000000010001000000010010110000000000000
+11010000000010010110000000000000010000000000100101100000000000000
+101000000011100001000000000001001011
+\end{verbatim}
+
+El ejemplar que se toman en cuenta, para el si tiene los datos $ejemplar2$:
+
+\begin{verbatim}
+    Nombre del archivo a guardar (ej. ejemplar.txt): ejemplar2
+¿Cuántos pedidos deseas ingresar? 4
+Pedido 1:
+Peso (en gramos): 300
+Ganancia (en pesos): 40
+Pedido 2:
+Peso (en gramos): 200
+Ganancia (en pesos): 30
+Pedido 3:
+Peso (en gramos): 350
+Ganancia (en pesos): 17
+Pedido 4:
+Peso (en gramos): 299
+Ganancia (en pesos): 19.5
+[Error] Entrada inválida. Por favor, ingresa un número entero.
+Ganancia (en pesos): 19
+Capacidad máxima de la mochila W (en gramos): 800
+Ganancia mínima requerida V (en pesos): 88
+
+Cadena binaria generada:
+00000001001011000000000000
+101000000000001100100000000000000
+111100000000101011110000000000001000
+100000001001010110000000000010011
+00000011001000000000000001011000
+
+\end{verbatim}
+
