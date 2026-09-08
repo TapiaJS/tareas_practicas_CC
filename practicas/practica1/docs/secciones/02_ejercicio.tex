@@ -41,4 +41,25 @@
         \item Línea 3: Un númeroo entero $V$ que define la ganancia meta (en pesos).
         \item Línea 4 a la $n + 3$: Dos números enteros separados por un espacio, correspondientes a $w_i$ (pesos) y $v_i$ (ganancias) del pedido $i$.
     \end{itemize}
+
+    \item \subsubsection*{1. Descripción del Algoritmo}
+
+    \textbf{Entrada:} Leer desde los argumentos de la consola el nombre del archivo de texto.
+    
+    \textbf{Lectura:} Abrir el archivo en modo lectura.
+    
+    \textbf{Decodificación (Parseo):}
+    
+    \begin{itemize}[leftmargin=*]
+        \item Leer la línea 1 y asignarla a $n$ (total de pedidos).
+        \item Leer la línea 2 y asignarla a $W$ (capacidad de la mochila).
+        \item Leer la línea 3 y asignarla a $V$ (ganancia meta).
+        \item Crear una lista iterando desde la línea 4 en adelante. Por cada línea, separar los valores por el espacio en blanco para obtener el peso ($w_i$) y la ganancia ($v_i$).
+    \end{itemize}
+    
+    \textbf{Salida:} Imprimir $n$, $W$, y $V$. Luego, acceder a los dos primeros elementos de la lista de pedidos pendientes e imprimir sus datos.
+
+    \subsubsection*{2. Implementación en Python}
+    
+    La implementación del algoritmo se encuentra en el archivo \texttt{lector.py}
 \end{enumerate}
