@@ -27,3 +27,14 @@ Al menos deben agregar ejemplos de los siguientes casos
 
 \subsection{Solución}
 % --- Escribe aquí tu solución ---
+Se sabe que los pesos para cada pedido $p$ son de igual cantidad; de esta manera $p_{w1}=p_{w2}=p_{w3}.. $, por lo tanto, lo único que posee un valor independiente $p_v$ son los valores para cada $p$. Teniendo esto en cuenta, se podría generar una suma de las cantidades de $p_v$ hasta que se alcance un $V$ de ganancias, siempre y cuando no sobrepase $W$. Esto se puede lograr gracias a un $max-heap$, ya que podemos ordenar los valores de los pedidos dependiendo de la cantidad de ganancia que se pueda ir generando. Para esto se utilizó la biblioteca \textit{heapq} de Python, que ayuda a poder utilizar los montículos mínimos. \cite{python_heapq}
+
+Una vez implementados los montículos para las tuplas de pedidos, se convirtieron los valores de ganancias de cada pedido en valores negativos, para que el montículo mínimo tomara los valores negativos como los mejores valores; después se transformaba a un entero positivo con la función $abs()$ que convierte en valor absoluto.
+
+La complejidad en tiempo está dada por $O(nlog(m))$, donde
+
+La decodificación y validación de pesos del ejercicio anterior es: $O(n)$, al recorrer la lista de pedidos una vez para verificar que todos tengan el mismo peso $w$. Construcción del Max-Heap $(heapify):$ $O(n)$, tiempo lineal para organizar los $n$ elementos en la estructura del montículo. Selección de los mejores elementos: $O(m \log n)$, ya que el bucle realiza como máximo $m$ extracciones, y cada reordenamiento en un montículo de tamaño $n$ toma $O(\log n)$. De esta manera, $O(m\log n)$.
+
+La complejidad en espacio del método es $O(n)$, donde $n$ es la cantidad total de pedidos. Lista de pedidos: Almacena las $n$ tuplas (peso, ganancia) procesadas por desbinarizar ($O(n)$). Estructura max-heap: Crea una nueva lista con $n$ tuplas $(-ganancia, peso)$ para la cola de prioridad ($O(n)$). Variables auxiliares: Variables como maxsum, maxweight, W y V ocupan un espacio constante e independiente del tamaño de la entrada ($O(1)$). Así $O(n)$.
+
+
