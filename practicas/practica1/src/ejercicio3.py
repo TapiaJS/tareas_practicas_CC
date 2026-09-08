@@ -64,37 +64,56 @@ def comprobar_pesos(binarios, bits = BITS):
 
     contador, pedidos, W, V = desbinarizar(binarios, bits=BITS)
 
-    #Generamos un Mini-Heap para extrar los m elementos mayores para el alcanzar el valor V
-    heapq.heapify(pedidos)
     maxsum = 0
     maxweight = 0
-    for i in range(len(pedidos)):
-        if pedidos[i][1] != W:
-            return 0, 0
-        heapq.heappush(pedidos[1], 2)
-        maxsum += pedidos[i][1]
-        maxweight += pedidos[i][0]
-    #Caso cuando el peso de la mochila no es rebasado y el valor total de todos los pedidos es igua a V
-    if maxweight <= W and maxsum == V:
-        return 1, maxweight
 
+    #comprobamos que existan pedidos
+    if not pedidos:
+        return 0, 0
+
+    #Iteramos para saber si el valor de cada pedido es el optimo para V sin rebasar W
+    for i in range(1, len(pedidos)):
+        if pedidos[i][0] != pedidos[i-1][0]:
+            return 0, 0
+        maxsum += pedidos[i-1][1]
+        maxweight += pedidos[i-1][0]
+    #Caso cuando el peso de la mochila no es rebasado y el valor total de todos los pedidos es igua a V
+    if maxweight <= W and maxsum >= V:
+        return 1, maxweight
+    #reiniciamos a 0 la suma maxima de maxweight
+    maxweight = 0
+    maxsum = 0
+    #Generamos un Max-Heap para extrar los m elementos mayores para el alcanzar el valor V
+    # Invertimos los pesos de las tuplas para empezar con los valores mayores
+    max_heap = [(-ganancia, peso) for peso, ganancia in pedidos]
+    heapq.heapify(max_heap)
+    
     for i in range(len(pedidos)):
-        if maxsum + pedidos[0][1] <= V and maxweight + pedidos[0][0]<= W:
-            maxsum += pedidos[0][1]
-        elif maxsum + pedidos[0][1] == V and maxweight + pedidos[0][0] <= W: 
+        # Extraemos la tupla (-valor, peso) del Max-Heap en una variable
+        pedido_actual = heapq.heappop(max_heap)
+        print("pedido actual:", pedido_actual)
+        print("maxweight:", maxweight, " maxsum:", maxsum)
+
+        if maxweight + pedido_actual[1] <= W and maxsum + abs(pedido_actual[0]) >= V:
+            maxweight += pedido_actual[1]
+            maxsum += abs(pedido_actual[0])
             return 1, maxweight
+
+        elif maxweight + pedido_actual[1] <= W:
+            maxweight += pedido_actual[1]
+            maxsum += abs(pedido_actual[0])
         else:
             # Se rebaso el peso de la mochila y no se puede alcanzar el valor V
             # No se rebasa el peso de la mochila pero V no es alcanzado
             # Se rebaso el peso de la mochila pero si es posible alcanzar V
-            return 0, 0
+            return 0, maxweight
 
-
+    return 0, 0
     # Comprobar que el peso de la primera mochila no sobrepasa W, si es asi, entonces no es posible el valor V
     # Utilizar algoritmo gready para poder saber el valor maximo de cada pedido, 
-    # si es que no se alcanza V, el siguiente valor se suma en Gready,
-    # Para ordenar los valores y mantener una suma de los valores mas altos se ordena.
-    # esto toma O(nlog(k)), iterar O(n), decodificar O(n).  O(nlog(k)) tomaria el resultado, siempre que k <= n 
+    # si es que no se alcanza V, el siguiente valor se suma.
+    # Para ordenar los valores y mantener una suma de los valores mas altos se ordena en un Max-heap.
+    # esto toma O(nlog(m)), iterar O(n), decodificar O(n).  O(nlog(m)) tomaria el resultado, siempre que m <= n 
 
 # Imprime la respuesta del programa solicitado
 def respuesta(resultado):
