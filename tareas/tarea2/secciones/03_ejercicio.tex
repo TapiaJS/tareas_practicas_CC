@@ -1,0 +1,41 @@
+% ============================================================
+\section{Ejercicio 3}
+
+% ============================================================
+
+\begin{tcolorbox}[enunciado]
+Considera la Máquina de Turing definida por:
+\begin{center}
+    $M=(\{  q_0,q_1,q_2,q_a,q_e \}, \{ 0,1\}, \{  0,1, \sqcup\}, \delta, q_0,q_a,q_r)$
+\end{center}
+Describe el Lenguaje $L_M$ para cada una de las siguientes definiciones de $\delta$. Para cada inciso.\\
+$\cdot$ Justifica tu respuesta agregando un par de ejecuciones (al menos una de aceptación y una de rechazo) para cada inciso.\\
+$\cdot$ Da la función $f_M(b)$ del tiempo de ejecución de la máquina.
+\begin{enumerate} 
+\item A.
+\begin{enumerate}
+    \item $\delta (q_0,0)=(q_1,1,\rightarrow)$
+    \item $\delta(q_1,1)=(q_2,0,\leftarrow)$
+    \item $\delta(q_2,1)= (q_0,1,\rightarrow )$
+    \item $\delta(q_1,\sqcup)=(q_a.\sqcup,\rightarrow)$
+\end{enumerate}
+
+\item B.
+\begin{enumerate}
+    \item $\delta(q_o,0)= (q_1, 1, \rightarrow)$
+    \item $\delta (q_1,1)=(q_0,0,\rightarrow)$
+    \item $\delta (q_1,\sqcup) = (q_a,\sqcup\leftarrow)$
+\end{enumerate}
+\item C.
+\begin{enumerate}
+    \item $\delta(q_0,0)=(q_0,\sqcup,\rightarrow)$
+    \item $\delta(q_0,1)=(q_1,\sqcup,\rightarrow)$
+    \item $\delta(q_1,1)=(q_1,\sqcup,\rightarrow)$
+    \item $\delta(q_1,\sqcup)=(q_a,\sqcup,\leftarrow)$
+\end{enumerate}
+\end{enumerate}
+Considera que las reglas (transiciones) que no se indican de manera explícita llevan al estado de rechazo.
+\end{tcolorbox}
+
+% ------------------------- Solución -------------------------
+\subsection{Solución}
