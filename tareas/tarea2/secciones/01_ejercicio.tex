@@ -15,3 +15,19 @@ Ejemplifica la ejecución (o idea general) de las máquinas propuestas.
 
 % ------------------------- Solución -------------------------
 \subsection{Solución}
+\subsection{1}
+\begin{enumerate}
+    \item A la entrada $x$ se le debe de anexar un símbolo inicial * y final +, teniendo ahora $x'=*\{a,b\}^*+$.
+    \item $M$ lee el símbolo inicial y busca cualquier símbolo a la derecha. Si llega a $+$ acepta.
+    \item Si $M$ lee $a$, lo borra y busca a la derecha $b$. Si lee $b$, lo borra y busca a la derecha $a$. Si $M$ en cualquiera de los dos casos, se llega a $+$ rechaza. 
+    \item Cuando $M$ localiza el símbolo deseado, lo borra y se desplaza a la izquierda, hasta alcanzar $*$.
+    \item $M$ repite la sucesión de pasos desde el paso $2$ hasta alcanzar un estado de aceptación o rechazo.
+\end{enumerate}
+\textbf{Tiempo de ejecución.}\\
+En cada ciclo completo se eliminan exactamente dos caracteres (una $a$, y una $b$). Por lo que se realizará un máximo de $n/{2}$ ciclos antes de terminar.\\
+En el peor de los casos, se debe recorrer toda la cinta hacia la derecha para encontrar la pareja y luego regresar al inicio. Lo que toma un tiempo proporcional a la longitud de la cadena. $O(n)$.\\
+$\therefore n/2 \times O(n) =O(n^2)$
+
+
+
+\subsection{3}

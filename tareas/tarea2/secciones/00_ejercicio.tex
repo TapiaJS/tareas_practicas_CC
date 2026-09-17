@@ -14,8 +14,20 @@ Considerando la definición formal vista en clase de la máquina de Turing, resp
 
 % ------------------------- Solución -------------------------
 \subsection{Respuestas}
-\subsection{1}
+\subsection{1} Si, pues el símbolo blanco $\sqcup\in\Gamma$. Por lo que la función de transición:
+\begin{center}
+    $\delta :Q\times\Gamma\rightarrow Q\times\Gamma \times \{\leftarrow, \rightarrow\}$
+\end{center}puede indicar explícitamente que se remplazar cualquier carácter leído en la celda por un $\sqcup$, lo que equivale a borrar un símbolo durante el proceso de cómputo.
+
 
 \subsection{2}
+Sea $\Sigma = \{ 0,1\}$ el alfabeto de entrada y sea $\Gamma= \{0,1,\sqcup\}$. Consideremos que la entrada $x$ que recibirá la máquina, es una codificación en binario. Como los elementos de la entrada $x$, están escritos en la cinta, es claro que $\Sigma\subset\Gamma$. Pero $\Gamma\not\Subset\Sigma$, pues $\sqcup\notin\Sigma$.\\
+$\therefore \Gamma \ne\Sigma$ no pueden ser iguales. Además, dependiendo el problema a resolver, la cinta puede requerir símbolos adicionales para el procesamiento, que no forman parte de la entrada original.
 
 \subsection{3}
+Es posible definiría, pero no sería útil. Pues para que una máquina de Turing realice un cómputo útil o decida un lenguaje, requiere de al menos un estado de rechazo $q_r$ o de aceptación $q_a$, si la máquina consta del estado inicial: $q_0$:
+\begin{itemize}
+    \item Si $q_0$ se define como estado de parada, la máquina se detiene instantáneamente en el paso $0$ para cualquier cadena, sin procesar la entrada. 
+    \item Si $q_0$ no es un estado de parada, la máquina nuca podrá cambiar de estado para detenerse, entrando en un bucle infinito para cualquier entrada.
+\end{itemize}
+$\therefore$ Una máquina de Turing de un solo estado no puede decidir ningún lenguaje no trivial ni calcular funciones útiles. Por eso en complejidad computacional, se requieren máquinas ocn al menos dos estados.
