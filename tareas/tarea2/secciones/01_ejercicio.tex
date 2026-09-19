@@ -17,17 +17,103 @@ Ejemplifica la ejecución (o idea general) de las máquinas propuestas.
 \subsection{Solución}
 \subsection{1}
 \begin{enumerate}
-    \item A la entrada $x$ se le debe de anexar un símbolo inicial * y final +, teniendo ahora $x'=*\{a,b\}^*+$.
-    \item $M$ lee el símbolo inicial y busca cualquier símbolo a la derecha. Si llega a $+$ acepta.
-    \item Si $M$ lee $a$, lo borra y busca a la derecha $b$. Si lee $b$, lo borra y busca a la derecha $a$. Si $M$ en cualquiera de los dos casos, se llega a $+$ rechaza. 
-    \item Cuando $M$ localiza el símbolo deseado, lo borra y se desplaza a la izquierda, hasta alcanzar $*$.
-    \item $M$ repite la sucesión de pasos desde el paso $2$ hasta alcanzar un estado de aceptación o rechazo.
+    \item A la entrada $x$ se le debe de anexar un símbolo inicial * y final +, teniendo ahora $x'=*x+ |x\in\{a,b\}^*$. (Aclarando que $\sqcup$ será ignorado en a la hora de buscar).
+    \item $M$ lee el símbolo inicial $*$ y se desplaza a la derecha en búsqueda de una $a$ o $b$. Si se llega inmediatamente a $+$ acepta.
+    \item Si $M$ lee $a$ imprime $\sqcup$ y procede a buscar $b$. Si $M$ lee $b$ imprime $\sqcup$ y procede a buscar $a$. Si se llega a $+$ rechaza.
+    \item Cuando haya encontrado el símbolo buscado, imprime $\sqcup$ y se desplaza a la izquierda hasta leer $*$
+    \item Repetir la sucesión de pasos desde 2, hasta rechazar o aceptar.
 \end{enumerate}
-\textbf{Tiempo de ejecución.}\\
+\subsection{Tiempo de ejecución}
 En cada ciclo completo se eliminan exactamente dos caracteres (una $a$, y una $b$). Por lo que se realizará un máximo de $n/{2}$ ciclos antes de terminar.\\
 En el peor de los casos, se debe recorrer toda la cinta hacia la derecha para encontrar la pareja y luego regresar al inicio. Lo que toma un tiempo proporcional a la longitud de la cadena. $O(n)$.\\
 $\therefore n/2 \times O(n) =O(n^2)$
+\subsection{Ejemplo}
+Sea la entrada $x = \text{baba}$. Aplicando el primer paso obtenemos la cinta inicial $x' = *\text{baba}+$.
+
+\begin{enumerate}
+    \item \textbf{Inicio:} $*\text{baba}+$
+    \item \textbf{Iteración 1:} Se lee la primera $b$, se borra y se busca su pareja $a$ a la derecha. \\
+    Estado de la cinta tras borrar el primer par $(b,a)$: $* \sqcup \sqcup \text{ba}+$ \\
+    La cabeza rebobina a la izquierda hasta $*$.
+    
+    \item \textbf{Iteración 2:} Se avanza omitiendo los $\sqcup$, se lee la siguiente $b$, se borra y se busca su pareja $a$. \\
+    Estado de la cinta tras borrar el segundo par $(b,a)$: $* \sqcup \sqcup \sqcup \sqcup +$ \\
+    La cabeza regresa a la izquierda hasta $*$.
+    
+    \item \textbf{Fin:} Se avanza desde $*$, se omiten los $\sqcup$ y se lee el delimitador $+$. La máquina \textbf{acepta}.
+\end{enumerate}
 
 
 
 \subsection{3}
+\textbf{Aclaración general sobre el mecanismo de búsqueda de $M$:}
+\begin{itemize}
+    \item \textbf{Salto de blancos:} La acción de \textit{"buscar"} un símbolo significa que $M$ se desplaza leyendo la cinta e ignorando las celdas con el símbolo $\sqcup$.
+    \item \textbf{Inercia de movimiento (caso general):} Al leer y borrar un símbolo, $M$ continuará buscando en la **misma dirección** en la que se venía desplazando. Si alcanza el delimitador del extremo ($+$ o $*$) sin hallar el objetivo, la máquina invertirá su sentido para realizar un barrido completo hacia el extremo opuesto.
+    \item \textbf{Búsqueda desde un extremo (caso optimizado):} Si el símbolo es borrado justamente en una celda adyacente a un delimitador ($*$ o $+$), la máquina no necesita intentar seguir hacia esa pared; en su lugar, se reorienta inmediatamente para realizar un único recorrido directo de $* \rightarrow +$ (o $+ \rightarrow *$).
+\end{itemize}
+
+\begin{enumerate}
+    \item A la entrada $x$ se le anexan los delimitadores de inicio y fin, teniendo $x' = *x+$ con $x \in \{a,b,c\}^*$.
+    
+    \item \textbf{Fase 1 (Eliminar tríos $c, b, a$):}
+    $M$ busca una $c$. Si la encuentra, la reemplaza por $\sqcup$ y procede a buscar una $b$:
+    \begin{itemize}
+        \item Si encuentra $b$, la reemplaza por $\sqcup$ y busca una $a$.
+        \item Si encuentra $a$, la reemplaza por $\sqcup$ y \textbf{regresa al inicio de la Fase 1}.
+        \item Si en alguno de los pasos falta la $b$ o la $a$, $M$ \textbf{rechaza}.
+    \end{itemize}
+    
+    \item \textbf{Fase 2 (Eliminar pares $b, a$):}
+    Cuando ya no queden $c$'s en la cinta, $M$ busca una $b$. Si la encuentra, la reemplaza por $\sqcup$ y busca una $a$:
+    \begin{itemize}
+        \item Si encuentra $a$, la reemplaza por $\sqcup$ y \textbf{regresa al inicio de la Fase 2}.
+        \item Si no encuentra $a$, $M$ \textbf{rechaza} (pues $\#a \le \#b$).
+    \end{itemize}
+    
+    \item \textbf{Fase 3 (Verificación de $a$ sobrante):}
+    Cuando ya no queden ni $c$'s ni $b$'s en la cinta, $M$ busca una $a$:
+    \begin{itemize}
+        \item Si encuentra al menos una $a$, $M$ \textbf{acepta} (garantizando $\#a > \#b \ge \#c$).
+        \item Si no encuentra ninguna $a$, $M$ \textbf{rechaza}.
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Tiempo de ejecución}
+
+Sea $n$ la longitud de la cadena de entrada $x$.
+
+\begin{itemize}
+    \item \textbf{Número de iteraciones:} Cada ciclo de la Fase 1 cancela un trío ($c,b,a$), la Fase 2 cancela un par ($b,a$), y la Fase 3 realiza una verificación final. Por lo tanto, se realizan a lo sumo $O(n)$ iteraciones de borrado.
+    \item \textbf{Costo por iteración:} En el peor de los casos, la cabeza de $M$ realiza barridos completos a lo largo de la cinta de longitud $n+2$ para localizar cada símbolo o verificar los límites ($*$ y $+$). Cada barrido toma tiempo $O(n)$.
+\end{itemize}
+
+$$\text{Tiempo Total} = O(n) \times O(n) = O(n^2)$$
+
+$\therefore$ El tiempo de ejecución de la máquina de Turing $M$ en el peor de los casos es cuadrático, $O(n^2)$.
+
+\subsection{Ejemplo}
+
+Sea la cadena de entrada $w = \text{bcaaaabc}$ con $n = 8$, donde $\#a=4, \#b=2, \#c=2$. La cinta inicial es $x' = *\text{bcaaaabc}+$.
+
+\begin{enumerate}
+    \item \textbf{Fase 1 (Cancelación de tríos $c, b, a$):}
+    \begin{itemize}
+        \item \textbf{Ciclo 1:} Se localiza la primera $c$, la primera $b$ y la primera $a$, reemplazándolas por $\sqcup$. \\
+        Estado de la cinta: $*\sqcup\sqcup\sqcup\text{aaabc}+$
+        \item \textbf{Ciclo 2:} Se localiza la segunda $c$, la $b$ restante y otra $a$, reemplazándolas por $\sqcup$. \\
+        Estado de la cinta: $*\sqcup\sqcup\sqcup\sqcup\text{aa}\sqcup\sqcup+$
+        \item \textbf{Fin de Fase 1:} $M$ realiza un barrido completo y no encuentra más símbolos $c$.
+    \end{itemize}
+    
+    \item \textbf{Fase 2 (Cancelación de pares $b, a$):}
+    \begin{itemize}
+        \item $M$ realiza un barrido en la cinta buscando el símbolo $b$. Dado que no existen más $b$'s, avanza directamente a la Fase 3.
+    \end{itemize}
+    
+    \item \textbf{Fase 3 (Verificación de $a$ sobrante):}
+    \begin{itemize}
+        \item $M$ busca el símbolo $a$ y localiza al menos una de las dos $a$'s restantes en la cinta.
+        \item Al encontrarla, confirma que $\#a > \#b \ge \#c$ ($4 > 2 \ge 2$) y \textbf{acepta}.
+    \end{itemize}
+\end{enumerate}
