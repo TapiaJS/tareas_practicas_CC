@@ -35,7 +35,7 @@ Ejemplares:
 El lenguaje a decidir es:
 \[ L = \{ 0^n 1^m 0^{n+m} \mid n, m \ge 1 \} \]
 
-\subsubsection*{Descripción General de la M.T.}
+\subsubsection*{Estrategia Algorítmica General}
 La máquina opera mediante una estrategia de \textbf{cancelación/emparejamiento en dos fases}:
 \begin{itemize}[leftmargin=*]
     \item \textbf{Fase 1 (Emparejar $0^n$ con el primer bloque de $0$'s del final):} Marca el primer $0$ no marcado del inicio con $X$, avanza a la derecha pasando el bloque $1^m$ hasta encontrar el primer $0$ no marcado del bloque final $0^{n+m}$, y lo marca con $Z$. Regresa a la izquierda al siguiente $0$ libre. Repite esto hasta marcar todos los $n$ ceros iniciales como $X$.
@@ -262,7 +262,7 @@ Ahora sustituimos la relación con el tamaño total de la entrada $N$, donde $n 
 Dado que el término dominante es de grado cuadrático, la complejidad temporal de la Máquina de Turing en una sola cinta para este lenguaje es:
 \[\mathbf{f(N) = \mathcal{O}(N^2)}\]
 
-\section*{Parte 3: Trazas de Ejecución para los Ejemplares Propuestos}
+\subsection*{3. Trazas de Ejecución para los Ejemplares Propuestos}
 
 A continuación se presentan los cómputos paso a paso representados mediante la secuencia de configuraciones $(q, w, u)$ para la cadena \textbf{011000} y para \textbf{010}.
 
@@ -323,7 +323,7 @@ La cadena 011000 corresponde a $n = 1$ cero inicial, $m = 2$ unos intermedios y 
 \vspace{0.2cm}
 \noindent\textbf{Resultado:} La cadena \textbf{011000 es ACEPTADA}.
 
-\subsection*{Ejemplar 2: Cadena 010 (Rechazada)}
+\subsection*{Ejemplar 2: Cadena 010}
 
 La cadena 010 tiene $n = 1$ cero inicial, $m = 1$ uno medio, pero únicamente \textbf{1 cero final} en lugar de los $n + m = 2$ ceros requeridos ($0^1 1^1 0^1$). Por lo tanto, \textbf{no pertenece al lenguaje $L$}.
 
@@ -344,3 +344,340 @@ La cadena 010 tiene $n = 1$ cero inicial, $m = 1$ uno medio, pero únicamente \t
 
 \vspace{0.2cm}
 \noindent\textbf{Resultado:} La cadena \textbf{010 es RECHAZADA}.
+
+\newpage
+
+\subsection{Solución al Ejercicio 2.b}
+\subsection*{1. Descripción Completa de la Máquina de Turing}
+
+El lenguaje a decidir es:
+\[ L = \{ a\#b \mid a, b \in \{0, 1\}^+ \text{ en binario y } \max(a, b) = a \} \]
+
+Es decir, la máquina debe aceptar la cadena si y solo si el número binario $a$ es \textbf{mayor o igual} que el número binario $b$ ($a \ge b$).
+
+\subsubsection*{Estrategia Algorítmica General}
+
+Para comparar dos números enteros positivos en binario $a$ y $b$, la máquina realiza un \textbf{emparejamiento bit a bit de izquierda a derecha (del bit más significativo al menos significativo)} registrando dos aspectos simultáneamente:
+\begin{enumerate}[label=\arabic*., leftmargin=*]
+    \item \textbf{Comparación de Longitud ($|a|$ vs $|b|$):} Empareja cada bit de $a$ con un bit de $b$. 
+    \begin{itemize}[leftmargin=*]
+        \item Si $a$ tiene más bits que $b$ ($|a| > |b|$), entonces $a > b \implies$ \textbf{Acepta}.
+        \item Si $b$ tiene más bits que $a$ ($|a| < |b|$), entonces $a < b \implies$ \textbf{Rechaza}.
+    \end{itemize}
+    \item \textbf{Comparación de Valor (si $|a| = |b|$):} Mientras empareja los bits, la máquina guarda en su memoria de estados el resultado del \textbf{primer bit en el que $a$ y $b$ difieran}:
+    \begin{itemize}[leftmargin=*]
+        \item Si el primer bit donde difieren tiene un $1$ en $a$ y un $0$ en $b$, la relación es \textbf{MAYOR} ($G$).
+        \item Si tiene un $0$ en $a$ y un $1$ en $b$, la relación es \textbf{MENOR} ($L$).
+        \item Si todos los bits son idénticos, la relación es \textbf{IGUAL} ($E$).
+    \end{itemize}
+\end{enumerate}
+
+Al finalizar la lectura de ambas cadenas, si las longitudes son iguales ($|a| = |b|$), la máquina acepta si el estado registrado es \textbf{MAYOR ($G$)} o \textbf{IGUAL ($E$)}, y rechaza si es \textbf{MENOR ($L$)}.
+
+\subsubsection*{Especificación Formal (7-Tupla)}
+
+Formalmente, definimos la Máquina de Turing $M$ como:
+\[ M = (Q, \Sigma, \Gamma, \delta, q_0, q_a, q_r) \]
+
+Donde:
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Conjunto de estados:}
+    \[ Q = \{ q_{0,E}, q_{0,G}, q_{0,L}, q_{r0,E}, q_{r0,G}, q_{r0,L}, q_{r1,E}, q_{r1,G}, q_{r1,L}, q_{ret,E}, q_{ret,G}, q_{ret,L}, q_{check,E}, q_{check,G}, q_{check,L}, q_a, q_r \} \]
+    \begin{itemize}[leftmargin=*]
+        \item El subíndice $E, G, L$ en cada estado representa la memoria del estado de comparación hasta el momento:
+        \begin{itemize}[leftmargin=*]
+            \item \textbf{$E$ (Equal):} Todos los bits procesados hasta ahora son iguales ($a = b$).
+            \item \textbf{$G$ (Greater):} La primera diferencia encontrada fue $1$ en $a$ y $0$ en $b$ ($a > b$).
+            \item \textbf{$L$ (Less):} La primera diferencia encontrada fue $0$ en $a$ y $1$ en $b$ ($a < b$).
+        \end{itemize}
+    \end{itemize}
+    \item \textbf{Alfabeto de entrada:} $\Sigma = \{0, 1, \#\}$
+    \item \textbf{Alfabeto de la cinta:} $\Gamma = \{0, 1, \#, X, Y, \sqcup\}$
+    \begin{itemize}[leftmargin=*]
+        \item $X$: Marcador para los bits ya procesados en la cadena $a$.
+        \item $Y$: Marcador para los bits ya procesados en la cadena $b$.
+        \item $\sqcup$: Símbolo en blanco.
+    \end{itemize}
+    \item \textbf{Estado inicial:} $q_0 = q_{0,E}$ (al inicio asumimos que son iguales hasta hallar la primera diferencia).
+    \item \textbf{Estado de aceptación:} $q_a$
+    \item \textbf{Estado de rechazo:} $q_r$
+\end{itemize}
+
+\subsubsection*{Función de Transición $\delta(q, s) = (q', s', m)$}
+
+Cualquier transición no indicada explícitamente en la siguiente tabla conduce implícitamente al \textbf{estado de rechazo $q_r$}:
+
+\vspace{0.3cm}
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\scriptsize
+\emergencystretch=1em
+\begin{tabular}{|p{3cm}|p{2cm}|p{2.5cm}|p{2cm}|p{1.5cm}|p{2cm}|p{1.8cm}|}
+\hline
+\textbf{Estado Actual ($q$)} & \textbf{Leído $0$} & \textbf{Leído $1$} & \textbf{Símbolo $\#$} & \textbf{Símbolo $X$} & \textbf{Símbolo $Y$} & \textbf{Blanco $\sqcup$} \\ \hline
+\textbf{$q_{0, K}$} \newline ($K \in \{E,G,L\}$) & $(q_{r0,K}, X, \to)$ & $(q_{r1,K}, X, \to)$ & $(q_{check,K}, \#, \to)$ & --- & --- & --- \\ \hline
+\textbf{$q_{r0, K}$} \newline \textit{(al leer bit en $b$)} & $(q_{r0,K}, 0, \to)$ \newline $\to$ en $b$: \newline $(q_{ret,K}, Y, \leftarrow)$ & $(q_{r0,K}, 1, \to)$ \newline $\to$ en $b$: \newline $(q_{ret, K'}, Y, \leftarrow)$ & $(q_{r0,K}, \#, \to)$ & --- & $(q_{r0,K}, Y, \to)$ & \textbf{$(q_a, \sqcup, -)$} \\ \hline
+\textbf{$q_{r1, K}$} \newline \textit{(al leer bit en $b$)} & $(q_{r1,K}, 0, \to)$ \newline $\to$ en $b$: \newline $(q_{ret,K''}, Y, \leftarrow)$ & $(q_{r1,K}, 1, \to)$ \newline $\to$ en $b$: \newline $(q_{ret,K}, Y, \leftarrow)$ & $(q_{r1,K}, \#, \to)$ & --- & $(q_{r1,K}, Y, \to)$ & \textbf{$(q_a, \sqcup, -)$} \\ \hline
+\textbf{$q_{ret, K}$} & $(q_{ret,K}, 0, \leftarrow)$ & $(q_{ret,K}, 1, \leftarrow)$ & $(q_{ret,K}, \#, \leftarrow)$ & $(q_{0,K}, X, \to)$ & $(q_{ret,K}, Y, \leftarrow)$ & --- \\ \hline
+\textbf{$q_{check, K}$} & --- & --- & --- & --- & $(q_{check,K}, Y, \to)$ & \textit{(ver abajo)} \\ \hline
+\end{tabular}
+\end{center}
+\vspace{0.3cm}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Actualización de la memoria de comparación:}
+    \begin{itemize}[leftmargin=*]
+        \item En $q_{r0, K}$ al leer $1$ en $b$ ($0$ vs $1$): Si $K=E \implies K'=L$; si $K=G \implies K'=G$; si $K=L \implies K'=L$.
+        \item En $q_{r1, K}$ al leer $0$ en $b$ ($1$ vs $0$): Si $K=E \implies K''=G$; si $K=G \implies K''=G$; si $K=L \implies K''=L$.
+    \end{itemize}
+    \item \textbf{Regla de terminación en $q_{check, K}$ al leer $\sqcup$:}
+    \begin{itemize}[leftmargin=*]
+        \item Si $K = E$ o $K = G \implies (q_a, \sqcup, -)$ (\textbf{Acepta}).
+        \item Si $K = L \implies (q_r, \sqcup, -)$ (\textbf{Rechaza}).
+        \item \textit{Nota:} Si $q_{check, K}$ lee $0$ o $1$ en lugar de $\sqcup$, significa que $|a| < |b|$, por lo que pasa a $q_r$ (\textbf{Rechaza}).
+    \end{itemize}
+\end{itemize}
+
+\subsubsection*{Funcionamiento de los Estados}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Estados $q_{0,K}$ (Lectura del siguiente bit de $a$):}\\
+    Ubicados en la cadena $a$, leen el primer bit no procesado.
+    \begin{itemize}[leftmargin=*]
+        \item Si leen $0$ o $1$, lo marcan con $X$, recuerdan en el estado qué bit leyeron ($r0$ o $r1$) y avanzan a la derecha.
+        \item Si leen $\#$, significa que \textbf{la cadena $a$ ya no tiene más bits}. Pasan al estado $q_{check, K}$ para comprobar el final de $b$.
+    \end{itemize}
+
+    \item \textbf{Estados $q_{r0,K}$ y $q_{r1,K}$ (Buscar el bit correspondiente en $b$):}\\
+    Avanzan hacia la derecha cruzando el resto de $a$, el separador $\#$ y las marcas $Y$ anteriores hasta encontrar el \textbf{primer bit libre de $b$}:
+    \begin{itemize}[leftmargin=*]
+        \item \textbf{Si encuentran el blanco $\sqcup$:} Significa que $a$ aún tenía bits pero $b$ ya se terminó ($|a| > |b|$). Por lo tanto, $a > b$ y la máquina \textbf{acepta inmediatamente ($q_a$)}.
+        \item \textbf{Si encuentran un bit en $b$ ($0$ o $1$):} Comparan el bit que traían de $a$ con el bit leído en $b$. Si es la primera diferencia, actualizan la memoria del estado ($E \to G$ o $E \to L$). Marcan el bit de $b$ con $Y$ y cambian a los estados de retorno $q_{ret, K}$.
+    \end{itemize}
+
+    \item \textbf{Estados $q_{ret,K}$ (Rebobinar a la izquierda):}\\
+    Retroceden hacia la izquierda cruzando todos los símbolos ($Y$, $\#$, $1$, $0$) sin modificarlos hasta encontrar la última marca $X$ en $a$. Al leer $X$, se mueven un paso a la derecha sobre el siguiente bit de $a$ y vuelven a $q_{0, K}$.
+
+    \item \textbf{Estados $q_{check,K}$ (Verificación de longitud y resultado final):}\\
+    Se alcanzan cuando $a$ se quedó sin bits. Recorren las marcas $Y$ de $b$ hacia la derecha:
+    \begin{itemize}[leftmargin=*]
+        \item \textbf{Si leen un $0$ o $1$ sin marcar:} Significa que $b$ tiene más bits que $a$ ($|a| < |b|$), por lo que $a < b$ y la máquina \textbf{rechaza ($q_r$)}.
+        \item \textbf{Si leen el blanco $\sqcup$:} Significa que $b$ también se quedó sin bits exactamente al mismo tiempo ($|a| = |b|$). 
+        \begin{itemize}[leftmargin=*]
+            \item Si la memoria conservó $E$ ($a = b$) o $G$ ($a > b$), pasa al estado de \textbf{aceptación $q_a$}.
+            \item Si la memoria conservó $L$ ($a < b$), pasa al estado de \textbf{rechazo $q_r$}.
+        \end{itemize}
+    \end{itemize}
+\end{itemize}
+
+
+\subsection*{2. Función de Complejidad de Tiempo $f(N)$ (Ejercicio 2.b)}
+
+Para calcular la función de complejidad temporal en el peor de los casos para la máquina que compara dos números binarios $a$ y $b$ ($w = a\#b$), analizamos el número de transiciones que ejecuta en función del tamaño total de la entrada $N$.
+
+\subsubsection*{1. Definición de las Variables de Entrada}
+
+Dada la cadena de entrada $w = a\#b$:
+\begin{itemize}[leftmargin=*]
+    \item Sea $n = |a|$ la cantidad de bits del número $a$.
+    \item Sea $m = |b|$ la cantidad de bits del número $b$.
+    \item El separador $\#$ ocupa \textbf{1 celda}.
+\end{itemize}
+
+La longitud total de la cadena de entrada es:
+\[ N = |w| = n + m + 1 \]
+
+De aquí despejamos la suma de las longitudes de ambos números binarios:
+\[ n + m = N - 1 \]
+
+\subsubsection*{2. Conteo de Pasos por Iteración (Emparejamiento de Bits)}
+
+Para cada bit $i$ de la cadena $a$ (con $i = 1, 2, \dots, \min(n, m)$):
+
+\begin{enumerate}[label=\arabic*., leftmargin=*]
+    \item \textbf{Desplazamiento a la derecha (de $a$ hacia $b$):}
+    \begin{itemize}[leftmargin=*]
+        \item La cabeza se encuentra en la posición del $i$-ésimo bit de $a$. Lo marca con $X$ y avanza hacia la derecha atravesando los $(n - i)$ bits restantes de $a$, la celda del separador $\#$ y las $(i - 1)$ marcas $Y$ de $b$ hasta posicionarse sobre el $i$-ésimo bit de $b$.
+        \item La distancia exacta recorrida a la derecha es:
+        \[ (n - i) + 1 + (i - 1) + 1 = n + 1 \text{ celdas} \]
+    \end{itemize}
+    
+    \item \textbf{Desplazamiento a la izquierda (retorno de $b$ hacia $a$):}
+    \begin{itemize}[leftmargin=*]
+        \item En el $i$-ésimo bit de $b$, lo marca con $Y$ y retrocede hacia la izquierda cruzando las mismas $n + 1$ celdas hasta volver a la marca $X$ en $a$, dando \textbf{1 paso adicional a la derecha} para ubicarse sobre el siguiente bit libre ($(i+1)$-ésimo bit) de $a$.
+        \item La distancia recorrida de regreso es:
+        \[ (n + 1) \text{ celdas hacia la izquierda} + 1 \text{ paso a la derecha} = n + 2 \text{ celdas} \]
+    \end{itemize}
+\end{enumerate}
+
+\noindent\textbf{Pasos totales por cada pareja de bits procesada:}
+\[ (n + 1) \text{ (ida)} + (n + 1) \text{ (vuelta)} = 2(n + 1) \text{ pasos} \]
+
+\subsubsection*{3. Análisis por Casos de Longitud}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Caso A: $|a| > |b|$ ($n > m$):}
+    \begin{itemize}[leftmargin=*]
+        \item Empareja los primeros $m$ bits de ambas cadenas: $m \cdot 2(n + 1)$ pasos.
+        \item En el bit $(m+1)$-ésimo de $a$, avanza $n + 1$ celdas a la derecha buscando un bit en $b$, pero encuentra el blanco $\sqcup$ (indicando que $b$ ya terminó). Acepta de inmediato.
+        \item Pasos totales: $2m(n + 1) + (n + 2)$.
+    \end{itemize}
+    
+    \item \textbf{Caso B: $|a| \le |b|$ ($n \le m$):}
+    \begin{itemize}[leftmargin=*]
+        \item Empareja los $n$ bits de $a$: $n \cdot 2(n + 1) = 2n(n + 1)$ pasos.
+        \item Tras procesar el $n$-ésimo bit de $a$, la cabeza llega al separador $\#$, cambia al estado $q_{check}$ y avanza a la derecha cruzando las $n$ marcas $Y$ de $b$ ($n$ pasos) y lee el siguiente símbolo ($\sqcup$ si $n=m$, o un bit libre si $m>n$) para decidir en 1 paso adicional.
+        \item Pasos totales: $2n(n + 1) + (n + 1) = (2n + 1)(n + 1)$ pasos.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection*{4. Deducción del Peor Caso en Términos de $N$}
+
+El \textbf{peor de los casos} (máximo número de transiciones) ocurre cuando \textbf{$a$ y $b$ tienen exactamente la misma longitud ($n = m$)}, ya que la máquina se ve obligada a realizar el recorrido completo de ida y vuelta para todos los bits de $a$ y $b$, más la verificación final completa de la cadena antes de aceptar o rechazar.
+
+Si $n = m$:
+\begin{enumerate}[label=\arabic*., leftmargin=*]
+    \item Sustituimos $n = m$ en la fórmula de longitud total:
+    \[ N = n + n + 1 = 2n + 1 \implies n = \frac{N - 1}{2} \]
+    
+    \item Sustituimos $n = \frac{N - 1}{2}$ en la función de pasos del peor caso $T(n) = (2n + 1)(n + 1)$:
+    \begin{align*}
+        f(N) &= \left(2\left(\frac{N - 1}{2}\right) + 1\right) \cdot \left(\frac{N - 1}{2} + 1\right) \\
+        f(N) &= (N - 1 + 1) \cdot \left(\frac{N - 1 + 2}{2}\right) \\
+        f(N) &= N \cdot \left(\frac{N + 1}{2}\right)
+    \end{align*}
+    \[ \mathbf{f(N) = \frac{1}{2}N^2 + \frac{1}{2}N} \]
+\end{enumerate}
+
+\subsubsection*{5. Complejidad Asintótica}
+
+Dado que el término dominante es de grado cuadrático, la complejidad temporal en el peor de los casos es:
+\[ \mathbf{f(N) = \mathcal{O}(N^2)} \]
+
+\subsection*{3. Trazas de Ejecución para los Ejemplares Propuestos}
+
+A continuación se presentan las trazas formales de cómputo paso a paso mediante la secuencia de configuraciones $(q, w, u)$ para los tres ejemplares propuestos: \textbf{111\#101}, \textbf{10\#100} y \textbf{1\#1}.
+
+\subsection*{Ejemplar 1: Cadena 111\#101}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Entrada:} $a = 111_2$ ($7_{10}$) y $b = 101_2$ ($5_{10}$).
+    \item \textbf{Condición:} $a \ge b$ ($7 \ge 5$).
+    \item \textbf{Resultado esperado:} \textbf{ACEPTADA}.
+\end{itemize}
+
+\subsubsection*{Traza de configuraciones paso a paso:}
+
+\vspace{0.2cm}
+\noindent\textbf{Comparación del primer bit: $1$ de $a$ vs $1$ de $b$}
+\begin{enumerate}[label=\arabic*., leftmargin=*]
+    \item $C_1 = (q_{0,E}, \epsilon, 111\#101)$: Inicio en estado de igualdad ($E$). Lee el primer $1$ de $a$.
+    \item $C_2 = (q_{r1,E}, X, 11\#101)$: Tacha con $X$ y avanza a la derecha recordando que leyó un $1$.
+    \item $C_3 = (q_{r1,E}, X1, 1\#101)$: Salta el segundo $1$.
+    \item $C_4 = (q_{r1,E}, X11, \#101)$: Salta el tercer $1$.
+    \item $C_5 = (q_{r1,E}, X11\#, 101)$: Salta el separador $\#$ y encuentra el primer bit de $b$ ($1$). Como trae un $1$ de $a$ y lee un $1$ en $b$, la memoria se mantiene en \textbf{igualdad ($E$)}. Lo tacha con $Y$ y retrocede en $q_{ret,E}$.
+    \item $C_6 = (q_{ret,E}, X11, \#Y01)$: Retrocede cruzando $\#$.
+    \item $C_7 = (q_{ret,E}, X1, 1\#Y01)$: Retrocede cruzando el último $1$.
+    \item $C_8 = (q_{ret,E}, X, 11\#Y01)$: Retrocede cruzando el penúltimo $1$.
+    \item $C_9 = (q_{ret,E}, \epsilon, X11\#Y01)$: Lee $X$, se mueve un paso a la derecha sobre el segundo $1$ de $a$ y pasa a $q_{0,E}$.
+\end{enumerate}
+
+\vspace{0.2cm}
+\noindent\textbf{Comparación del segundo bit: $1$ de $a$ vs $0$ de $b$}
+\begin{enumerate}[label=\arabic*., start=10, leftmargin=*]
+    \item $C_{10} = (q_{0,E}, X, 11\#Y01)$: Lee el segundo $1$ de $a$.
+    \item $C_{11} = (q_{r1,E}, XX, 1\#Y01)$: Tacha con $X$ y avanza a la derecha.
+    \item $C_{12} = (q_{r1,E}, XX1, \#Y01)$: Salta el último $1$.
+    \item $C_{13} = (q_{r1,E}, XX1\#, Y01)$: Salta la marca $\#$.
+    \item $C_{14} = (q_{r1,E}, XX1\#Y, 01)$: Salta la primera $Y$ y encuentra el segundo bit de $b$ ($0$). Como trae un $1$ de $a$ y lee un $0$ en $b$ ($1 > 0$), \textbf{la memoria cambia de $E \to G$ (MAYOR)}. Lo tacha con $Y$ y retrocede en $q_{ret,G}$.
+    \item $C_{15} = (q_{ret,G}, XX1\#, YY1)$: Retrocede en estado $G$.
+    \item $C_{16} = (q_{ret,G}, XX1, \#YY1)$: Retrocede cruzando $\#$.
+    \item $C_{17} = (q_{ret,G}, XX, 1\#YY1)$: Retrocede cruzando el $1$.
+    \item $C_{18} = (q_{ret,G}, X, X1\#YY1)$: Lee $X$, se mueve un paso a la derecha sobre el tercer $1$ de $a$ y pasa a $q_{0,G}$.
+\end{enumerate}
+
+\vspace{0.2cm}
+\noindent\textbf{Comparación del tercer bit: $1$ de $a$ vs $1$ de $b$}
+\begin{enumerate}[label=\arabic*., start=19, leftmargin=*]
+    \item $C_{19} = (q_{0,G}, XX, 1\#YY1)$: Lee el tercer $1$ de $a$.
+    \item $C_{20} = (q_{r1,G}, XXX, \#YY1)$: Tacha con $X$ y avanza a la derecha en memoria $G$.
+    \item $C_{21} = (q_{r1,G}, XXX\#, YY1)$: Salta $\#$.
+    \item $C_{22} = (q_{r1,G}, XXX\#Y, Y1)$: Salta la primera $Y$.
+    \item $C_{23} = (q_{r1,G}, XXX\#YY, 1)$: Salta la segunda $Y$ y lee el último bit de $b$ ($1$). Como la memoria ya estaba en $G$, se conserva en \textbf{$G$ (MAYOR)}. Tacha con $Y$ y retrocede en $q_{ret,G}$.
+    \item $C_{24} = (q_{ret,G}, XXX\#Y, YY)$: Retrocede cruzando $Y$.
+    \item $C_{25} = (q_{ret,G}, XXX\#, YYY)$: Retrocede cruzando $Y$.
+    \item $C_{26} = (q_{ret,G}, XX, X\#YYY)$: Retrocede cruzando $\#$ y lee $X$, moviéndose un paso a la derecha sobre la $\#$. Pasa a $q_{0,G}$.
+\end{enumerate}
+
+\vspace{0.2cm}
+\noindent\textbf{Verificación de fin de cadena y Aceptación}
+\begin{enumerate}[label=\arabic*., start=27, leftmargin=*]
+    \item $C_{27} = (q_{0,G}, XXX, \#YYY)$: Lee $\#$ (confirmando que $a$ no tiene más bits). Pasa al estado $q_{check,G}$ y avanza a la derecha.
+    \item $C_{28} = (q_{check,G}, XXX\#, YYY)$: Salta la primera $Y$.
+    \item $C_{29} = (q_{check,G}, XXX\#Y, YY)$: Salta la segunda $Y$.
+    \item $C_{30} = (q_{check,G}, XXX\#YY, Y)$: Salta la tercera $Y$.
+    \item $C_{31} = (q_{check,G}, XXX\#YYY, \sqcup)$: Encuentra el símbolo en blanco $\sqcup$ al final de la cinta (confirmando que $|a| = |b|$).
+    \item $C_{32} = (q_a, XXX\#YYY, \sqcup)$: Como la memoria conservó el estado \textbf{$G$ ($a > b$)}, pasa al \textbf{estado de aceptación $q_a$} y se detiene.
+\end{enumerate}
+
+\vspace{0.2cm}
+\noindent\textbf{Resultado:} La cadena \textbf{111\#101 es ACEPTADA}.
+
+\subsection*{Ejemplar 2: Cadena 10\#100}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Entrada:} $a = 10_2$ ($2_{10}$, $|a| = 2$) y $b = 100_2$ ($4_{10}$, $|b| = 3$).
+    \item \textbf{Condición:} $a < b$ (longitud de $a$ menor que la de $b$).
+    \item \textbf{Resultado esperado:} \textbf{RECHAZADA}.
+\end{itemize}
+
+\subsubsection*{Traza de configuraciones paso a paso:}
+
+\begin{enumerate}[label=\arabic*., leftmargin=*]
+    \item $C_1 = (q_{0,E}, \epsilon, 10\#100)$: Lee el primer $1$ de $a$.
+    \item $C_2 = (q_{r1,E}, X, 0\#100)$: Tacha con $X$ y avanza a la derecha.
+    \item $C_3 = (q_{r1,E}, X0, \#100)$: Salta el $0$.
+    \item $C_4 = (q_{r1,E}, X0\#, 100)$: Salta $\#$ y lee el primer bit de $b$ ($1$). Como $1$ vs $1 \implies E$, tacha con $Y$ y retrocede en $q_{ret,E}$.
+    \item $C_5 = (q_{ret,E}, X0, \#Y00)$: Retrocede cruzando $\#$.
+    \item $C_6 = (q_{ret,E}, X, 0\#Y00)$: Retrocede cruzando $0$.
+    \item $C_7 = (q_{ret,E}, \epsilon, X0\#Y00)$: Lee $X$, avanza a la derecha sobre el $0$ de $a$ y pasa a $q_{0,E}$.
+    \item $C_8 = (q_{0,E}, X, 0\#Y00)$: Lee el $0$ de $a$.
+    \item $C_9 = (q_{r0,E}, XX, \#Y00)$: Tacha con $X$ y avanza a la derecha.
+    \item $C_{10} = (q_{r0,E}, XX\#, Y00)$: Salta $\#$.
+    \item $C_{11} = (q_{r0,E}, XX\#Y, 00)$: Salta $Y$ y lee el segundo bit de $b$ ($0$). Como $0$ vs $0 \implies E$, tacha con $Y$ y retrocede en $q_{ret,E}$.
+    \item $C_{12} = (q_{ret,E}, XX\#, YY0)$: Retrocede cruzando $Y$.
+    \item $C_{13} = (q_{ret,E}, X, X\#YY0)$: Retrocede cruzando $\#$ y lee $X$, moviéndose a la derecha sobre la $\#$ en estado $q_{0,E}$.
+    \item $C_{14} = (q_{0,E}, XX, \#YY0)$: Lee $\#$ (cadena $a$ terminada). Pasa a $q_{check,E}$ y avanza a la derecha.
+    \item $C_{15} = (q_{check,E}, XX\#, YY0)$: Salta la primera $Y$.
+    \item $C_{16} = (q_{check,E}, XX\#Y, Y0)$: Salta la segunda $Y$.
+    \item $C_{17} = (q_{check,E}, XX\#YY, 0)$: \textbf{Encuentra un bit $0$ no procesado en $b$} (lo que demuestra que $|a| < |b|$).
+    \item $C_{18} = (q_r, XX\#YY, 0)$: Al no poder completar la verificación de longitud, pasa al \textbf{estado de rechazo $q_r$} y se detiene.
+\end{enumerate}
+
+\vspace{0.2cm}
+\noindent\textbf{Resultado:} La cadena \textbf{10\#100 es RECHAZADA}.
+
+\subsection*{Ejemplar 3: Cadena 1\#1}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Entrada:} $a = 1_2$ ($1_{10}$) y $b = 1_2$ ($1_{10}$).
+    \item \textbf{Condición:} $a = b$ ($1 \ge 1$).
+    \item \textbf{Resultado esperado:} \textbf{ACEPTADA}.
+\end{itemize}
+
+\subsubsection*{Traza de configuraciones paso a paso:}
+
+\begin{enumerate}[label=\arabic*., leftmargin=*]
+    \item $C_1 = (q_{0,E}, \epsilon, 1\#1)$: Lee el único $1$ de $a$.
+    \item $C_2 = (q_{r1,E}, X, \#1)$: Tacha con $X$ y avanza a la derecha.
+    \item $C_3 = (q_{r1,E}, X\#, 1)$: Salta $\#$ y lee el único bit de $b$ ($1$). Como $1$ vs $1 \implies E$, tacha con $Y$ y retrocede en $q_{ret,E}$.
+    \item $C_4 = (q_{ret,E}, X, \#Y)$: Retrocede cruzando $\#$.
+    \item $C_5 = (q_{ret,E}, \epsilon, X\#Y)$: Lee $X$, se mueve a la derecha sobre la $\#$ y pasa a $q_{0,E}$.
+    \item $C_6 = (q_{0,E}, X, \#Y)$: Lee $\#$ (cadena $a$ terminada). Pasa a $q_{check,E}$ y avanza a la derecha.
+    \item $C_7 = (q_{check,E}, X\#, Y)$: Salta la $Y$.
+    \item $C_8 = (q_{check,E}, X\#Y, \sqcup)$: Encuentra el símbolo blanco $\sqcup$ al final de la cinta (confirmando $|a| = |b|$).
+    \item $C_9 = (q_a, X\#Y, \sqcup)$: Como la memoria conservó el estado \textbf{$E$ ($a = b$)}, pasa al \textbf{estado de aceptación $q_a$} y se detiene.
+\end{enumerate}
+
+\vspace{0.2cm}
+\noindent\textbf{Resultado:} La cadena \textbf{1\#1 es ACEPTADA}.
