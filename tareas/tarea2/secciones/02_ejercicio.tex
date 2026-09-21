@@ -28,4 +28,319 @@ Ejemplares:
 \end{tcolorbox}
 
 % ------------------------- Solución -------------------------
-\subsection{Solución}
+\subsection{Solución al Ejercicio 2.a}
+
+\subsection*{1. Descripción Completa de la Máquina de Turing}
+
+El lenguaje a decidir es:
+\[ L = \{ 0^n 1^m 0^{n+m} \mid n, m \ge 1 \} \]
+
+\subsubsection*{Descripción General de la M.T.}
+La máquina opera mediante una estrategia de \textbf{cancelación/emparejamiento en dos fases}:
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Fase 1 (Emparejar $0^n$ con el primer bloque de $0$'s del final):} Marca el primer $0$ no marcado del inicio con $X$, avanza a la derecha pasando el bloque $1^m$ hasta encontrar el primer $0$ no marcado del bloque final $0^{n+m}$, y lo marca con $Z$. Regresa a la izquierda al siguiente $0$ libre. Repite esto hasta marcar todos los $n$ ceros iniciales como $X$.
+    \item \textbf{Fase 2 (Emparejar $1^m$ con los $0$'s restantes del final):} Marca el primer $1$ no marcado con $Y$, avanza a la derecha hasta encontrar el primer $0$ no marcado del final y lo marca con $Z$. Regresa al siguiente $1$ libre. Repite esto hasta marcar todos los $m$ unos como $Y$.
+    \item \textbf{Fase 3 (Verificación):} Comprueba que todo el bloque final esté compuesto únicamente por marcas $Z$ y que la cinta termine inmediatamente con el blanco ($\sqcup$).
+\end{itemize}
+
+\subsubsection*{Especificación Formal (7-Tupla)}
+
+Formalmente, definimos la Máquina de Turing $M$ como:
+\[ M = (Q, \Sigma, \Gamma, \delta, q_0, q_a, q_r) \]
+
+Donde:
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Conjunto de estados:}
+    \[ Q = \{q_0, q_1, q_{1b}, q_2, q_0', q_3, q_4, q_5, q_3', q_6, q_a, q_r\} \]
+    \begin{itemize}[leftmargin=*]
+        \item $q_0, q_0'$: Inicio y bucle de la Fase 1 (procesar $0^n$).
+        \item $q_1, q_{1b}$: Desplazamiento a la derecha buscando el $0$ correspondiente en $0^{n+m}$.
+        \item $q_2$: Retorno a la izquierda tras marcar un $0$ con $Z$.
+        \item $q_3, q_3'$: Inicio y bucle de la Fase 2 (procesar $1^m$).
+        \item $q_4$: Desplazamiento a la derecha buscando el $0$ correspondiente en $0^{n+m}$.
+        \item $q_5$: Retorno a la izquierda tras marcar un $0$ con $Z$.
+        \item $q_6$: Fase de verificación final.
+        \item $q_a, q_r$: Estados de aceptación y rechazo, respectivamente.
+    \end{itemize}
+    
+    \item \textbf{Alfabeto de entrada:} $\Sigma = \{0, 1\}$
+    
+    \item \textbf{Alfabeto de la cinta:} $\Gamma = \{0, 1, X, Y, Z, \sqcup\}$
+    \begin{itemize}[leftmargin=*]
+        \item $X$: Marcador para los ceros del primer bloque ($0^n$).
+        \item $Y$: Marcador para los unos del bloque medio ($1^m$).
+        \item $Z$: Marcador para los ceros del bloque final ($0^{n+m}$).
+        \item $\sqcup$: Símbolo en blanco.
+    \end{itemize}
+    
+    \item \textbf{Estado inicial:} $q_0$
+    \item \textbf{Estado de aceptación:} $q_a$
+    \item \textbf{Estado de rechazo:} $q_r$
+\end{itemize}
+
+\subsubsection*{Función de Transición $\delta(q, s) = (q', s', m)$}
+
+Cualquier transición no indicada explícitamente en la siguiente tabla conduce implícitamente al \textbf{estado de rechazo $q_r$}:
+
+\vspace{0.3cm}
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+\textbf{Estado} & \textbf{Leído $0$} & \textbf{Leído $1$} & \textbf{Símbolo $X$} & \textbf{Símbolo $Y$} & \textbf{Símbolo $Z$} & \textbf{Blanco $\sqcup$} \\ \hline
+$q_0$    & $(q_1, X, \to)$        & ---                 & ---              & ---                 & ---                 & --- \\ \hline
+$q_1$    & $(q_1, 0, \to)$        & $(q_{1b}, 1, \to)$  & ---              & ---                 & ---                 & --- \\ \hline
+$q_{1b}$ & $(q_2, Z, \leftarrow)$ & $(q_{1b}, 1, \to)$  & ---              & $(q_{1b}, Y, \to)$  & $(q_{1b}, Z, \to)$  & --- \\ \hline
+$q_2$    & $(q_2, 0, \leftarrow)$ & $(q_2, 1, \leftarrow)$ & $(q_0', X, \to)$ & $(q_2, Y, \leftarrow)$ & $(q_2, Z, \leftarrow)$ & --- \\ \hline
+$q_0'$   & $(q_1, X, \to)$        & $(q_3, 1, -)$       & ---              & ---                 & ---                 & --- \\ \hline
+$q_3$    & ---                    & $(q_4, Y, \to)$     & ---              & ---                 & ---                 & --- \\ \hline
+$q_4$    & $(q_5, Z, \leftarrow)$ & $(q_4, 1, \to)$     & ---              & $(q_4, Y, \to)$     & $(q_4, Z, \to)$     & --- \\ \hline
+$q_5$    & ---                    & $(q_5, 1, \leftarrow)$ & ---           & $(q_3', Y, \to)$    & $(q_5, Z, \leftarrow)$ & --- \\ \hline
+$q_3'$   & ---                    & $(q_4, Y, \to)$     & ---              & ---                 & $(q_6, Z, -)$       & --- \\ \hline
+$q_6$    & ---                    & ---                 & ---              & ---                 & $(q_6, Z, \to)$     & $(q_a, \sqcup, -)$ \\ \hline
+\end{tabular}
+\end{center}
+
+\subsubsection*{Funcionamiento de los Estados}
+
+\subsubsection*{Fase 1: Emparejar el primer bloque de ceros ($0^n$)}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Estado $q_0$ (Inicio del proceso):}\\
+    Lee el primer símbolo de la entrada. Si es un $0$, lo tacha reemplazándolo por $X$ (marcando que ya procesamos el primer $0$ de $0^n$), se mueve a la derecha y pasa a $q_1$. \textit{(Si no hay un $0$ al inicio, la máquina rechaza inmediatamente).}
+
+    \item \textbf{Estado $q_1$ (Cruzar el bloque inicial):}\\
+    Avanza a la derecha atravesando los $0$'s restantes del primer bloque sin modificarlos, hasta encontrar el primer $1$. Al leer el $1$, cambia al estado $q_{1b}$ y continúa hacia la derecha.
+
+    \item \textbf{Estado $q_{1b}$ (Buscar el $0$ final correspondiente):}\\
+    Continúa desplazándose hacia la derecha atravesando los $1$'s del bloque medio, las marcas $Y$ y las marcas $Z$ previamente colocadas, hasta encontrar el \textbf{primer $0$ no marcado del bloque final} ($0^{n+m}$). Al encontrarlo:
+    \begin{enumerate}[label=\arabic*., leftmargin=*]
+        \item Lo marca con $Z$ (cancelando un $0$ del final).
+        \item Cambia la dirección hacia la izquierda ($\leftarrow$).
+        \item Pasa al estado de retorno $q_2$.
+    \end{enumerate}
+
+    \item \textbf{Estado $q_2$ (Rebobinar a la izquierda):}\\
+    Retrocede hacia la izquierda cruzando todos los símbolos ($Z$, $Y$, $1$, $0$) sin alterarlos, buscando la última marca $X$ que colocamos al principio. Al leer la $X$, se mueve un paso a la derecha (sobre el siguiente símbolo a procesar) y pasa a $q_0'$.
+
+    \item \textbf{Estado $q_0'$ (Evaluador de la Fase 1):}\\
+    Inspecciona el símbolo que está inmediatamente a la derecha de la última $X$:
+    \begin{itemize}[leftmargin=*]
+        \item \textbf{Si es un $0$:} Significa que aún quedan ceros en el primer bloque $0^n$. Lo marca con $X$, se mueve a la derecha y vuelve a $q_1$ para repetir la búsqueda de otro $0$ final.
+        \item \textbf{Si es un $1$:} Significa que \textbf{ya procesamos todos los $n$ ceros del primer bloque}. Cambia el control a la Fase 2 pasando al estado $q_3$ (sin modificar el $1$).
+    \end{itemize}
+\end{itemize}
+
+\subsubsection*{Fase 2: Emparejar el bloque medio de unos ($1^m$)}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Estado $q_3$ y $q_3'$ (Procesar un $1$ del bloque medio):}\\
+    Lee el primer $1$ libre del bloque medio. Lo tacha reemplazándolo por $Y$, se mueve a la derecha y pasa a $q_4$.
+
+    \item \textbf{Estado $q_4$ (Buscar el $0$ final para la $Y$):}\\
+    Avanza hacia la derecha saltando los $1$'s restantes, las $Y$'s y las $Z$'s previas, hasta localizar el \textbf{siguiente $0$ no marcado del bloque final}. Al encontrarlo:
+    \begin{enumerate}[label=\arabic*., leftmargin=*]
+        \item Lo marca con $Z$.
+        \item Cambia la dirección hacia la izquierda ($\leftarrow$).
+        \item Pasa a $q_5$.
+    \end{enumerate}
+
+    \item \textbf{Estado $q_5$ (Rebobinar en la Fase 2):}\\
+    Retrocede hacia la izquierda cruzando $Z$'s y $1$'s hasta encontrar la última marca $Y$. Al leer la $Y$, se mueve un paso a la derecha y pasa a $q_3'$.
+
+    \item \textbf{Evaluación en $q_3'$:}\\
+    Inspecciona el símbolo que sigue a la última $Y$:
+    \begin{itemize}[leftmargin=*]
+        \item \textbf{Si es un $1$:} Quedan más unos por procesar. Lo marca con $Y$ y pasa a $q_4$ para cancelar otro $0$ final.
+        \item \textbf{Si es una $Z$:} Significa que \textbf{ya procesamos todos los $m$ unos de $1^m$}. Pasa a la Fase 3 de verificación en el estado $q_6$.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection*{Fase 3: Verificación Final y Aceptación}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Estado $q_6$ (Comprobación de limpieza):}\\
+    Recorre la cinta hacia la derecha asegurándose de que \textbf{todos los símbolos restantes del bloque final sean exclusivamente marcas $Z$}.
+    \begin{itemize}[leftmargin=*]
+        \item Si encuentra un $0$ o un $1$ sin marcar, la cadena tenía más elementos de los requeridos y la máquina rechaza ($q_r$).
+        \item Al encontrar el \textbf{símbolo en blanco ($\sqcup$)} inmediatamente después de las $Z$'s, confirma que la cadena era de la forma exacta $0^n 1^m 0^{n+m}$ y pasa al \textbf{estado de aceptación $q_a$}.
+    \end{itemize}
+\end{itemize}
+
+\subsection*{2. Función de Complejidad de Tiempo $f(N)$}
+
+Para calcular la función de complejidad temporal en el peor de los casos, analizamos el número exacto de pasos (transiciones) que ejecuta la Máquina de Turing en función del tamaño de la cadena de entrada.
+
+\subsubsection*{1. Definición del Tamaño de Entrada $N$}
+
+Dada una cadena válida $w = 0^n 1^m 0^{n+m} \in L$:
+\begin{itemize}[leftmargin=*]
+    \item El bloque inicial $0^n$ contiene \textbf{$n$ ceros}.
+    \item El bloque medio $1^m$ contiene \textbf{$m$ unos}.
+    \item El bloque final $0^{n+m}$ contiene \textbf{$n+m$ ceros}.
+\end{itemize}
+
+La longitud total de la cadena de entrada es:
+\[ N = |w| = n + m + (n + m) = 2(n + m) \]
+
+De aquí despejamos la relación fundamental:
+\[ n + m = \frac{N}{2} \]
+
+\subsubsection*{2. Conteo de Pasos por Fases}
+
+\vspace{0.2cm}
+\noindent\textbf{Fase 1: Procesamiento del primer bloque ($0^n$)}\\
+Para cada uno de los \textbf{$n$ ceros} del primer bloque:
+\begin{enumerate}[label=\arabic*., leftmargin=*]
+    \item La máquina marca el `$0$' actual con `$X$' y avanza hacia la derecha cruzando los ceros restantes de $0^n$, todos los unos de $1^m$ y las marcas `$Z$' previas hasta encontrar el primer `$0$' libre del bloque final.
+    \begin{itemize}[leftmargin=*]
+        \item La distancia recorrida hacia la derecha es exactamente de \textbf{$n + m$ celdas}.
+    \end{itemize}
+    \item Al encontrar el `$0$', lo marca con `$Z$' y retrocede hacia la izquierda hasta volver a la última `$X$' colocada.
+    \begin{itemize}[leftmargin=*]
+        \item La distancia recorrida hacia la izquierda es nuevamente de \textbf{$n + m$ celdas}.
+    \end{itemize}
+\end{enumerate}
+
+Por cada iteración de la Fase 1, la cabeza realiza $2(n + m)$ movimientos. Como hay $n$ ceros en el primer bloque:
+\[\text{Pasos en Fase 1} = n \cdot 2(n + m) = 2n(n + m)\]
+
+\vspace{0.3cm}
+\noindent\textbf{Fase 2: Procesamiento del bloque medio ($1^m$)}\\
+Para cada uno de los \textbf{$m$ unos} del bloque medio:
+\begin{enumerate}[label=\arabic*., leftmargin=*]
+    \item La máquina marca el `$1$' actual con `$Y$' y avanza a la derecha cruzando los unos restantes, las marcas `$Y$' y todas las marcas `$Z$' previas hasta localizar el siguiente `$0$' libre del bloque final.
+    \begin{itemize}[leftmargin=*]
+        \item La distancia recorrida hacia la derecha es de \textbf{$n + m$ celdas}.
+    \end{itemize}
+    \item Marca el `$0$' con `$Z$' y retrocede a la izquierda hasta la última `$Y$'.
+    \begin{itemize}[leftmargin=*]
+        \item La distancia recorrida hacia la izquierda es de \textbf{$n + m$ celdas}.
+    \end{itemize}
+\end{enumerate}
+
+Por cada iteración de la Fase 2, la cabeza realiza $2(n + m)$ movimientos. Como hay $m$ unos en el bloque medio:
+\[\text{Pasos en Fase 2} = m \cdot 2(n + m) = 2m(n + m)\]
+
+\vspace{0.3cm}
+\noindent\textbf{Fase 3: Verificación final y aceptación}\\
+Una vez procesados todos los ceros y unos:
+\begin{enumerate}[label=\arabic*., leftmargin=*]
+    \item En el estado $q_3'$, al leer la primera `$Z$', la máquina pasa a $q_6$ y recorre todo el bloque final de $n+m$ marcas `$Z$' hacia la derecha verificando que no queden ceros libres.
+    \begin{itemize}[leftmargin=*]
+        \item Requiere \textbf{$n + m$ pasos}.
+    \end{itemize}
+    \item Al encontrar el blanco $\sqcup$, lee el símbolo y concluye en el estado de aceptación $q_a$.
+    \begin{itemize}[leftmargin=*]
+        \item Requiere \textbf{1 paso}.
+    \end{itemize}
+\end{enumerate}
+
+\[\text{Pasos en Fase 3} = (n + m) + 1\]
+
+\subsubsection*{3. Expresión Formal de la Función de Tiempo $f(N)$}
+
+Sumamos los pasos de las tres fases en términos de los parámetros $n$ y $m$:
+\begin{align*}
+    T(n, m) &= \text{Fase 1} + \text{Fase 2} + \text{Fase 3} \\
+    T(n, m) &= 2n(n + m) + 2m(n + m) + (n + m) + 1
+\end{align*}
+
+Factorizamos $(n + m)$:
+\[T(n, m) = 2(n + m)(n + m) + (n + m) + 1 = 2(n + m)^2 + (n + m) + 1\]
+
+Ahora sustituimos la relación con el tamaño total de la entrada $N$, donde $n + m = \frac{N}{2}$:
+\begin{align*}
+    f(N) &= 2\left(\frac{N}{2}\right)^2 + \left(\frac{N}{2}\right) + 1 \\
+    f(N) &= 2 \left(\frac{N^2}{4}\right) + \frac{N}{2} + 1
+\end{align*}
+
+\[\mathbf{f(N) = \frac{1}{2}N^2 + \frac{1}{2}N + 1}\]
+
+\subsubsection*{4. Complejidad Asintótica}
+
+Dado que el término dominante es de grado cuadrático, la complejidad temporal de la Máquina de Turing en una sola cinta para este lenguaje es:
+\[\mathbf{f(N) = \mathcal{O}(N^2)}\]
+
+\section*{Parte 3: Trazas de Ejecución para los Ejemplares Propuestos}
+
+A continuación se presentan los cómputos paso a paso representados mediante la secuencia de configuraciones $(q, w, u)$ para la cadena \textbf{011000} y para \textbf{010}.
+
+\subsection*{Ejemplar 1: Cadena 011000}
+
+La cadena 011000 corresponde a $n = 1$ cero inicial, $m = 2$ unos intermedios y $n + m = 3$ ceros finales ($0^1 1^2 0^3$). Por lo tanto, \textbf{pertenece al lenguaje $L$}.
+
+\subsubsection*{Traza de configuraciones paso a paso:}
+
+\noindent\textbf{Fase 1: Emparejar el primer bloque de ceros ($n = 1$)}
+\begin{enumerate}[label=\arabic*., leftmargin=*]
+    \item $C_1 = (q_0, \epsilon, 011000)$: Estado inicial. Lee el primer $0$.
+    \item $C_2 = (q_1, X, 11000)$: Tacha el $0$ con $X$ y avanza a la derecha en $q_1$.
+    \item $C_3 = (q_{1b}, X1, 1000)$: Lee el primer $1$ y pasa al estado $q_{1b}$.
+    \item $C_4 = (q_{1b}, X11, 000)$: Pasa el segundo $1$ y encuentra el primer $0$ del bloque final.
+    \item $C_5 = (q_2, X1, 1Z00)$: Marca el $0$ con $Z$ y se mueve a la izquierda en el estado de retorno $q_2$.
+    \item $C_6 = (q_2, X, 11Z00)$: Continúa retrocediendo cruzando el $1$.
+    \item $C_7 = (q_2, \epsilon, X11Z00)$: Alcanza la marca $X$ en el extremo izquierdo.
+    \item $C_8 = (q_0', X, 11Z00)$: Lee la $X$, se mueve un paso a la derecha y evalúa. Al leer un $1$, concluye la Fase 1 y pasa a $q_3$.
+\end{enumerate}
+
+\noindent\textbf{Fase 2: Emparejar el bloque de unos ($m = 2$)}
+
+\vspace{0.2cm}
+\noindent\textbf{Procesamiento del primer $1$:}
+\begin{enumerate}[label=\arabic*., start=9, leftmargin=*]
+    \item $C_9 = (q_3, X, 11Z00)$: Lee el primer $1$.
+    \item $C_{10} = (q_4, XY, 1Z00)$: Lo tacha con $Y$ y avanza a la derecha en $q_4$.
+    \item $C_{11} = (q_4, XY1, Z00)$: Salta el segundo $1$.
+    \item $C_{12} = (q_4, XY1Z, 00)$: Salta la marca $Z$.
+    \item $C_{13} = (q_5, XY1, ZZ0)$: Encuentra el segundo $0$ del final, lo marca con $Z$ y retrocede en $q_5$.
+    \item $C_{14} = (q_5, XY, 1ZZ0)$: Retrocede cruzando la $Z$.
+    \item $C_{15} = (q_5, X, Y1ZZ0)$: Retrocede cruzando el $1$ hasta encontrar la $Y$.
+    \item $C_{16} = (q_3', XY, 1ZZ0)$: Pasa a $q_3'$. Como el siguiente símbolo es un $1$, continúa la Fase 2.
+\end{enumerate}
+
+\vspace{0.2cm}
+\noindent\textbf{Procesamiento del segundo $1$:}
+\begin{enumerate}[label=\arabic*., start=17, leftmargin=*]
+    \item $C_{17} = (q_4, XYY, ZZ0)$: Tacha el segundo $1$ con $Y$ y avanza a la derecha.
+    \item $C_{18} = (q_4, XYYZ, Z0)$: Salta la primera $Z$.
+    \item $C_{19} = (q_4, XYYZZ, 0)$: Salta la segunda $Z$.
+    \item $C_{20} = (q_5, XYYZ, ZZ)$: Encuentra el tercer y último $0$ del final, lo marca con $Z$ y retrocede.
+    \item $C_{21} = (q_5, XYY, ZZZ)$: Retrocede cruzando la $Z$.
+    \item $C_{22} = (q_5, XY, YZZZ)$: Retrocede cruzando la segunda $Z$ hasta llegar a la última $Y$.
+    \item $C_{23} = (q_3', XYY, ZZZ)$: Pasa a $q_3'$. Lee una $Z$ (ya no quedan unos), lo que confirma el fin de la Fase 2 y cambia a $q_6$.
+\end{enumerate}
+
+\noindent\textbf{Fase 3: Verificación final y Aceptación}
+\begin{enumerate}[label=\arabic*., start=24, leftmargin=*]
+    \item $C_{24} = (q_6, XYY, ZZZ)$: En $q_6$, verifica la primera $Z$.
+    \item $C_{25} = (q_6, XYYZ, ZZ)$: Verifica la segunda $Z$.
+    \item $C_{26} = (q_6, XYYZZ, Z)$: Verifica la tercera $Z$.
+    \item $C_{27} = (q_6, XYYZZZ, \sqcup)$: Encuentra el símbolo blanco $\sqcup$ al final de la cinta.
+    \item $C_{28} = (q_a, XYYZZZ, \sqcup)$: Alcanza el \textbf{estado de aceptación $q_a$} y se detiene.
+\end{enumerate}
+
+\vspace{0.2cm}
+\noindent\textbf{Resultado:} La cadena \textbf{011000 es ACEPTADA}.
+
+\subsection*{Ejemplar 2: Cadena 010 (Rechazada)}
+
+La cadena 010 tiene $n = 1$ cero inicial, $m = 1$ uno medio, pero únicamente \textbf{1 cero final} en lugar de los $n + m = 2$ ceros requeridos ($0^1 1^1 0^1$). Por lo tanto, \textbf{no pertenece al lenguaje $L$}.
+
+\subsubsection*{Traza de configuraciones paso a paso:}
+
+\begin{enumerate}[label=\arabic*., leftmargin=*]
+    \item $C_1 = (q_0, \epsilon, 010)$: Estado inicial. Lee el primer $0$.
+    \item $C_2 = (q_1, X, 10)$: Tacha el $0$ con $X$ y avanza en $q_1$.
+    \item $C_3 = (q_{1b}, X1, 0)$: Lee el $1$ y pasa al estado $q_{1b}$.
+    \item $C_4 = (q_2, X, 1Z)$: Encuentra el único $0$ final, lo marca con $Z$ y retrocede en $q_2$.
+    \item $C_5 = (q_2, \epsilon, X1Z)$: Retrocede cruzando el $1$ hasta llegar a la $X$.
+    \item $C_6 = (q_0', X, 1Z)$: Lee la $X$ y pasa a $q_0'$. Al leer el $1$, concluye la Fase 1 y pasa a $q_3$.
+    \item $C_7 = (q_3, X, 1Z)$: En $q_3$, lee el único $1$.
+    \item $C_8 = (q_4, XY, Z)$: Tacha el $1$ con $Y$ y avanza a la derecha buscando un $0$ final sin marcar.
+    \item $C_9 = (q_4, XYZ, \sqcup)$: Salta la marca $Z$ y encuentra el símbolo en blanco $\sqcup$ \textbf{sin haber encontrado el $0$ que requería para emparejar la $Y$}.
+    \item $C_{10} = (q_r, XYZ, \sqcup)$: Dado que no existe una transición explícita para $\delta(q_4, \sqcup)$, la máquina ejecuta la regla implícita de fallo y pasa al \textbf{estado de rechazo $q_r$}.
+\end{enumerate}
+
+\vspace{0.2cm}
+\noindent\textbf{Resultado:} La cadena \textbf{010 es RECHAZADA}.
