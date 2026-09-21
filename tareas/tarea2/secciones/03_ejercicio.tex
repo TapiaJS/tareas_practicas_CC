@@ -1,41 +1,163 @@
 % ============================================================
 \section{Ejercicio 3}
-
 % ============================================================
 
 \begin{tcolorbox}[enunciado]
 Considera la Máquina de Turing definida por:
 \begin{center}
-    $M=(\{  q_0,q_1,q_2,q_a,q_e \}, \{ 0,1\}, \{  0,1, \sqcup\}, \delta, q_0,q_a,q_r)$
+    $M=(\{ q_0,q_1,q_2,q_a,q_r \}, \{ 0,1\}, \{ 0,1, \sqcup\}, \delta, q_0,q_a,q_r)$
 \end{center}
-Describe el Lenguaje $L_M$ para cada una de las siguientes definiciones de $\delta$. Para cada inciso.\\
-$\cdot$ Justifica tu respuesta agregando un par de ejecuciones (al menos una de aceptación y una de rechazo) para cada inciso.\\
-$\cdot$ Da la función $f_M(b)$ del tiempo de ejecución de la máquina.
+Describe el Lenguaje $L_M$ para cada una de las siguientes definiciones de $\delta$. Para cada inciso:
+\begin{itemize}[leftmargin=*]
+    \item Justifica tu respuesta agregando un par de ejecuciones (al menos una de aceptación y una de rechazo) para cada inciso.
+    \item Da la función $f_M(N)$ del tiempo de ejecución de la máquina con respecto a la longitud $N$ de la cadena.
+\end{itemize}
+
 \begin{enumerate} 
-\item A.
+\item \textbf{A.}
 \begin{enumerate}
-    \item $\delta (q_0,0)=(q_1,1,\rightarrow)$
-    \item $\delta(q_1,1)=(q_2,0,\leftarrow)$
-    \item $\delta(q_2,1)= (q_0,1,\rightarrow )$
-    \item $\delta(q_1,\sqcup)=(q_a.\sqcup,\rightarrow)$
+    \item $\delta(q_0,0) = (q_1,1,\rightarrow)$
+    \item $\delta(q_1,1) = (q_2,0,\leftarrow)$
+    \item $\delta(q_2,1) = (q_0,1,\rightarrow)$
+    \item $\delta(q_1,\sqcup) = (q_a,\sqcup,\rightarrow)$
 \end{enumerate}
 
-\item B.
+\item \textbf{B.}
 \begin{enumerate}
-    \item $\delta(q_o,0)= (q_1, 1, \rightarrow)$
-    \item $\delta (q_1,1)=(q_0,0,\rightarrow)$
-    \item $\delta (q_1,\sqcup) = (q_a,\sqcup\leftarrow)$
+    \item $\delta(q_0,0) = (q_1, 1, \rightarrow)$
+    \item $\delta(q_1,1) = (q_0,0,\rightarrow)$
+    \item $\delta(q_1,\sqcup) = (q_a,\sqcup,\leftarrow)$
 \end{enumerate}
-\item C.
+
+\item \textbf{C.}
 \begin{enumerate}
-    \item $\delta(q_0,0)=(q_0,\sqcup,\rightarrow)$
-    \item $\delta(q_0,1)=(q_1,\sqcup,\rightarrow)$
-    \item $\delta(q_1,1)=(q_1,\sqcup,\rightarrow)$
-    \item $\delta(q_1,\sqcup)=(q_a,\sqcup,\leftarrow)$
+    \item $\delta(q_0,0) = (q_0,\sqcup,\rightarrow)$
+    \item $\delta(q_0,1) = (q_1,\sqcup,\rightarrow)$
+    \item $\delta(q_1,1) = (q_1,\sqcup,\rightarrow)$
+    \item $\delta(q_1,\sqcup) = (q_a,\sqcup,\leftarrow)$
 \end{enumerate}
 \end{enumerate}
-Considera que las reglas (transiciones) que no se indican de manera explícita llevan al estado de rechazo.
+\textit{Considera que las reglas (transiciones) que no se indican de manera explícita llevan al estado de rechazo $q_r$.}
 \end{tcolorbox}
 
 % ------------------------- Solución -------------------------
-\subsection{Solución}
+
+\subsection{Solución al Ejercicio 3.A}
+
+\textbf{Lenguaje descrito:}
+\[ L_M = \{01^m \mid m \geq 0\} \]
+
+El estado inicial $q_0$ exige que el primer símbolo sea forzosamente un '0'. Al leerlo, escribe un '1' y pasa a $q_1$. Si la cadena tiene '1's posteriores, la máquina entra en un ciclo de tres pasos ($q_1 \to q_2 \to q_0 \to q_1$) cuyo único propósito es avanzar el cabezal hacia la derecha dejando un '1' escrito, funcionando como un mecanismo complejo para saltar los '1's. Acepta si, estando en $q_1$, encuentra el final de la cadena ($\sqcup$). Si en $q_1$ encuentra un '0', rechaza.
+
+Consideramos las cadenas originales para ejecución:
+$w_r = 011011$ (rechazo) y $w_a = 011111$ (aceptación).
+
+\vspace{0.3cm}
+\noindent\textbf{Ejecución de rechazo para $w_r = 011011$:}
+\begin{align*}
+    C_0 &= (q_0, \epsilon, 011011) && \text{Aplica } \delta(q_0, 0) = (q_1, 1, \to) \\
+    C_1 &= (q_1, 1, 11011) && \text{Aplica } \delta(q_1, 1) = (q_2, 0, \leftarrow) \\
+    C_2 &= (q_2, \epsilon, 101011) && \text{Aplica } \delta(q_2, 1) = (q_0, 1, \to) \\
+    C_3 &= (q_0, 1, 01011) && \text{Aplica } \delta(q_0, 0) = (q_1, 1, \to) \\
+    C_4 &= (q_1, 11, 1011) && \text{Aplica } \delta(q_1, 1) = (q_2, 0, \leftarrow) \\
+    C_5 &= (q_2, 1, 10011) && \text{Aplica } \delta(q_2, 1) = (q_0, 1, \to) \\
+    C_6 &= (q_0, 11, 0011) && \text{Aplica } \delta(q_0, 0) = (q_1, 1, \to) \\
+    C_7 &= (q_1, 111, 011) && \text{Sin transición definida para } \delta(q_1, 0). \text{ RECHAZA } (q_r).
+\end{align*}
+
+\vspace{0.3cm}
+\noindent\textbf{Ejecución de aceptación para $w_a = 011111$:}
+\begin{align*}
+    C_0 &= (q_0, \epsilon, 011111) && \text{Aplica } \delta(q_0, 0) = (q_1, 1, \to) \\
+    C_1 &= (q_1, 1, 11111) && \text{Aplica } \delta(q_1, 1) = (q_2, 0, \leftarrow) \\
+    C_2 &= (q_2, \epsilon, 101111) && \text{Aplica } \delta(q_2, 1) = (q_0, 1, \to) \\
+    C_3 &= (q_0, 1, 01111) && \text{Aplica } \delta(q_0, 0) = (q_1, 1, \to) \\
+    C_4 &= (q_1, 11, 1111) && \text{Aplica } \delta(q_1, 1) = (q_2, 0, \leftarrow) \\
+    C_5 &= (q_2, 1, 10111) && \text{Aplica } \delta(q_2, 1) = (q_0, 1, \to) \\
+    C_6 &= (q_0, 11, 0111) && \text{Aplica } \delta(q_0, 0) = (q_1, 1, \to) \\
+    C_7 &= (q_1, 111, 111) && \text{Aplica } \delta(q_1, 1) = (q_2, 0, \leftarrow) \\
+    C_8 &= (q_2, 11, 1011) && \text{Aplica } \delta(q_2, 1) = (q_0, 1, \to) \\
+    C_9 &= (q_0, 111, 011) && \text{Aplica } \delta(q_0, 0) = (q_1, 1, \to) \\
+    C_{10} &= (q_1, 1111, 11) && \text{Aplica } \delta(q_1, 1) = (q_2, 0, \leftarrow) \\
+    C_{11} &= (q_2, 111, 101) && \text{Aplica } \delta(q_2, 1) = (q_0, 1, \to) \\
+    C_{12} &= (q_0, 1111, 01) && \text{Aplica } \delta(q_0, 0) = (q_1, 1, \to) \\
+    C_{13} &= (q_1, 11111, 1) && \text{Aplica } \delta(q_1, 1) = (q_2, 0, \leftarrow) \\
+    C_{14} &= (q_2, 1111, 10) && \text{Aplica } \delta(q_2, 1) = (q_0, 1, \to) \\
+    C_{15} &= (q_0, 11111, 0) && \text{Aplica } \delta(q_0, 0) = (q_1, 1, \to) \\
+    C_{16} &= (q_1, 111111, \sqcup) && \text{Aplica } \delta(q_1, \sqcup) = (q_a, \sqcup, \to) \\
+    C_{17} &= (q_a, 111111\sqcup, \epsilon) && \text{ACEPTA.}
+\end{align*}
+
+\textbf{Complejidad de $M$:} Para una cadena válida de longitud $N = m + 1$, la máquina emplea 1 transición para leer el primer '0', realiza un ciclo de 3 transiciones por cada uno de los $m$ unos, y 1 transición para aceptar con el $\sqcup$. El número total de transiciones es $1 + 3m + 1 = 3m + 2$. Sustituyendo $m = N - 1$, obtenemos $3(N - 1) + 2 = 3N - 1$ pasos. Por lo tanto:
+\[ f_M(N) = 3N - 1 \implies \mathbf{f_M(N) \in \mathcal{O}(N)} \]
+
+
+\subsection{Solución al Ejercicio 3.B}
+
+\textbf{Lenguaje descrito:}
+\[ L_M = \{0(10)^m \mid m \geq 0\} \]
+
+El autómata alterna estrictamente sus estados: en $q_0$ espera obligatoriamente un '0' y pasa a $q_1$; en $q_1$ espera obligatoriamente un '1' y regresa a $q_0$. La aceptación solo ocurre si la máquina lee el blanco ($\sqcup$) estando en $q_1$, lo que significa que el último símbolo procesado debió ser un '0'. Por ende, las cadenas válidas deben iniciar en '0' y alternar entre '1' y '0', terminando siempre en '0'.
+
+Consideramos las cadenas originales para ejecución:
+$w_r = 011011$ (rechazo) y $w_a = 01010$ (aceptación).
+
+\vspace{0.3cm}
+\noindent\textbf{Ejecución de rechazo para $w_r = 011011$:}
+\begin{align*}
+    C_0 &= (q_0, \epsilon, 011011) && \text{Aplica } \delta(q_0, 0) = (q_1, 1, \to) \\
+    C_1 &= (q_1, 1, 11011) && \text{Aplica } \delta(q_1, 1) = (q_0, 0, \to) \\
+    C_2 &= (q_0, 10, 1011) && \text{Sin transición definida para } \delta(q_0, 1). \text{ RECHAZA } (q_r).
+\end{align*}
+
+\vspace{0.3cm}
+\noindent\textbf{Ejecución de aceptación para $w_a = 01010$:}
+\begin{align*}
+    C_0 &= (q_0, \epsilon, 01010) && \text{Aplica } \delta(q_0, 0) = (q_1, 1, \to) \\
+    C_1 &= (q_1, 1, 1010) && \text{Aplica } \delta(q_1, 1) = (q_0, 0, \to) \\
+    C_2 &= (q_0, 10, 010) && \text{Aplica } \delta(q_0, 0) = (q_1, 1, \to) \\
+    C_3 &= (q_1, 101, 10) && \text{Aplica } \delta(q_1, 1) = (q_0, 0, \to) \\
+    C_4 &= (q_0, 1010, 0) && \text{Aplica } \delta(q_0, 0) = (q_1, 1, \to) \\
+    C_5 &= (q_1, 10101, \sqcup) && \text{Aplica } \delta(q_1, \sqcup) = (q_a, \sqcup, \leftarrow) \\
+    C_6 &= (q_a, 1010, 1\sqcup) && \text{ACEPTA.}
+\end{align*}
+
+\textbf{Complejidad de $M$:} La máquina avanza de forma estrictamente lineal, procesando un símbolo por cada transición hacia la derecha sin realizar retrocesos durante la lectura. Al llegar al final de la cadena de longitud $N$, ejecuta una transición final para evaluar el $\sqcup$. El número de pasos es exactamente $N + 1$. Por lo tanto:
+\[ f_M(N) = N + 1 \implies \mathbf{f_M(N) \in \mathcal{O}(N)} \]
+
+
+\subsection{Solución al Ejercicio 3.C}
+
+\textbf{Lenguaje descrito:}
+\[ L_M = \{0^n 1^m \mid n \geq 0, m \geq 1\} \]
+
+La máquina permanece en $q_0$ borrando cualquier secuencia inicial (posiblemente vacía) de ceros. Requiere encontrar al menos un '1' para transitar a $q_1$, donde permanece borrando cualquier cantidad de '1's adicionales. Si, estando en $q_1$, se encuentra con otro '0' (lo que indicaría un '0' después de un '1'), la máquina rechaza. Acepta si logra vaciar la cadena y encuentra el $\sqcup$ en el estado $q_1$.
+
+Consideramos las cadenas originales para ejecución:
+$w_r = 011011$ (rechazo) y $w_a = 0000111$ (aceptación).
+
+\vspace{0.3cm}
+\noindent\textbf{Ejecución de rechazo para $w_r = 011011$:}
+\begin{align*}
+    C_0 &= (q_0, \epsilon, 011011) && \text{Aplica } \delta(q_0, 0) = (q_0, \sqcup, \to) \\
+    C_1 &= (q_0, \sqcup, 11011) && \text{Aplica } \delta(q_0, 1) = (q_1, \sqcup, \to) \\
+    C_2 &= (q_1, \sqcup\sqcup, 1011) && \text{Aplica } \delta(q_1, 1) = (q_1, \sqcup, \to) \\
+    C_3 &= (q_1, \sqcup\sqcup\sqcup, 011) && \text{Sin transición definida para } \delta(q_1, 0). \text{ RECHAZA } (q_r).
+\end{align*}
+
+\vspace{0.3cm}
+\noindent\textbf{Ejecución de aceptación para $w_a = 0000111$:}
+\begin{align*}
+    C_0 &= (q_0, \epsilon, 0000111) && \text{Aplica } \delta(q_0, 0) = (q_0, \sqcup, \to) \\
+    C_1 &= (q_0, \sqcup, 000111) && \text{Aplica } \delta(q_0, 0) = (q_0, \sqcup, \to) \\
+    C_2 &= (q_0, \sqcup\sqcup, 00111) && \text{Aplica } \delta(q_0, 0) = (q_0, \sqcup, \to) \\
+    C_3 &= (q_0, \sqcup\sqcup\sqcup, 0111) && \text{Aplica } \delta(q_0, 0) = (q_0, \sqcup, \to) \\
+    C_4 &= (q_0, \sqcup\sqcup\sqcup\sqcup, 111) && \text{Aplica } \delta(q_0, 1) = (q_1, \sqcup, \to) \\
+    C_5 &= (q_1, \sqcup\sqcup\sqcup\sqcup\sqcup, 11) && \text{Aplica } \delta(q_1, 1) = (q_1, \sqcup, \to) \\
+    C_6 &= (q_1, \sqcup\sqcup\sqcup\sqcup\sqcup\sqcup, 1) && \text{Aplica } \delta(q_1, 1) = (q_1, \sqcup, \to) \\
+    C_7 &= (q_1, \sqcup\sqcup\sqcup\sqcup\sqcup\sqcup\sqcup, \sqcup) && \text{Aplica } \delta(q_1, \sqcup) = (q_a, \sqcup, \leftarrow) \\
+    C_8 &= (q_a, \sqcup\sqcup\sqcup\sqcup\sqcup\sqcup, \sqcup\sqcup) && \text{ACEPTA.}
+\end{align*}
+
+\textbf{Complejidad de $M$:} Similar al inciso anterior, el cabezal avanza en una sola dirección borrando un símbolo por cada transición, ya sea en $q_0$ o $q_1$. Para una cadena válida de longitud $N$, el cabezal realiza $N$ desplazamientos a la derecha, más 1 transición final al leer $\sqcup$. El número de pasos es $N + 1$. Por lo tanto:
+\[ f_M(N) = N + 1 \implies \mathbf{f_M(N) \in \mathcal{O}(N)} \]
