@@ -21,3 +21,109 @@ Investiga qué son las funciones de tiempo "construibles" (Time constructible fu
 
 % ------------------------- Solución -------------------------
 \subsection{Solución}
+
+Las funciones de tiempo construibles se refiere a una función $f(n)$ tal que existe una máquina de Turing determinista de múltiples cintas que se detiene en $f(n)$ cuando se le da una palabra de entrada de longitud $n$. Dichas funciones desempeñan un papel importante en la teoría de la computación. Son interesantes por sí mismas como ejemplos de funciones muy `honestas'. Por lo tanto, es deseable contar con técnicas potentes para demostrar la construibilidad en tiempo de las funciones.\\
+
+Por máquina de Turing nos referimos a una máquina de Turing determinista de múltiples cintas. Se supone que todas las cintas son cintas de trabajo (es decir, no utilizamos cintas especiales de entrada o salida) y que las cintas son infinitas en ambas direcciones. Generlamente $\mathbb{N}$ denota el conjunto de todos los enteros no negativos. Se dice que una función de $d$ variables $f(n_1, \dots, n_d)$ de $\mathbb{N}^d$ a $\mathbb{N}$ es \emph{construible en tiempo} (\emph{ct} para abreviar) si existe una máquina de Turing con al menos $d$ cintas que se detiene en el tiempo $f(n_1, \dots, n_d)$ cuando se inicia con la siguiente configuración en el tiempo 0: (1) para cada $i$ ($1 \leqslant i \leqslant d$), el contenido de la $i$-ésima cinta es $\dots BB1^{n_i}BB\dots$ y el cabezal escanea el 1 situado más a la izquierda (si $n_i > 0$) ($B$ denota el símbolo blanco y $1^{n_i}$ denota la secuencia de $n_i$ unos), y (2) el contenido de las otras cintas, si las hay, está completamente en blanco.\cite{kobayashi1985proving}\\
+
+\begin{itemize}
+    \item Elige dos de las siguientes funciones y demuestra que son de tiempo construibles:
+    \begin{enumerate}[label=\alph*.]
+        \item $2n \log n$
+        \item $3n^2$
+        \item $3^n$
+    \end{enumerate}
+
+    
+Tomando el \textbf{incico b):}\\
+
+
+Sea $3n^2$ decimos es una funcion en tiempo construible si existe una maquina MT de multiples cintas, con la entrada \(1^{n_i}\) (representación unaria de n), produce la representación binaria de f(n) en O(f(n)) pasos. Se puede simular $M$ de la siguiente forma.\\
+
+Se necesita escanear la cinta de entrada que contiene \(1^{n}\) para contar el número de caracteres, convirtiéndolo en un entero binario \(n\) en una segunda cinta. Despues se tiene que calcular \(n^{2}\). Para esto el entero binario \(n\) por sí mismo utilizando un algoritmo estándar de multiplicación binaria para obtener \(n^{2}\). Multiplicar \(n^{2}\) por 3 (lo cual equivale simplemente a desplazar \(n^{2}\) un bit a la izquierda para obtener \(2n^{2}\) y sumarlo a \(n^{2}\), osea $3n^2 = 2n^2 + n^2$). \\
+
+Convertir \(1^{n}\) a binario requiere exactamente \(n\) pasos. La representación binaria de \(n\) tiene \(\lfloor\log_2 n\rfloor + 1\) bits. Multiplicar dos números de \(m\) bits requiere \(O(m^2)\) pasos. si tenemos, \(m = O(\log n)\), elevar \(n\) al cuadrado requiere \(O(\log^2 n)\) pasos. Multiplicar por 3 conlleva un tiempo lineal respecto al número de bits de \(n^{2}\), es decir, \(O(\log n)\) pasos.\\
+
+Sumando estos valores, el tiempo total \(T(n)\) necesario para calcular la salida binaria es: \(T(n)=O(n)+O(\log ^{2}n)+O(\log n)=O(n)\). Dado que \(O(n) \le O(3n^2)\) para todo \(n \ge 1\), así \(3n^{2}\) es construible en tiempo.\\
+
+ Tomando el \textbf{incico c)} consideramos:\\
+
+Sea $3^n$ decimos es una funcion en tiempo construible si existe una maquina MT de multiples cintas, con la entrada \(1^{n_i}\) (representación unaria de n), produce la representación binaria de f(n) en O(f(n)) pasos. Se puede simular $M$ de la siguiente forma.\\
+
+Escribir el número binario $1 (3^0)$ en la Cinta 2. Mantener la entrada \(1^{n}\) en la Cinta 1 para que actúe como contador del bucle. Recorrer la entrada de izquierda a derecha, y por cada $1$ leído, multiplicar por $3$ el numeral de la zona de trabajo. Al encontrar el primer $\sqcup$, detenerse.\\
+
+Multiplicar por $3$ en binario es una sola operación compuesta ($3x = 2x + x$). Es decir, que se debe de recorrer un lugar y sumar el original. Despues de tachar todos los n símbolos de la Cinta 1, la Cinta 2 contiene la representación binaria exacta de \(3^{n}\).\\
+
+Ahora podemos analzar el número total de operaciones realizadas por M, para la Longitud en bits tras i iteraciones, el valor en la Cinta 2 es \(3^{i}\), por lo que el número de bits necesario para almacenar \(3^{i}\) es \(\lfloor \log_2(3^i) \rfloor + 1 \approx i \cdot \log_2(3) \approx 1,58i\).\\
+
+En la i-ésima iteración, copiar, desplazar y sumar un número binario de longitud O(i) requiere O(i) pasos. Sumar los pasos de todas las n iteraciones da una serie aritmética: \(\sum_{i=1}^{n} O(i) = O\left( \frac{n(n + 1)}{2} \right) = O(n^2).\).\\
+
+Dado que \(O(n^2) \le O(3^n)\) para todo $n \geq 1$, la máquina de Turing calcula \(3^{n}\). Por lo tanto, \(3^{n}\) es una función construible en tiempo.\\
+
+    \item Da otros ejemplos (diferentes a los del inciso anterior) de funciones de tiempo construible.
+
+    Muchas funciones simples como $n^2$, $n^3$, $2^n$, $n!$ son ct. Las demostraciones no son fundamentalmente difíciles, pero sí tediosas.\\
+
+    
+Para $n^3$, sucede un caso similar a $n^2$. Suponemos a M determinista de 3 cintas de trabajo, donde cada una contiene inicialmente la entrada unaria $1^n$. La máquina ejecuta un esquema de tres bucles anidados. La cinta 1 actúa como contador externo y realiza $n$ iteraciones. Para la cinta 2 realiza un recorrido completo de $n$ posiciones por cada celda procesada en la cinta 1 ($n^2$ iteraciones en total). Así para  la cinta 3 ejecuta un barrido completo de $n$ celdas ($n$ pasos) por cada movimiento de la Cinta 2.\\
+
+El número total de transiciones ejecutadas hasta la parada es $T(n) = n \cdot n \cdot n = n^3.$ La máquina se detiene en exactamente $n^3$ pasos, $f(n) = n^3$ es construible en tiempo.\\
+
+Para $f(n) = n!$, se puede suponer una máquina M que utiliza la cadena de entrada $1^n$ para controlar las llamadas anidadas de $n$ niveles de profundidad.\\
+
+En la $m$-ésima iteración del bucle, multiplicamos $(m-1)!$ por $m$. El número de bits necesarios para representar $(m-1)!$ es $O(m \log m)$, y el número de bits para $m$ es $O(\log m)$, multiplicarlos seria $O((m \log m) \cdot \log m) = O(m \log^2 m)$ pasos.\\
+
+Sumamos los costos $T(n) = \sum_{m=1}^{n} O(m \log^2 m) = O(n^2 \log^2 n)$, entonces $f(n) = n!$ es construible en tiempo.\cite{blais2026time}
+    
+    \item Da un par de ejemplos de funciones que no son de tiempo construible. Justifica por qué no lo son.\\
+
+\textbf{La funcion} $f(n) = \log n$
+
+    Para cualquier función construible en tiempo bajo la definición estándar, la máquina de Turing debe al menos leer la cadena de entrada $1^n$ de longitud $n$.\\
+    
+    Supongamos que la cadena de entrada en la cinta de la máquina de Turing es $1^{1000}$, de acuerdo con la función $f(n) = \log_2 n$, la máquina debería finalizar su cómputo y detenerse aproximadamente:$$f(1000) = \log_2(1000) = 9 \text{ pasos}$$Para que la máquina de Turing pueda procesar o reconocer que el tamaño de la entrada es $n = 1000$, el cabezal debe desplazarse celda por celda a lo largo de la cinta, por lo que leerla requiere un mínimo indispensable de $1000$ pasos, solo que al llegar al paso 10, el cabezal solo ha logrado avanzar sobre los primeros 10 símbolos ($1^{10}$).Quedan aún $990$ símbolos de la entrada sin leer.\\
+    
+    Leer una entrada de longitud $n$ requiere un mínimo de $n$ pasos físicos de desplazamiento del cabezal, 
+    como $\log n = o(n)$, la función crece demasiado lento: la máquina agota el presupuesto de tiempo permitido ($\log n$ pasos) antes de haber podido leer la entrada completa.\\
+
+    
+
+    \textbf{Teorema de Jerarquía de Tiempo.} Aqui fungen funciones construidas mediante saltos condicionales basados en el problema de la parada o usando la diagonalización del Teorema de Jerarquía de Tiempo\\ 
+    
+    Para entender por qué no es construible en tiempo, debemos examinar cómo está construida mediante una paradoja intencionada (autorreferencia y diagonalización).\\
+    
+    Sea $M_1, M_2, M_3, \dots$ una enumeración de todas las máquinas de Turing posibles. Definimos artificialmente una función $T(n)$ paso a paso para cada tamaño de entrada $n$. Tomamos la $n$-ésima máquina de Turing, $M_n$, y le damos la entrada $n$.\\
+    
+    Observamos el comportamiento de $M_n(n)$, por ejemplo, definir \(f(n)\) de modo que valga \(2n\) si una máquina \(M_{n}\) se detiene en su propia entrada, y \(2n + 1\) si no lo hace (o variaciones similares).\\
+    
+     No es constructible porque si pudieras construir esta función eficientemente en tiempo \(O(f(n))\), podrías usar ese algoritmo para resolver o decidir problemas indecidibles (como el problema de la parada), lo cual genera una contradicción.\cite{mathstackexchange658854}
+    
+\end{itemize}
+
+
+\begin{center}
+
+\end{center}
+
+\begin{thebibliography}{99}
+
+\bibitem{kobayashi1985proving}
+Kobayashi, K. (1985).
+\newblock On proving time constructibility of functions.
+\newblock \emph{Theoretical Computer Science}, 35, 215--225.
+\newblock Disponible en: \url{https://doi.org/10.1016/0304-3975(85)90015-5}.
+
+\bibitem{blais2026time}
+Blais, E. (2026).
+\newblock \emph{CS 365: Models of Computation -- Time Complexity} [Notas de clase].
+\newblock David R. Cheriton School of Computer Science, University of Waterloo.
+\newblock Disponible en: \url{https://cs.uwaterloo.ca/~eblais/cs365/w26/time}.
+
+\bibitem{mathstackexchange658854}
+Mathematics Stack Exchange. (2014).
+\newblock \emph{Why are the hierarchy theorem proofs called diagonalization?}
+\newblock Disponible en: \url{https://math.stackexchange.com/questions/658854/why-are-the-hierarchy-theorem-proofs-called-diagonalization}.
+
+\end{thebibliography}
+
+%============================================END============================================
