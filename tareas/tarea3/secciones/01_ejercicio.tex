@@ -1,0 +1,24 @@
+% ============================================================
+\section{Ejercicio 1}
+
+% ============================================================
+
+\begin{tcolorbox}[enunciado]
+En este ejercicio vamos a asumir que una variante de la Máquina de Turing es equivalente a la versión estándar (vista en clase) si el conjunto de lenguajes $L$ que puede ser decidido por el modelo de la variante es el mismo conjunto de lenguajes que puede ser decidido por la versión estándar. Justifica tu respuesta.
+\begin{itemize}
+    \item Una MT con una cinta infinita en ambas direcciones que se puede mover arbitrariamente en cualquier dirección. Es decir, la función de transición es de la forma:
+    \begin{center}
+        $\delta:Q\times \Gamma\xrightarrow{}Q\times \Gamma \times \mathbb{Z}$
+    \end{center}
+    donde el último entero especifica que tan lejos se mueve hacia la derecha (si es positivo) o a la izquierda (si es negativo).
+    \item Una Máquina de Turing que utiliza el alfabeto infinito $\Gamma = \mathbb{N}$.
+    \item Una Máquina que no puede moverse hacia la izquierda. Es decir, la función de transición es de la forma:\begin{center}
+        $\delta:Q \times \Gamma \rightarrow Q \times \Gamma \times \{ -,\rightarrow\}$
+    \end{center}
+\end{itemize}
+\end{tcolorbox}
+
+% ------------------------- Solución -------------------------
+\subsection{Respuestas}
+\subsection{1}
+\subsection{2}
