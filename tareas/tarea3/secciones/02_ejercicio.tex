@@ -1,5 +1,5 @@
 % ============================================================
-\section{Ejercicio }
+\section{Ejercicio 2}
 
 % ============================================================
 
@@ -10,3 +10,99 @@ Investiga un modelo de cómputo (diferente a los mencionados en clase y en esta 
 
 % ------------------------- Solución -------------------------
 \subsection{Respuestas}
+\subsection{Modelo}
+El modelo seleccionado fue: $Redes \ de \ Petri$. \textbf{Definición:} Una red de Petri es un conjunto formado por: \begin{center}
+    $R=\{ P,T,Pre,Post \}$
+\end{center}
+Donde: \begin{itemize}
+    \item $P$ es un conjunto de lugares de cardinal n.
+    \item $T$ es un conjunto de transiciones de cardinal m.
+    \item $Pre$ es la aplicación de incidencia previa definida como: \begin{center}
+        $Pre:P\times T \to Naturales$
+    \end{center}
+    \item $Post$ la aplicación de incidencia posterior que viene definida como: \begin{center}
+        $Post:P\times T \to Naturales$
+    \end{center}
+\end{itemize}
+Entonces tenemos que la Red $R$ es el mapa del sistema que define los lugares de los nodos, las acciones que pueden ocurrir y cómo se conectan las flechas. Por eso se requiere de lo siguiente:\\
+\textbf{Definición:} Una red marcada, es un conjunto formado por $\{ R,M \}$ donde:\begin{itemize}
+    \item $R$ es una Red de Petri.
+    \item $M$ es una aplicación denominada marcado y: \begin{center}
+        $M:P\to Naturales$
+    \end{center}
+\end{itemize}
+Añadiendo eso, ahora se tiene una red con datos y memoria en un momento concreto. 
+
+\subsection{Cómputo}
+\textbf{Buscador  del Máximo}.\\
+Sea $V=[x_1,x_2,...,x_n]$ una lista de $n$ números naturales. Sea $RN = (R,M_0)$ la red marcada y sea $R=(P,T,Pre,Post)$ la red de petri construida de la siguiente manera: \\
+$P:$ \begin{center}
+    $P=\{ p_1,p_2,...,p_n\}\cup\{p_{max},p_{aux}\}$  
+\end{center}
+\begin{itemize}
+    \item $p_1,...,p_n:$ Lugares de entrada que almacenarán los valores numéricos.
+    \item $p_{max}:$ Lugar donde se acumulará el valor máximo global al finalizar la ejecución.
+    \item $p_{aux}:$ Lugar auxiliar para la extracción y comparación temporal.
+\end{itemize}
+$T:$\begin{center}
+    $T=\{ t_{init} \}\cup\{t_{comp_i}|2\leq i \leq n \} \cup \{ t_{clear}\}$.
+\end{center}
+\begin{itemize}
+    \item $t_{init}:$ Inicializa el candidato a máximo cargando las marcas de $p_1$ en $p_{max}$.
+    \item $t_{comp_i}:$ Compara activamente las fichas restantes del elemento $x_i$ con las del máximo acumulado hasta el momento.
+    \item $t_{clear}:$ Descarta los residuos sobrantes del elemento comparado si resultaba ser menor o igual.
+\end{itemize}
+$Pre$ y $Post$:
+Para $t_{init}:$ \begin{itemize}
+    \item $Pre(p_!,p_{init}=1)$
+    \item $Post(p_{max},t_{init})=1.$
+\end{itemize} 
+ 
+Para las comparaciones entre $x_i$ y el candidato actual en $p_{max}:$
+\begin{itemize}
+    \item $Pre(p_i,t_{comp_i})=1$
+    \item $Pre(p_{max}, t_{comp_i})=1$
+    \item $Post(p_{aux},t_{comp_i})=1$
+\end{itemize}
+$M_0:$
+El estado inicial del sistema se define como: $M_0:P\to \mathbb{N}:$
+\begin{center}
+    $M_0(p)= \begin{cases}
+        x_i\ \text{si }p=p_i \text{ para } i\in \{ 1,...,n \}\\
+        0 \ \text{si }p=p_i \text{ para } \{ p_{max},p_{aux}\}
+        \end{cases}$
+\end{center}
+Ahora, sea $V=[3,5,2]$ una lista de elementos:
+$M_0:$
+\begin{itemize}
+    \item $M_0(p_1) =3.$
+    \item $M_0(p2)=5.$
+    \item $M(p_3)=2.$
+    \item $M_0(p_{max})=0, M_0(p_{aux})=0.$
+\end{itemize}
+Ahora $t_{init}$ se dispara 3 veces consecutivas consumiendo las marcas de $p_1$, teniendo ahora $M_1$\begin{center}
+$M_1(p_1)=0, M_1(p2)=5, M_1(p_3)=2, M_1(p_{max})=3$ 
+\end{center}
+El máximo candidato actual es 3. \\
+Ahora se dispara la  transición de comparación $t_{comp_2}$ restando 1 unidad de $p_2$ y de $p_{max}$ de forma simultanea sucede:
+\begin{enumerate}
+    \item $t_{comp}$ se dispara 3 veces (el mínimo entre 5 y 3).
+    \item Quedan 0 fichas en $p_{max}$, 2 fichas restantes en $p_2$ y 3 fichas acumuladas en $p_{aux}$.
+    \item Como $p_2$ aún tiene fichas, significa que $x_2$ es mayor que el máximo anterior. Por lo que se mueven las 2 fichas restantes de $p_2$ y las 3 fichas de $p_{aux}$ hacia $p_{max}$.
+\end{enumerate}
+Ahora se tiene $M_2:$
+\begin{center}
+$M_2(p_1)=0, M_2(p2)=0, M_2=(p_3)=2, M_2(p_{max})=5$.    
+\end{center}
+El máximo candidato actual es 5.\\
+Se dispara la transición de comparación $t_{comp_3}$ entre $p_3$ y $p_{max}:$
+\begin{enumerate}
+    \item $t_{comp_3}$ se dispara 2 veces (el mínimo entre 2 y 5).
+    \item $p_3$ se queda con 0 fichas, $p_{max}$ queda con 3 fichas y $p_{aux}$ recibe 2 fichas.
+    \item Como $p_3$ no conservó fichas, significa que $x_3 \leq 5$. Las dos fichas de $p_{aux}$ regresan a $p_{max}$ para restaurar su valor original (3+2=5).
+\end{enumerate}
+$M_f:$
+\begin{center}
+    $M_f(p_1)=0,M_f(p_2)=0, M_f(p_3)=0,M_f(p_{max})=5. $
+\end{center}
+El cómputo se da por finalizado al no existir ninguna transición habilitada. El resultado se obtiene evaluando el marcado del lugar de salida $p_{max}$
