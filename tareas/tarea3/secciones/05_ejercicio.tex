@@ -8,4 +8,52 @@ Investiga ejemplos de problemas no computables. Ejemplifica los problemas y just
 \end{tcolorbox}
 
 % ------------------------- Solución -------------------------
-\subsection{Respuestas}
+\subsection{Solución}
+
+Un \textbf{problema de decisión} (formalizado como un lenguaje $L \subseteq \Sigma^*$ o una función $f : \Sigma^* \to \{0, 1\}$) es \textbf{no computable} (o \textbf{indecidible}) si \textbf{no existe ninguna Máquina de Turing $M$ capaz de resolverlo y detenerse para todas las entradas posibles}. 
+
+Si un problema es indecidible, significa que ningún algoritmo podrá jamás dar una respuesta correcta de forma garantizada para cualquier ejemplar del problema en un tiempo finito y eficiente (en tiempo polinomial).
+
+A continuación, presentamos el análisis correspondiente para 2 problemas no computables:
+
+\subsubsection*{Ejemplo 1: El Problema de Correspondencia de Post (\textit{Post Correspondence Problem} --- PCP)}
+
+\textbf{Definición:} Dado un conjunto finito de ``dominós'' o pares de cadenas $P = \left\{ \left[\frac{u_1}{v_1}\right], \left[\frac{u_2}{v_2}\right], \dots, \left[\frac{u_k}{v_k}\right] \right\}$ sobre algún alfabeto, determinar si existe una secuencia de índices $i_1, i_2, \dots, i_m$ (con posibles repeticiones) tal que la concatenación de las cadenas superiores sea exactamente igual a la concatenación de las cadenas inferiores:
+\[
+    u_{i_1} u_{i_2} \dots u_{i_m} = v_{i_1} v_{i_2} \dots v_{i_m}
+\]
+
+\textbf{Ejemplar:} \\
+Considera las siguientes 3 fichas:
+\[
+    F_1 = \left[\frac{a}{b}\right], \quad F_2 = \left[\frac{a}{aa}\right], \quad F_3 = \left[\frac{aab}{a}\right]
+\]
+\begin{itemize}
+    \item ¿Existe una coincidencia? \textbf{Sí.} La secuencia de fichas $(F_2, F_3, F_1, F_2)$ da:
+    \begin{itemize}
+        \item \textbf{Cadena Superior:} $a + aab + a + a = \mathbf{aaabaa}$
+        \item \textbf{Cadena Inferior:} $aa + a + b + aa = \mathbf{aaabaa}$
+    \end{itemize}
+    \item El problema general del PCP exige determinar si \textbf{cualquier} conjunto arbitrario de fichas dado tiene o no una solución.
+\end{itemize}
+
+El PCP se demuestra indecidible mediante una \textbf{reducción desde el Problema de Aceptación de la MT}. Se demuestra que cualquier configuración de cómputo de una Máquina de Turing (la secuencia de configuraciones válidas $C_1 \vdash C_2 \vdash \dots \vdash C_k$) se puede codificar como una colección de fichas del PCP. 
+
+Una coincidencia en el PCP existe \textbf{si y sólo si} la Máquina de Turing alcanza un estado de aceptación. Dado que determinar si una MT acepta una entrada es indecidible, el \textbf{PCP es no computable}.
+
+\subsubsection*{Ejemplo 2: El Problema del Lenguaje Vacío de una MT y Teorema de Rice}
+
+\textbf{Definición:} Dada la descripción de una Máquina de Turing $M$, determinar si el lenguaje que reconoce es completamente vacío:
+\[
+    E_{TM} = \{ \langle M \rangle \mid L(M) = \emptyset \}
+\]
+\textbf{Ejemplar:} Preguntarse si existe al menos una entrada $w$ para la cual la máquina $M$ responda ``Aceptar'', o si por el contrario no acepta absolutamente ninguna cadena del universo.
+
+El \textbf{Teorema de Rice} establece que \textit{cualquier propiedad semántica no trivial de los lenguajes reconocidos por Máquinas de Turing es indecidible}.
+
+\begin{enumerate}
+    \item Ser un lenguaje vacío ($L(M) = \emptyset$) es una \textbf{propiedad semántica} (depende del lenguaje aceptado por la máquina, no de su sintaxis).
+    \item Es \textbf{no trivial} porque algunas MTs reconocen el lenguaje vacío y otras no.
+\end{enumerate}
+
+Por el Teorema de Rice, \textbf{El Problema del Lenguaje Vacío de una MT es automáticamente no computable}.

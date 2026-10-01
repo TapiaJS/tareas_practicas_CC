@@ -44,7 +44,7 @@
     enhanced,
     breakable,             % Por si el comando es muy largo y cambia de página
     width=0.85\linewidth,  % 1. Reduce el ancho de la caja (85% del espacio de la lista)
-    %center,                % 2. Centra la caja misma dentro del margen de la lista
+    center,                % 2. Centra la caja misma dentro del margen de la lista
     halign=center          % 3. Centra el comando (texto) dentro de la caja
 }
 
@@ -83,7 +83,7 @@
 % Formato de secciones con color 
 \titleformat{\section}{\Large\bfseries\color{unamBlue}}{}{0em}{}
 \titleformat{\subsection}{\large\bfseries\color{unamBlue!80!black}}{}{0em}{}
-\titleformat{\subsubsection}{\normalsize\bfseries}{}{0em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries\color{unamBlue!80!black}}{}{0em}{}
 
 \graphicspath{
     {imagenes/logos_unam/}
@@ -108,8 +108,6 @@
 \input{secciones/04_ejercicio}
 \input{secciones/05_ejercicio}
 \input{secciones/06_referencias}
-
-
 
 %======================================END==================================
 \end{document}
