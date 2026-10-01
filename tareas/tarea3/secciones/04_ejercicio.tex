@@ -1,6 +1,5 @@
 % ============================================================
 \section{Ejercicio 4}
-
 % ============================================================
 
 \begin{tcolorbox}[enunciado]
@@ -14,7 +13,61 @@ Sea $\Sigma = \{ s_1, s_2,...,s_k\},$ con $k\in N$.
 \end{tcolorbox}
 
 % ------------------------- Solución -------------------------
-\subsection{Respuestas}
-\subsection{1}
+\subsection{Solución}
+
+\begin{tcolorbox}[enunciado]
+Sea $\Sigma = \{s_1, s_2, \dots, s_k\}$, con $k \in \mathbb{N}$. Demuestra que la cerradura de Kleene $\Sigma^*$ es un conjunto \textbf{contable (o numerable)}.
+\end{tcolorbox}
+
+\subsection*{Datos}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Alfabeto ($\Sigma$):} Es un conjunto finito de $k$ símbolos, $\Sigma = \{s_1, s_2, \dots, s_k\}$.
+    \item \textbf{Conjunto de cadenas de longitud $n$ ($\Sigma^n$):} Es el conjunto formado por todas las secuencias de exactamente $n$ símbolos tomados de $\Sigma$. Como en cada una de las $n$ posiciones hay $k$ opciones posibles, la cardinalidad de este conjunto es estrictamente finita:
+    \[ |\Sigma^n| = k^n \]
+    \item \textbf{Cerradura de Kleene ($\Sigma^*$):} Es el conjunto de todas las cadenas finitas que se pueden construir con los símbolos del alfabeto $\Sigma$, incluyendo la cadena vacía $\epsilon$ (donde $|\epsilon| = 0$):
+    \[ \Sigma^* = \bigcup_{n=0}^{\infty} \Sigma^n = \Sigma^0 \cup \Sigma^1 \cup \Sigma^2 \cup \dots \]
+    \item \textbf{Conjunto Contable:} Un conjunto $A$ es contable si existe una \textbf{función biyectiva} $f: \mathbb{N} \to A$ (es decir, si es posible listar todos sus elementos en una secuencia ordenada sin omitir ni repetir ninguno).
+\end{itemize}
+
+\vspace{10pt}
+\subsection*{P.D. que $\Sigma^*$ es contable}
+
+Para demostrar que $\Sigma^*$ es contable, construiremos una enumeración explícita asignándole a cada cadena $w \in \Sigma^*$ un índice entero único $i \in \mathbb{N}$ mediante el \textbf{orden lexicográfico por longitud}.
+
+\textbf{Regla de ordenamiento:}
+\begin{enumerate}[label=\arabic*., leftmargin=*]
+    \item \textbf{Por longitud creciente:} Listamos primero la cadena de longitud $0$, luego todas las cadenas de longitud $1$, después las de longitud $2$, y así sucesivamente.
+    \item \textbf{Por orden lexicográfico:} Para cadenas que comparten la misma longitud $n$, las ordenamos alfabéticamente fijando una jerarquía en los símbolos: $s_1 < s_2 < \dots < s_k$.
+\end{enumerate}
+
+\vspace{10pt}
+\subsubsection*{Enumeración Paso a Paso}
+
+Aplicando esta regla, obtenemos la siguiente lista ordenada e infinita de elementos de $\Sigma^*$:
+
+\begin{enumerate}[label=\arabic*., leftmargin=*]
+    \item \textbf{Longitud $n = 0$ ($\Sigma^0$):} Contiene $k^0 = 1$ cadena:
+    \[ w_1 = \epsilon \]
+    \item \textbf{Longitud $n = 1$ ($\Sigma^1$):} Contiene $k^1 = k$ cadenas:
+    \[ w_2 = s_1, \quad w_3 = s_2, \quad \dots, \quad w_{k+1} = s_k \]
+    \item \textbf{Longitud $n = 2$ ($\Sigma^2$):} Contiene $k^2$ cadenas:
+    \[ w_{k+2} = s_1 s_1, \quad w_{k+3} = s_1 s_2, \quad \dots, \quad w_{k+1+k^2} = s_k s_k \]
+    \item \textbf{Longitud $n = L$ ($\Sigma^L$):} Contiene $k^L$ cadenas.
+\end{enumerate}
+
+Dado que cada bloque de longitud $\Sigma^n$ es \textbf{finito}, para cualquier cadena arbitraria $w \in \Sigma^*$ de longitud $L$, la cantidad de cadenas que la anteceden en la lista es finita y está dada por la suma de las potencias de $k$:
+\[ 
+\text{Posición inicial de los elementos de } \Sigma^L = 1 + \sum_{n=0}^{L-1} k^n = 1 + \frac{k^L - 1}{k - 1} \quad (\text{para } k > 1) 
+\]
+\subsubsection*{Conclusión}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Sobreyectividad:} Cualquier cadena posible $w \in \Sigma^*$ tiene una longitud finita $L$, por lo que ocupará una posición finita y bien definida $i \in \mathbb{N}$ en la lista.
+    \item \textbf{Inyectividad:} Dos posiciones distintas $i \neq j$ corresponden a dos cadenas distintas $w_i \neq w_j$.
+\end{itemize}
+
+La asignación $f(i) = w_i$ establece una \textbf{biyección explícita entre $\mathbb{N}$ y $\Sigma^*$}, lo que prueba formalmente que \textbf{$\Sigma^*$ es un conjunto contable}.
+
 \subsection{2}
 \subsection{3}
