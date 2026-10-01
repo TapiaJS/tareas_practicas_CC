@@ -13,6 +13,9 @@ Sea $\Sigma = \{ s_1, s_2,...,s_k\},$ con $k\in N$.
 \end{tcolorbox}
 
 % ------------------------- Solución -------------------------
+% =========================================================================
+% Inciso (a)
+% =========================================================================
 \subsection{Solución}
 
 \begin{tcolorbox}[enunciado]
@@ -42,7 +45,7 @@ Para demostrar que $\Sigma^*$ es contable, construiremos una enumeración explí
 \end{enumerate}
 
 \vspace{10pt}
-\subsubsection*{Enumeración Paso a Paso}
+\subsubsection*{Enumeración}
 
 Aplicando esta regla, obtenemos la siguiente lista ordenada e infinita de elementos de $\Sigma^*$:
 
@@ -69,5 +72,74 @@ Dado que cada bloque de longitud $\Sigma^n$ es \textbf{finito}, para cualquier c
 
 La asignación $f(i) = w_i$ establece una \textbf{biyección explícita entre $\mathbb{N}$ y $\Sigma^*$}, lo que prueba formalmente que \textbf{$\Sigma^*$ es un conjunto contable}.
 
-\subsection{2}
+% =========================================================================
+% Inciso (b)
+% =========================================================================
+
+\subsection{Solución}
+
+\begin{tcolorbox}[enunciado]
+    ¿El conjunto de máquinas de Turing NO-Deterministas es contable? Considera la versión de MT NO determinista vista en clase.
+\end{tcolorbox}
+
+Sí, el conjunto de todas las Máquinas de Turing No-Deterministas (MTND) es contable. 
+
+A pesar de que el no determinismo permite a la máquina ramificar sus cómputos y generar un árbol con múltiples rutas de decisión (árbol de cómputo), la estructura de cualquier MTND es estrictamente finita. Por lo tanto, el conjunto de todas las MTNDs posibles tiene cardinalidad numerable.
+
+\subsection*{P.D. que el conjunto de máquinas de Turing NO-Deterministas es contable}
+
+\subsubsection*{Definición de la MTND}
+Una Máquina de Turing No-Determinista se define formalmente como una 7-tupla:
+\[
+    N = \langle Q, \Sigma, \Gamma, \delta, q_0, q_a, q_r \rangle
+\]
+
+\noindent Donde:
+\begin{enumerate}
+    \item \(Q = \{q_0, q_1, \dots, q_{m-1}\}\) es un conjunto \textbf{finito} de \(m\) estados.
+    \item \(\Sigma = \{s_1, \dots, s_k\}\) es el alfabeto \textbf{finito} de entrada.
+    \item \(\Gamma = \{s_1, \dots, s_k, \sqcup, \dots, s_p\}\) es el alfabeto \textbf{finito} de la cinta.
+    \item \(q_0 \in Q\) es el estado inicial, \(q_a \in Q\) es el estado de aceptación y \(q_r \in Q\) es el estado de rechazo.
+    \item \(\delta\) es la \textbf{relación/función de transición no-determinista}:
+    \[
+        \delta : Q \times \Gamma \to \mathcal{P}(Q \times \Gamma \times \{\leftarrow, \rightarrow, -\})
+    \]
+    o equivalentemente \(\delta \subseteq (Q \times \Gamma) \times (Q \times \Gamma \times \{\leftarrow, \rightarrow, -\})\). Para cada par \((q, s)\), la máquina tiene un número \textbf{finito} de posibles transiciones o elecciones.
+\end{enumerate}
+
+\subsubsection*{Codificación de una MTND como una cadena binaria finita}
+Dado que los conjuntos \(Q\), \(\Sigma\), \(\Gamma\) son finitos y la función de transición \(\delta\) contiene un número finito de pares y opciones de transición, \textbf{todos los elementos que conforman una MTND \(N\) se puede codificar como una cadena binaria de longitud finita} \(\langle N \rangle \in \{0, 1\}^*\):
+
+\begin{itemize}
+    \item \textbf{Codificación de Estados:} Los estados \(q_0, q_1, \dots, q_{m-1}\) se representan con cadenas de ceros: \(q_i \Longrightarrow 0^{i+1}\).
+    \item \textbf{Codificación del Alfabeto:} Los símbolos de \(\Gamma\) se representan análogamente: \(s_j \Longrightarrow 0^{j+1}\) (reservando una representación específica para el símbolo en blanco \(\sqcup\)).
+    \item \textbf{Codificación de Movimientos:} Las direcciones \(\{\leftarrow, \rightarrow, -\}\) se representan como: \(- \Longrightarrow 0\), \(\leftarrow \Longrightarrow 00\), \(\rightarrow \Longrightarrow 000\).
+    \item \textbf{Codificación de las Transiciones:} Cada regla no-determinista de la forma \(((q_i, s_j), (q_{i'}, s_{j'}, m))\) se codifica como un bloque delimitado por el símbolo \(1\):
+    \[
+        0^{i+1} \, 1 \, 0^{j+1} \, 1 \, 0^{i'+1} \, 1 \, 0^{j'+1} \, 1 \, 0^{\text{movimiento}}
+    \]
+    \item \textbf{MTND Completa:} Una máquina no determinista \(N\) que tenga múltiples alternativas de transición para el mismo par de estado y símbolo simplemente lista todas sus reglas separadas por separadores dobles (\(11\)).
+\end{itemize}
+
+Dado que la descripción de \(N\) consta de un número finito de estados y reglas, la cadena codificada resultante \(\langle N \rangle\) tiene una \textbf{longitud finita} \(|\langle N \rangle|\).
+
+\subsubsection*{Comprobación de que el conjunto de MTND es contable}
+Definimos la función \(f\) que asigna a cada Máquina de Turing No Determinista con su respectiva cadena binaria única que lo representa:
+\[
+    f : \mathcal{M}_{\text{ND}} \to \{0, 1\}^* \quad \text{donde} \quad f(N) = \langle N \rangle
+\]
+
+\begin{itemize}
+    \item \textbf{Sobreyectividad (nota):} Creemos importante mencionar que la función de codificación \(f\) no es sobreyectiva sobre todo el conjunto \(\{0, 1\}^*\) e incluso no es necesario que lo sea para demostrar que el conjunto es contable. Basta con que la función sea inyectiva, pues no es necesario construir una biyección directa contra todo el codominio.
+    
+    De manera general, si existe una inyección \(f: A \to B\), la cardinalidad de \(A\) es menor o igual a la de \(B\) (\(|A| \le |B|\)). Como \(f\) es inyectiva, induce una \textbf{biyección} entre \(A\) y su \textbf{imagen} \(\operatorname{Im}(f) = f(A) \subseteq B\).
+
+    \item \textbf{Inyectividad:} Dos máquinas no deterministas distintas \(N_1 \neq N_2\) difieren en al menos un estado, símbolo o regla de transición no determinista. Por lo tanto, sus representaciones binarias son distintas: \(\langle N_1 \rangle \neq \langle N_2 \rangle\).
+\end{itemize}
+
+Esto establece que el conjunto de todas las MTNDs (\(\mathcal{M}_{\text{ND}}\)) es biyectivo con un subconjunto de todas las cadenas binarias \(\{0, 1\}^*\). Cabe señalar que \(f\) no sea biyectiva con todas las cadenas posibles de \(\{0, 1\}^*\), porque no cualquier cadena binaria resulta ser una máquina válida (por ejemplo \texttt{11111}).
+
+\subsubsection*{Conclusión}
+En el \textbf{inciso (a)} demostramos que para cualquier alfabeto finito \(\Sigma\), la cerradura de Kleene \(\Sigma^*\) (y en particular \(\{0, 1\}^*\)) es un conjunto \textbf{contable (numerable)}. Además, todo subconjunto de un conjunto contable es a su vez \textbf{contable o finito}, y como \(\mathcal{M}_{\text{ND}}\) equivale a un subconjunto de \(\{0, 1\}^*\), concluimos que \textbf{el conjunto de todas las Máquinas de Turing No Deterministas es contable.}
+
 \subsection{3}
