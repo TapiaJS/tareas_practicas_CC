@@ -16,7 +16,7 @@ Sea $\Sigma = \{ s_1, s_2,...,s_k\},$ con $k\in N$.
 % =========================================================================
 % Inciso (a)
 % =========================================================================
-\subsection{Solución}
+\subsection{Solución al Inciso a}
 
 \begin{tcolorbox}[enunciado]
 Sea $\Sigma = \{s_1, s_2, \dots, s_k\}$, con $k \in \mathbb{N}$. Demuestra que la cerradura de Kleene $\Sigma^*$ es un conjunto \textbf{contable (o numerable)}.
@@ -75,8 +75,7 @@ La asignación $f(i) = w_i$ establece una \textbf{biyección explícita entre $\
 % =========================================================================
 % Inciso (b)
 % =========================================================================
-
-\subsection{Solución}
+\subsection{Solución al Inciso b}
 
 \begin{tcolorbox}[enunciado]
     ¿El conjunto de máquinas de Turing NO-Deterministas es contable? Considera la versión de MT NO determinista vista en clase.
@@ -100,11 +99,11 @@ Una Máquina de Turing No-Determinista se define formalmente como una 7-tupla:
     \item \(\Sigma = \{s_1, \dots, s_k\}\) es el alfabeto \textbf{finito} de entrada.
     \item \(\Gamma = \{s_1, \dots, s_k, \sqcup, \dots, s_p\}\) es el alfabeto \textbf{finito} de la cinta.
     \item \(q_0 \in Q\) es el estado inicial, \(q_a \in Q\) es el estado de aceptación y \(q_r \in Q\) es el estado de rechazo.
-    \item \(\delta\) es la \textbf{relación/función de transición no-determinista}:
+    \item \(\delta\) es la \textbf{función de transición no-determinista}:
     \[
         \delta : Q \times \Gamma \to \mathcal{P}(Q \times \Gamma \times \{\leftarrow, \rightarrow, -\})
     \]
-    o equivalentemente \(\delta \subseteq (Q \times \Gamma) \times (Q \times \Gamma \times \{\leftarrow, \rightarrow, -\})\). Para cada par \((q, s)\), la máquina tiene un número \textbf{finito} de posibles transiciones o elecciones.
+    o equivalentemente \(\delta \subseteq (Q \times \Gamma) \times (Q \times \Gamma \times \{\leftarrow, \rightarrow, -\})\). Para cada par \((q, s)\), la máquina tiene un número \textbf{finito} de posibles transiciones.
 \end{enumerate}
 
 \subsubsection*{Codificación de una MTND como una cadena binaria finita}
@@ -142,4 +141,49 @@ Esto establece que el conjunto de todas las MTNDs (\(\mathcal{M}_{\text{ND}}\)) 
 \subsubsection*{Conclusión}
 En el \textbf{inciso (a)} demostramos que para cualquier alfabeto finito \(\Sigma\), la cerradura de Kleene \(\Sigma^*\) (y en particular \(\{0, 1\}^*\)) es un conjunto \textbf{contable (numerable)}. Además, todo subconjunto de un conjunto contable es a su vez \textbf{contable o finito}, y como \(\mathcal{M}_{\text{ND}}\) equivale a un subconjunto de \(\{0, 1\}^*\), concluimos que \textbf{el conjunto de todas las Máquinas de Turing No Deterministas es contable.}
 
-\subsection{3}
+% =========================================================================
+% Inciso (c)
+% =========================================================================
+\subsection{Solución al Inciso c}
+
+\begin{tcolorbox}[enunciado]
+    ¿Qué podemos concluir de las afirmaciones de los incisos anteriores?
+\end{tcolorbox}
+
+De la combinación de los incisos \textbf{(a)} y \textbf{(b)} —junto con la teoría de complejidad y computabilidad vista en el curso— consideramos las siguientes ideas:
+
+\subsubsection*{1. Igualdad de Cardinalidad entre Algoritmos Deterministas y No Deterministas}
+
+De acuerdo al \textbf{inciso (a)} demostramos que el conjunto de cadenas finitas $\Sigma^*$ (y por lo tanto $\{0, 1\}^*$) es \textbf{contable}, lo que implica que el conjunto de todas las Máquinas de Turing Deterministas (MTD) es contable; siendo su demostración prácticamente análoga a la que hicimos para las MTND, lo único que cambia es la descripción de la función de transición y por ende su codificación, pero manteniendo el número finito de posibles transiciones.
+
+En el \textbf{inciso (b)} se demostró que el conjunto de todas las Máquinas de Turing No Deterministas (MTND) también es \textbf{contable}.
+
+\textbf{Por lo tanto,} ambos modelos tienen exactamente la misma cantidad de elementos:
+\[
+    |\mathcal{M}_{\text{D}}| = |\mathcal{M}_{\text{ND}}|
+\]
+El no determinismo permite a una máquina ramificar sus cómputos en un árbol de decisiones, pero \textbf{no incrementa la cantidad de algoritmos que se pueden especificar en el conjunto universo}. La descripción de cualquier máquina (determinista o no determinista) sigue siendo una cadena finita de símbolos.
+
+\subsubsection*{2. Existencia Absoluta de Problemas Indecidibles (Principio del Palomar)}
+
+Un \textbf{problema de decisión} sobre un alfabeto $\Sigma$ es una función $f : \Sigma^* \to \{0, 1\}$, la cual equivale a seleccionar un lenguaje $L \subseteq \Sigma^*$.
+
+El conjunto de todos los problemas de decisión posibles corresponde al conjunto potencia $\mathcal{P}(\Sigma^*)$.
+
+Dado que $\Sigma^*$ es un conjunto contable (demostrado en el inciso a), su conjunto potencia $\mathcal{P}(\Sigma^*)$ es \textbf{incontable} por el Teorema de Cantor y la prueba de diagonalización.
+
+\noindent \textbf{Tenemos por el Principio del Palomar:}
+\begin{itemize}
+    \item \textbf{Palomares (Algoritmos/Máquinas):} Cantidad contable.
+    \item \textbf{Palomas (Problemas de decisión):} Cantidad incontable.
+\end{itemize}
+
+Como hay estrictamente más problemas que Máquinas de Turing (tanto deterministas como no deterministas), se concluye que \textbf{existen infinitos problemas que no pueden ser resueltos por ningún algoritmo posible (problemas indecidibles)}.
+
+\subsubsection*{3. El No Determinismo NO Supera la Frontera de la Computabilidad}
+
+Aunque el no determinismo es una herramienta teórica poderosa para definir clases de complejidad como $\mathbf{NP}$, \textbf{no amplía el conjunto de problemas que son computables en sentido absoluto}.
+
+Una MTND no puede decidir problemas que sean fundamentalmente indecidibles para una MTD (como el \textit{Problema del Paro}).
+
+Esto reafirma la \textbf{Tesis de Church-Turing}: el conjunto de lenguajes decidibles/reconocibles por cualquier modelo razonable de cómputo (ya sean MTs de una cinta, $k$-cintas, RAMs o MTNDs) coincide exactamente con la clase de lenguajes procesables por la Máquina de Turing estándar.
