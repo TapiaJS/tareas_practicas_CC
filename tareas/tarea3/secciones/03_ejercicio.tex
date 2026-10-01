@@ -119,3 +119,44 @@ Si $x \in (L(M_1))^c$, entonces $x \notin L(M_1)$, lo que significa que $M_1(x) 
 Dado que $M_3$ siempre se detiene e invierte exactamente las respuestas de $M_1$, se cumple que $L(M_3) = (L(M_1))^c$ y $M_3$ total. Por lo tanto, el complemento de cualquier lenguaje decidible es también decidible.
 
 \subsection*{e}¿Para cuáles de las operaciones anteriores se mantiene la cerradura para las clases P, NP?\\
+
+\textbf{Para la Clase P:} Para decidir $L_1 \cup L_2$ o $L_1 \cap L_2$, basta con simular secuencialmente $N_1$ y $N_2$ sobre la entrada. La suma de tiempos polinómicos sigue siendo un polinomio, ya que como explicamos en la \textbf{union}, se ejecutan en tiempo polinomial, dado las M.T deterministas es lo que tardan en realizar su ejecucion de transiciones de estados. El tiempo total es $O(n^{k_1} + n^{k_2}) = O(n^{\max(k_1, k_2)})$, al igual que la \textbf{intersección}, el cual sigue siendo polinomial.\\
+
+Respecto a la \textbf{concatenación},  Para $L_1 L_2$, existen $n+1$ formas de dividir la entrada $x = yz$. Evaluar $M_1(y)$ y $M_2(z)$ para cada división toma tiempo $O(n \cdot (n^{k_1} + n^{k_2}))$, el cual se mantiene polinomial. Finalmente para el \textbf{complemento}, dado que una M.T determinista para un lenguaje en P siempre se detiene y da una respuesta en tiempo polinómico, basta con intercambiar los estados de aceptación y rechazo de la máquina para decidir el complemento en tiempo polinómico. Si $L \in P$, existe una maquina determinista $M$ de tiempo $O(n^k)$. Al ser determinista, basta con invertir las respuestas de aceptación y rechazo. La nueva máquina decide $L^c$ en el mismo tiempo $O(n^k)$, demostrando que $L^c \in P$.\cite{chowdhary2025theory}\\
+
+\textbf{Para la Clase NP:}
+
+Se mantienen en $NP$ mediante computación no determinista. Esto quiere decir que para la unión y la intersección, una MTN ramifica de manera no determinista para simular $M_1$ o $M_2$, es decir.\\
+
+Para la \textbf{union}, se construye una MTN $N_3$ para procesar la entrada $x$ de longitud $n = \vert{}x\vert{}$, ser recibe la entrada $x$, $N_3$ realiza una ramificación no determinista en el primer paso:\\
+
+Rama 1 simular $N_1$ con la entrada $x$.\\
+Rama 2 simular $N_2$ con la entrada $x$.\\
+Si la simulación en la rama elegida acepta, esa rama de $N_3$ acepta.\\
+
+Existe al menos una ruta de cómputo aceptadora en $N_1(x)$ o en $N_2(x)$ si y solo si, existe al menos una ruta aceptadora en $N_3(x)$. La ramificación inicial toma $O(1)$ pasos. La profundidad máxima del árbol de cómputo es el máximo de las profundidades de $N_1$ y $N_2$:
+
+$$T_{N_3}(n) = O(1) + \max(T_{N_1}(n), T_{N_2}(n)) = O(n^{\max(k_1, k_2)})$$
+
+Dado que la profundidad del árbol de cómputo no determinista está acotada por un polinomio, $L_1 \cup L_2 \in NP$.\\
+
+Sucede algo similar para la \textbf{intersección} $L_1 \cap L_2 \in NP$. Se construye una MTN $N_3$ para procesar la entrada. $N_3$ simula de manera no determinista a $N_1$ sobre $x$ que es la entrada.\\
+
+Si alguna rama de $N_1(x)$ llega a un estado de aceptación, esa misma rama procede a simular de manera no determinista a $N_2$ sobre la entrada $x$.\\
+Si para $N_2(x)$ en esa rama también alcanza un estado de aceptación, $N_3$ acepta.\\
+
+ Existen rutas válidas de aceptación tanto para $N_1(x)$ como para $N_2(x)$ si existe una secuencia de ramificaciones secuenciales en $N_3(x)$ que lleva a la aceptación. La profundidad máxima del árbol de cómputo resultante de ejecutar ambas simulaciones en secuencia y de igual manera es la suma de sus profundidades individuales, esto nos da
+ 
+ $$T_{N_3}(n) = T_{N_1}(n) + T_{N_2}(n) = O(n^{k_1}) + O(n^{k_2}) = O(n^{\max(k_1, k_2)})$$
+ 
+ Como la suma de dos polinomios es un polinomio, la profundidad total permanece acotada polinomialmente, demostrando que $L_1 \cap L_2 \in NP$.\\
+
+Para la \textbf{concatenación} sucede de igual manera, proponiendo un $N_3$ a simula de manera no determinista a $N_1$ y $N_2$ sobre $x$ que es la entrada, $N_3$ simula a $N_1$ sobre la subcadena $y$.Si la simulación de $N_1(y)$ no acepta en esa ruta, esa rama rechaza. Si acepta, procede a la siguiente etapa que es simular la segunda parte, $N_3$ simula a $N_2$ sobre la subcadena $z$.Si $N_2(z)$ también llega a un estado de aceptación en esa rama, $N_3$ acepta.\\
+
+La fase de previsión o como adivinanza toma $O(n)$ pasos para escribir la partición $y$ y $z$. La simulación secuencial de $N_1$ sobre $y$ y $N_2$ sobre $z$ toma profundidades máximas acotadas por sus polinomios, lo que nos da $T_{N_3}(n) \leq O(n + n^{k_1} + n^{k_2}) = O(n^{\max(k_1, k_2)})$.\\
+
+Finalmente para el \textbf{complemento} se mantiene una incertidumbre, ya que si $NP$ es cerrada bajo complemento, consistiria en intercambiar los estados finalizadores de una MTN, pero esta no decide el complemento, pues el criterio de aceptación no determinista exige que todas las ramas rechacen. Suponemos una $N_3$ MTN acepta una cadena de entrada $w$ si al menos una de sus múltiples ramas de cómputo alcanza un estado de aceptación.\\
+
+Para que una cadena $w$ pertenezca al complemento $L_3^c$, todas las ramas de la MTN deben rechazar la entrada, por lo que si en una MTN $N_3$ intercambia los estados de aceptación y rechazo para formar $N_3'$, la nueva máquina aceptará la cadena si al menos una rama alcanzaba el estado de rechazo original. Si una cadena $w \in L_3^c$ generaba algunas ramas de aceptación y algunas de rechazo en $N_3$, la máquina modificada $N_3'$ vería las ramas de rechazo originales convertidas en aceptación y también aceptaría $w$. Por lo tanto, $N_3'$ no reconoce el complemento.\\
+
+El complemento de un lenguaje en $NP$ pertenece a una clase conocida como $\text{co-}NP$, y ademas en el articulo \cite{dejesse2025critique} se conjetura que $NP \neq \text{co-}NP$.\cite{dejesse2025critique}\\
