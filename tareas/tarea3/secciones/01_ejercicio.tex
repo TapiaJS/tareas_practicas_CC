@@ -20,5 +20,105 @@ En este ejercicio vamos a asumir que una variante de la Máquina de Turing es eq
 
 % ------------------------- Solución -------------------------
 \subsection{Respuestas}
-\subsection{1}
-\subsection{2}
+
+
+Denotemos por $D(X)$ al conjunto de lenguajes que puede decidir el modelo $X$. La definición del enunciado establece que $X$ y $Y$ son equivalentes si:
+\[
+D(X) = D(Y)
+\]
+
+Como es una igualdad de conjuntos, la relación es reflexiva, simétrica y transitiva. Si dos variantes son equivalentes al modelo estándar, entonces son equivalentes entre sí.
+
+Para demostrar que una variante es equivalente al modelo estándar hay que probar dos contenciones:
+\[
+D(\text{estándar}) \subseteq D(\text{variante}) \quad \text{y} \quad D(\text{variante}) \subseteq D(\text{estándar})
+\]
+
+Cada una de estas inclusiones se prueba mediante una simulación. Es decir, dada una máquina de un modelo, se construye una del otro modelo que acepta, rechaza o no se detiene exactamente cuando la original lo hace. Es decir que dos modelos son equivalentes si cada uno puede imitar al otro. No importa si uno es más rápido o más cómodo; solo nos interesa qué problemas pueden resolver. Si queremos demostrar que no son equivalentes, basta encontrar un solo lenguaje que un modelo decida y el otro no.
+
+
+\subsection*{1} Para demostrar que esta variante no es más poderosa que el modelo estándar, mostramos cómo una MT estándar $M$ puede simular paso a paso a la variante $M'$.\\
+
+ \textbf{($D(\text{estándar}) \subseteq D(\text{variante})$)}\\
+ 
+ Si se supone una máquina de Turing estándar arbitraria $M = (Q, \Sigma, \Gamma, \delta, q_0, q_{a}, q_{r})$ con:$$\delta : Q \times \Gamma \rightarrow Q \times \Gamma \times \{-1, 0, 1\}$$Construimos la máquina variante $M' = (Q, \Sigma, \Gamma, \delta', q_0, q_{a}, q_{r})$ con:$$\delta'(q, a) = \delta(q, a)$$\\
+ 
+ Como $\{-1, 0, 1\} \subset \mathbb{Z}$, la máquina $M'$ no necesita hacer ninguna adaptación. La entrada se coloca desde la celda $0$ hacia la derecha o colocando un simbolo nuevo antes de empezar, tal que $* \notin \Gamma$. $M'$ ejecuta exactamente las mismas transiciones que $M$. Si $M$ entra en bucle, $M'$ entra en el mismo bucle; si $M$ se detiene en $q_{a}$ o $q_{r}$, $M'$ se hace exactamente lo mismo.\\
+
+\textbf{($D(\text{variante}) \subseteq D(\text{estándar})$)}\\
+
+Lo hacemos en dos pasos: primero quitamos los saltos y luego quitamos la cinta biinfinita.\\
+
+El estado interno de $M$ incluye un bit auxiliar que indica en qué pista se encuentra virtualmente la cabeza de $M'$ en ese instante ($\text{M}^+$ o $\text{M}^-$).\\
+
+Se ejecución de un paso de cómputo de $M'$ para simular un único paso de $M'$ dado por la regla $\delta'(q, a) = (q', b, k)$ con $k \in \mathbb{Z}$:\\
+
+
+Primeramente $M$ lee la celda actual en la pista activa, verifica el símbolo $a$, escribe $b$ en la pista activa y cambia el estado interno hacia $q'$.Como la función de transición $\delta'$ es un conjunto finito de reglas, existe una constante $k_{max} = \max \{ \vert{}k\vert{} \}$ para la máquina $M'$. $M$ simula el movimiento de $k$ posiciones mediante un bucle interno de $\vert{}k\vert{}$ movimientos de un solo paso ($d \in \{-1, 1\}$), desta manera tenemos el siguiente funcionamiento\\
+
+\begin{itemize}
+    \item Si $k > 0$, $M$ desplaza su cabeza un espacio a la derecha por cada unidad de $k$.
+    \item Si la cabeza cruza la posición $0$ en la cinta física hacia la izquierda mientras está en $\text{M}^+$, $M$ cambia su estado interno a $\text{M}^-$ y comienza a mover su cabeza hacia la derecha en la cinta física para recorrer los índices negativos.
+    \item Si $k < 0$, realiza el proceso inverso.
+    \item Si $M'$ acepta $x$ tras un número finito de pasos de $M'$, la simulación en $M$ alcanzará el estado $q_{\text{a}}'$ y $M$ aceptará.
+    \item Si $M'$ rechaza $x$: Tras un número finito de pasos de $M'$, la simulación en $M$ alcanzará el estado $q_{\text{r}}'$ y $M$ rechazará.
+    \item Si $M'$ entra en bucle infinito con $x$ por lo tanto la máquina $M$ continuará ejecutando los pasos de simulación indefinidamente, entrando también en un bucle infinito.
+\end{itemize}
+
+Dado que existe una construcción algorítmica explícita para simular cualquier máquina $M'$ mediante una máquina $M$ de ambos lados tanto para la variante como para el modelo estandar preservando exactamente su comportamiento para toda entrada, se demuestra que ambos modelos tienen exactamente el mismo poder de cómputo y son equivalentes.
+
+
+\subsection*{2}
+
+\textbf{Primera Suposición}\\
+
+Lo primero es notar que esto no es una máquina de Turing según la definición vista en clase, que exige que $\Gamma$ sea finito. En cuanto $\Gamma = \mathbb{N}$, el dominio de $\delta$ es $Q \times \mathbb{N}$, que es infinito, por lo tanto la tabla de transición tiene infinitos renglones. El enunciado no dice cómo está dada esa tabla, y la respuesta depende de ello.\\
+
+En lo que sigue suponemos que el alfabeto de entrada $\Sigma = \{\sigma_1, \dots, \sigma_k\}$ sigue siendo finito, con $\Sigma \subseteq \mathbb{N}$ y $\sqcup \in \mathbb{N} \setminus \Sigma$. Por ejemplo, $\sqcup = 0$ y $\sigma_d = d$.\\
+
+\textbf{Segunda suposición}\\
+
+Si suponemos que la función de transición $\delta$ tiene una descripción finita o computable, para que el modelo se mantenga o se considere un algoritmo ejecutable, se debe exigir que la función de transición $\delta$ pueda ser descrita de forma finita. Esto puede ocurrir de dos maneras.\\
+
+Primero, si solo un número finito de números de $\mathbb{N}$ tienen reglas de transición explícitas y todos los demás números aplican un comportamiento uniforme (por ejemplo, mantener el símbolo y detenerse), la máquina solo puede leer o escribir un conjunto finito de símbolos a lo largo de cualquier ejecución. Es decir que en la ejecución se reduce a una MT estándar tomando los números utilizados a un alfabeto finito $\Gamma$.\\
+
+Segundo, suponemos una maquina $M'$, tal que la máquina variante con alfabeto infinito $\Gamma' = \mathbb{N}$ y función de transición $\delta'$ computable. Puesto que $\delta'$ es computable, existe una Máquina de Turing estándar $M_\delta$ que, dada la entrada $\langle q, n \rangle$, se detiene en un número finito de pasos produciendo en su cinta la tupla $\langle q', n', d \rangle$, donde $d \in \{-1, 0, 1\}$.\\
+
+Construimos una Máquina de Turing estándar $M$ con alfabeto finito $\Gamma = \{0, 1, \#, \hat{\#}, \text{\_}\}$ que representa el contenido de la cinta de $M'$ guardando el valor numérico de cada celda codificado en binario y separado por el delimitador $\#$.\\
+
+El delimitador previo a la celda que está escanendo la cabeza virtual de $M'$ se identifica con el símbolo marcado $\hat{\#}$.Para simular un paso de cómputo de $M'$, la máquina estándar $M$ realiza el siguiente algoritmo:
+
+\begin{enumerate}
+\item Copia a una zona de trabajo de la cinta el estado actual $q$ junto con el número $n$ (en binario) ubicado en el bloque marcado por $\hat{\#}$
+\item Ejecuta a $M_\delta$ como subrutina con la entrada $\langle q, n \rangle$ para obtener el resultado $\delta'(q, n) = (q', n', d)$
+\item Reescribe el bloque binario $n$ con el nuevo valor $n'$, desplazando el resto de la cinta a la derecha o izquierda si $n'$ ocupa más o menos dígitos que $n$.\item Desplaza la marca $\hat{\#}$ al delimitador del bloque vecino según la dirección $d$. Si el movimiento llega a una zona no inicializada, $M$ crea un nuevo bloque con la representación binaria del símbolo blanco
+\item Si $q' = q_{accept}'$, $M$ pasa a su estado $q_{accept}$ y acepta; si $q' = q_{reject}'$, $M$ pasa a su estado $q_{reject}$ y rechaza.\end{enumerate}
+
+Como $M_\delta$ siempre se detiene por ser una función computable, cada paso de $M'$ se simula en un número finito de pasos de $M$. Por lo tanto, $M$ preserva exactamente el comportamiento de $M'$ (aceptación, rechazo o bucle infinito), demostrando que ambos modelos son equivalentes.
+
+
+\subsection*{3}
+
+Analizamos los dos movimientos permitidos en $\{- , \rightarrow\}$:\\
+
+\textbf{Movimiento a la derecha} ($\rightarrow$): La cabeza lectora avanza a la siguiente celda sin posibilidad de retornar. Una vez que la cabeza abandona una celda hacia la derecha, la información escrita a la izquierda queda inaccesible para el resto del cómputo.\\
+
+\textbf{Movimiento neutro} ($-$): Permite a la máquina permanecer en la celda actual, modificar el símbolo y cambiar de estado. Sin embargo, dado que el número de estados $\vert{}Q\vert{}$ y el tamaño del alfabeto $\vert{}\Gamma\vert{}$ son conjuntos finitos, el número de configuraciones locales distintas en una sola celda está acotado por $\vert{}Q\vert{} \times \vert{}\Gamma\vert{}$. Si $M'$ permanece en la misma celda por más de $\vert{}Q\vert{} \times \vert{}\Gamma\vert{}$ pasos, se repetirá una configuración, cayendo en un bucle infinito. \\
+
+Por lo tanto, el movimiento neutro solo permite realizar una cantidad de modificaciones finita y acotada antes de avanzar obligatoriamente a la derecha o detenerse.Debido a esto, la cinta no puede usarse como memoria auxiliar reutilizable. $M'$ procesa la entrada en una sola pasada de izquierda a derecha, comportándose como un autómata finito determinista.\\
+
+\textbf{Demostración por contradicción:} Para demostrar que dos modelos no son equivalentes, basta probar que existe al menos un lenguaje $L$ decidible por el modelo estándar ($L \in D(M)$) que no puede ser decidido por el modelo variante ($L \notin D(M')$). Asi que, por contradicción, supongamos, que existe una máquina variante $M'$ que decide $L$ utilizando un conjunto finito de estados $Q'$ con $\vert{}Q'\vert{} = p$ estados.\\
+
+Consideremos el conjunto de $p + 1$ prefijos formados únicamente por ceros:$$\{\epsilon, \, 0, \, 0^2, \, \dots, \, 0^p\}$$
+
+Al terminar de procesar cualquiera de estos prefijos $0^i$ (con $0 \le i \le p$), la máquina $M'$ no puede haber aceptado ni rechazado todavía. Esto se debe a que la cadena $0^i 1^i \in L$ (debe ser aceptada) y la cadena $0^i 1^{i+1} \notin L$ (debe ser rechazada), y ambas comparten el mismo prefijo $0^i$.\\
+
+Como $M'$ debe continuar el cómputo y posicionar su cabeza en la primera celda del sufijo restante, existen $p + 1$ historias de cómputo sobre la entrada de ceros, pero solo $p$ estados posibles en $Q'$. Deben existir dos índices distintos $i \neq j$ (con $0 \le i, j \le p$) tales que $M'$ alcanza la primera celda después del prefijo en el mismo estado interno $q \in Q'$.\\
+
+Dado que la función de transición de $M'$ no permite desplazamientos hacia la izquierda, $M'$ no puede releer o modificar las celdas donde guardo los prefijos $0^i$ y $0^j$. Por lo tanto, el comportamiento de $M'$ depende únicamente de el estado actual $q$ y la subcadena restante por leer a la derecha.\\
+
+Si ahora proporcionamos el sufijo $1^i$ a ambas simulaciones, entonces para la entrada $0^i 1^i$, $M'$ llega a la primera celda del $1^i$ en el estado $q$ y posteriormente acepta (pues $0^i 1^i \in L$).\\
+
+Para la entrada $0^j 1^i$, $M'$ llega a la primera celda del $1^i$ exactamente en el mismo estado $q$. Como el estado inicial de esta fase y el sufijo restante son idénticos, $M'$ ejecutará exactamente la misma secuencia de pasos y también aceptará. En este caso $M'$ acepta la cadena $0^j 1^i$. Sin embargo, dado que $i \neq j$, la cadena $0^j 1^i \notin L$, por lo que $M'$ debió haberla rechazado.\\
+
+La suposición de que existía una máquina $M'$ de la variante capaz de decidir $L$ es falsa. Por lo tanto, $L \notin D(M')$, lo que demuestra que:$$D(M') \subsetneq D(M)$$\cite{sipser2013introduction}

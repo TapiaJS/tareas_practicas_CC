@@ -16,7 +16,7 @@ Si un problema es indecidible, significa que ningún algoritmo podrá jamás dar
 
 A continuación, presentamos el análisis correspondiente para 2 problemas no computables:
 
-\subsubsection*{Ejemplo 1: El Problema de Correspondencia de Post (\textit{Post Correspondence Problem} --- PCP)}
+\subsubsection*{Ejemplo 1: El Problema de Correspondencia de Post (\textit{Post Correspondence Problem}, PCP \cite{wiki_pcp_2026}) \cite{carrion_teoria}}
 
 \textbf{Definición:} Dado un conjunto finito de ``dominós'' o pares de cadenas $P = \left\{ \left[\frac{u_1}{v_1}\right], \left[\frac{u_2}{v_2}\right], \dots, \left[\frac{u_k}{v_k}\right] \right\}$ sobre algún alfabeto, determinar si existe una secuencia de índices $i_1, i_2, \dots, i_m$ (con posibles repeticiones) tal que la concatenación de las cadenas superiores sea exactamente igual a la concatenación de las cadenas inferiores:
 \[
@@ -41,7 +41,7 @@ El PCP se demuestra indecidible mediante una \textbf{reducción desde el Problem
 
 Una coincidencia en el PCP existe \textbf{si y sólo si} la Máquina de Turing alcanza un estado de aceptación. Dado que determinar si una MT acepta una entrada es indecidible, el \textbf{PCP es no computable}.
 
-\subsubsection*{Ejemplo 2: El Problema del Lenguaje Vacío de una MT y Teorema de Rice}
+\subsubsection*{Ejemplo 2: El Problema del Lenguaje Vacío de una MT y Teorema de Rice \cite{carrion_teoria}}
 
 \textbf{Definición:} Dada la descripción de una Máquina de Turing $M$, determinar si el lenguaje que reconoce es completamente vacío:
 \[

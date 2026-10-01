@@ -16,7 +16,147 @@ Prueba que la colección de lenguajes decidibles en cerrada bajo las siguientes 
 
 % ------------------------- Solución -------------------------
 \subsection{Respuestas}
-\subsection{a}
-\subsection{b}
-\subsection{c}
-\subsection{d}
+
+\subsection*{a}
+
+Para demostra que $L_3(M_3)=L_1 \cup L_2$, suponemos lo siguiente.\\
+
+Suponemos que $L_1$ es decidible si exite una maquina $M_1$ tal que $L(M_1) = L_1$ y $M_1$ es total. De la misma forma suponemos un $L_2$ que es decidible si exite una maquina $M_2$ tal que $L(M_2) = L_2$ y $M_2$ es total.\\
+
+Por lo tanto lo que se quiere demostrar es que existe una $M_3$ tal que $L_3(M_3) = L_1 \cup L_2$ y $M_3$ es total.\\
+
+Suponemos el funcionamiento de $M_3 = U$ como el siguiente:
+\begin{enumerate}
+    \item U simula $M_1$ con x
+        Si $M_1(x) = 1$, entonces U acepta
+    \item U simula $M_2$ con x
+        Si $M_2(x) = 1$, entonces U acepta
+    \item U en otro caso rechaza
+\end{enumerate}
+
+Si suponemos que $M_1(x)=1$, entonces $L_1(M_1)$ acepta, dada la union, si $x$ bajo la ejecuion de $M_1$ acepta, entonces $L_1 \cup L_2$ se cumple y acepta.\\
+
+Si suponemos que $M_2(x)=1$ acepta, entonces $L_2(M_2)$ acepta, dada la union, si $x$ bajo la ejecuion de $M_2$ acepta, entonces $L_2 \cup L_1$ se cumple y acepta.\\
+
+Si $M_1(x) = 0$, entonces $L_1(M_1)$ rechaza, dada la union, $M_2(x)=1$, por lo tanto $L_1 \cup L_2$ se cumple. Sucede lo mismo para $M_2$\\
+
+Por doble contencion tenemos que $L_3 = L_1 \cup L_2$.\\
+
+Para analizar la complejidad temporal de $M_3$ con una entrada $x$ de longitud $n = \vert{}x\vert{}$:
+Sea $t_1(n)$ el tiempo que tarda $M_1$ en procesar una entrada de longitud $n$.\\
+Sea $t_2(n)$ el tiempo que tarda $M_2$ en procesar una entrada de longitud $n$.\\
+
+Como $M_3$ ejecuta $M_1$ y (en el peor de los casos) posteriormente $M_2$ en secuencia sobre la misma entrada $x$, el tiempo de ejecución total $T_{M_3}(n)$ está acotado por la suma de los tiempos de ambas máquinas:
+$$T_{M_3}(n) = O(t_1(n) + t_2(n))$$
+
+Caso Polinomial:
+Si $M_1 \in TIME(n^{k_1})$ y $M_2 \in TIME(n^{k_2})$ para constantes $k_1, k_2 \ge 1$:$$T_{M_3}(n) = O(n^{k_1} + n^{k_2}) = O(n^{\max(k_1, k_2)})$$
+
+Pero como solo se quiere saber si es decidible o no, no es necesario analizar su complejidad temporal, pues solo debemos garantizar en aceptar o rechazar en un número finito de pasos para toda entrada $x$.
+
+\subsection*{b}
+
+Para demostra que $L_3(M_3)=L_1 \cap L_2$, suponemos lo siguiente.\\
+
+Suponemos que $L_1$ es decidible si exite una maquina $M_1$ tal que $L(M_1) = L_1$ y $M_1$ es total. De la misma forma suponemos un $L_2$ que es decidible si exite una maquina $M_2$ tal que $L(M_2) = L_2$ y $M_2$ es total.\\
+
+Por lo tanto lo que se quiere demostrar es que existe una $M_3$ tal que $L_3(M_3) = L_1 \cap L_2$ y $M_3$ es total.\\
+
+Suponemos el funcionamiento de $M_3 = U$ como el siguiente:
+\begin{enumerate}
+\item $M_3$ simula a $M_1$ con la entrada $x$
+\item Si $M_1(x) = 0$ rechaza, $M_3$ rechaza 
+\item Si $M_1(x) = 1$ acepta, entonces $M_3$ simula a $M_2$ con la entrada $x$
+\item Si $M_2(x) = 1$ acepta, $M_3$ acepta
+\item Si $M_2(x) = 0$ rechaza, $M_3$ rechaza 
+\end{enumerate}
+
+Si suponemos que $M_1(x)=1$, entonces $L_1(M_1)$ es reconocible,de esta manera para la misma $x$,$M_2(x)=1$ acepta; $L_1(M_1) \cap L_2(M_2)$ se cumple.\\
+
+Si suponemos que $M_2(x)=1$, entonces $L_2(M_2)$ es reconocible, entonces para la misma $x$,$M_1(x)=1$ acepta, de igual manera es reconocible; $L_1(M_1) \cap L_2(M_2)$ se cumple.\\
+
+Dado que $M_1$ es una máquina total, la primera simulación siempre finaliza en un número finito de pasos. Si $M_1$ rechaza, $M_3$ termina inmediatamente. Si $M_1$ acepta, se pasa a simular $M_2$, la cual también es total y garantiza terminar en un número finito de pasos. En ningún caso $M_3$ entra en un bucle infinito, demostrando que $M_3$ es total.\\
+
+Por lo tanto, $L(M_3) = L_1 \cap L_2$ y $M_3$ es total, lo que demuestra que la clase de lenguajes decidibles es cerrada bajo intersección.\\
+
+\subsection*{c} 
+Para demostra que $L_3(M_3)=L_1 L_2$, suponemos lo siguiente.\\
+
+Suponemos que $L_1$ es decidible si existe una maquina $M_1$ tal que $L(M_1) = L_1$ y $M_1$ es total. De la misma forma suponemos un $L_2$ que es decidible si existe una maquina $M_2$ tal que $L(M_2) = L_2$ y $M_2$ es total.\\
+
+Por lo tanto lo que se quiere demostrar es que existe una $M_3$ tal que $L_3(M_3) = L_1 L_2$ y $M_3$ es total. Para esto suponemos una maquina de turing tal que $M_3$ simule a $M_1$ y $M_2$, así. Suponemos que $L_3= \{x=yz: y \in L_1 , z \in L_2 \}$
+
+\begin{enumerate}
+\item Para cada posible división de la cadena $x$ en dos partes $y$ y $z$ tales que $x = yz$ (desde $y = \epsilon, z = x$ hasta $y = x, z = \epsilon$):
+\begin{enumerate}
+\item Simular $M_1$ con la entrada $y$
+\item Simular $M_2$ con la entrada $z$
+\item Si $M_1(y) = 1$ y $M_2(z) = 1$, entonces $U$
+\end{enumerate}
+\item Si $U$ prueba todas las posibles divisiones $x = yz$ y en ninguna se cumple para $M_1$ y $M_2$ ambas acepten, entonces $M_3$ rechaza.
+\end{enumerate}
+
+Dada la cadena de entrada, se simula la primera parte de $x$ en $M_1$ hasta alcanzar un estado final y, a continuación, se pasa a $M_2$ para completar la segunda mitad del cómputo.\\
+
+Puesto que una cadena $x$ de longitud $n$ solo tiene un número finito de particiones las cuales son $n+1$ posibles divisiones y $M_1$ y $M_2$ son máquinas totales que siempre se detienen, el bucle de $M_3$ siempre terminará en un número finito de pasos. Entonces la concatenacion de los lenguajes con sus respectivas maquinas como $L_1(M_1)$ y $L_2(M_2)$;  $L_1L_2$ es cerrado bajo la operacion de concatenacion. 
+
+\subsection*{d}
+
+Para demostrar que $L_3(M_3)= (L_1(M_1))^c$\\
+
+Por definición, sabemos que una maquina es deidible si existe una $M_3$ tal que $L_3(M_3) = L_1(M_1)^c$. Asi, suponemos el siguiente funcionamiento de la maquina $M_3 = U$.\\
+
+\begin{enumerate}
+    \item U simula $M_1$ con x. Si $M_1(x) = 0$, entonces $U$ acepta
+    \item U simula $M_1$ con x. Si $M_1(x) = 1$, entonces $U$ rechaza
+    \item $U$ rechaza en otro caso
+\end{enumerate}
+
+Dado que $M_1$ es una máquina total, para cualquier entrada $x \in \Sigma^*$ solo existen dos posibilidades:\\
+
+Si $x \in (L(M_1))^c$, entonces $x \notin L(M_1)$, lo que significa que $M_1(x) = 0$. Por el paso (1), $M_3$ acepta $x$. Si $x \notin (L(M_1))^c$, entonces $x \in L(M_1)$, lo que significa que $M_1(x) = 1$. Por el paso (2), $M_3$ rechaza $x$.\\
+
+Dado que $M_3$ siempre se detiene e invierte exactamente las respuestas de $M_1$, se cumple que $L(M_3) = (L(M_1))^c$ y $M_3$ total. Por lo tanto, el complemento de cualquier lenguaje decidible es también decidible.
+
+\subsection*{e}¿Para cuáles de las operaciones anteriores se mantiene la cerradura para las clases P, NP?\\
+
+\textbf{Para la Clase P:} Para decidir $L_1 \cup L_2$ o $L_1 \cap L_2$, basta con simular secuencialmente $N_1$ y $N_2$ sobre la entrada. La suma de tiempos polinómicos sigue siendo un polinomio, ya que como explicamos en la \textbf{union}, se ejecutan en tiempo polinomial, dado las M.T deterministas es lo que tardan en realizar su ejecucion de transiciones de estados. El tiempo total es $O(n^{k_1} + n^{k_2}) = O(n^{\max(k_1, k_2)})$, al igual que la \textbf{intersección}, el cual sigue siendo polinomial.\\
+
+Respecto a la \textbf{concatenación},  Para $L_1 L_2$, existen $n+1$ formas de dividir la entrada $x = yz$. Evaluar $M_1(y)$ y $M_2(z)$ para cada división toma tiempo $O(n \cdot (n^{k_1} + n^{k_2}))$, el cual se mantiene polinomial. Finalmente para el \textbf{complemento}, dado que una M.T determinista para un lenguaje en P siempre se detiene y da una respuesta en tiempo polinómico, basta con intercambiar los estados de aceptación y rechazo de la máquina para decidir el complemento en tiempo polinómico. Si $L \in P$, existe una maquina determinista $M$ de tiempo $O(n^k)$. Al ser determinista, basta con invertir las respuestas de aceptación y rechazo. La nueva máquina decide $L^c$ en el mismo tiempo $O(n^k)$, demostrando que $L^c \in P$.\cite{chowdhary2025theory}\\
+
+\textbf{Para la Clase NP:}
+
+Se mantienen en $NP$ mediante computación no determinista. Esto quiere decir que para la unión y la intersección, una MTN ramifica de manera no determinista para simular $M_1$ o $M_2$, es decir.\\
+
+Para la \textbf{union}, se construye una MTN $N_3$ para procesar la entrada $x$ de longitud $n = \vert{}x\vert{}$, ser recibe la entrada $x$, $N_3$ realiza una ramificación no determinista en el primer paso:\\
+
+Rama 1 simular $N_1$ con la entrada $x$.\\
+Rama 2 simular $N_2$ con la entrada $x$.\\
+Si la simulación en la rama elegida acepta, esa rama de $N_3$ acepta.\\
+
+Existe al menos una ruta de cómputo aceptadora en $N_1(x)$ o en $N_2(x)$ si y solo si, existe al menos una ruta aceptadora en $N_3(x)$. La ramificación inicial toma $O(1)$ pasos. La profundidad máxima del árbol de cómputo es el máximo de las profundidades de $N_1$ y $N_2$:
+
+$$T_{N_3}(n) = O(1) + \max(T_{N_1}(n), T_{N_2}(n)) = O(n^{\max(k_1, k_2)})$$
+
+Dado que la profundidad del árbol de cómputo no determinista está acotada por un polinomio, $L_1 \cup L_2 \in NP$.\\
+
+Sucede algo similar para la \textbf{intersección} $L_1 \cap L_2 \in NP$. Se construye una MTN $N_3$ para procesar la entrada. $N_3$ simula de manera no determinista a $N_1$ sobre $x$ que es la entrada.\\
+
+Si alguna rama de $N_1(x)$ llega a un estado de aceptación, esa misma rama procede a simular de manera no determinista a $N_2$ sobre la entrada $x$.\\
+Si para $N_2(x)$ en esa rama también alcanza un estado de aceptación, $N_3$ acepta.\\
+
+ Existen rutas válidas de aceptación tanto para $N_1(x)$ como para $N_2(x)$ si existe una secuencia de ramificaciones secuenciales en $N_3(x)$ que lleva a la aceptación. La profundidad máxima del árbol de cómputo resultante de ejecutar ambas simulaciones en secuencia y de igual manera es la suma de sus profundidades individuales, esto nos da
+ 
+ $$T_{N_3}(n) = T_{N_1}(n) + T_{N_2}(n) = O(n^{k_1}) + O(n^{k_2}) = O(n^{\max(k_1, k_2)})$$
+ 
+ Como la suma de dos polinomios es un polinomio, la profundidad total permanece acotada polinomialmente, demostrando que $L_1 \cap L_2 \in NP$.\\
+
+Para la \textbf{concatenación} sucede de igual manera, proponiendo un $N_3$ a simula de manera no determinista a $N_1$ y $N_2$ sobre $x$ que es la entrada, $N_3$ simula a $N_1$ sobre la subcadena $y$.Si la simulación de $N_1(y)$ no acepta en esa ruta, esa rama rechaza. Si acepta, procede a la siguiente etapa que es simular la segunda parte, $N_3$ simula a $N_2$ sobre la subcadena $z$.Si $N_2(z)$ también llega a un estado de aceptación en esa rama, $N_3$ acepta.\\
+
+La fase de previsión o como adivinanza toma $O(n)$ pasos para escribir la partición $y$ y $z$. La simulación secuencial de $N_1$ sobre $y$ y $N_2$ sobre $z$ toma profundidades máximas acotadas por sus polinomios, lo que nos da $T_{N_3}(n) \leq O(n + n^{k_1} + n^{k_2}) = O(n^{\max(k_1, k_2)})$.\\
+
+Finalmente para el \textbf{complemento} se mantiene una incertidumbre, ya que si $NP$ es cerrada bajo complemento, consistiria en intercambiar los estados finalizadores de una MTN, pero esta no decide el complemento, pues el criterio de aceptación no determinista exige que todas las ramas rechacen. Suponemos una $N_3$ MTN acepta una cadena de entrada $w$ si al menos una de sus múltiples ramas de cómputo alcanza un estado de aceptación.\\
+
+Para que una cadena $w$ pertenezca al complemento $L_3^c$, todas las ramas de la MTN deben rechazar la entrada, por lo que si en una MTN $N_3$ intercambia los estados de aceptación y rechazo para formar $N_3'$, la nueva máquina aceptará la cadena si al menos una rama alcanzaba el estado de rechazo original. Si una cadena $w \in L_3^c$ generaba algunas ramas de aceptación y algunas de rechazo en $N_3$, la máquina modificada $N_3'$ vería las ramas de rechazo originales convertidas en aceptación y también aceptaría $w$. Por lo tanto, $N_3'$ no reconoce el complemento.\\
+
+El complemento de un lenguaje en $NP$ pertenece a una clase conocida como $\text{co-}NP$, y ademas en el articulo \cite{dejesse2025critique} se conjetura que $NP \neq \text{co-}NP$.\cite{dejesse2025critique}\\
