@@ -16,25 +16,236 @@ Justifica tu respuesta argumentando tu conjetura o dando la demostración de per
     \textit{Un subconjunto de vértices $C$ de $G$ es un conjunto dominante de $G$, si todo otro vértice de $G$ es adyacente a algún vértice de $C$.}
     
     \subsection*{Solución}
-    % Escribe tu respuesta aquí
+    \subsubsection*{Definición Formal del Lenguaje $\text{DOM}$}
+    El lenguaje del problema del conjunto dominante en su versión de decisión se define como:
+    \[ \text{DOM} = \{ \langle G, K \rangle \mid G \text{ es una gráfica no dirigida y } G \text{ tiene un conjunto dominante de } K \text{ nodos} \} \]
+
+    Un subconjunto de vértices $C \subseteq V(G)$ es un \textbf{conjunto dominante} si $|C| \le K$ y para todo vértice $v \in V(G) \setminus C$, existe al menos un vértice $u \in C$ tal que $\{u, v\} \in E(G)$.
+
+    \subsubsection*{Definición de NP por Verificación}
+    Un lenguaje $L$ pertenece a la clase \textbf{NP} si existen un polinomio $p(n)$ y una Máquina de Turing determinista $M$ de tiempo polinomial tales que para toda cadena de entrada $x$:
+    \[ x \in L \iff \exists u \in \{0, 1\}^{p(|x|)} \text{ tal que } M(x, u) = 1 \]
+
+    \vspace{0.3cm}
+    \noindent\textbf{P.D. que el problema DOM pertenece a NP mediante un verificador determinista}
+
+    \subsubsection*{1. Definición del Certificado (Testigo) $u$ y Esquema de Codificación}
+    \begin{itemize}[leftmargin=*]
+        \item \textbf{Certificado ($u$):} Es el subconjunto candidato de vértices $C = \{v_1, v_2, \dots, v_m\} \subseteq V(G)$.
+        \item \textbf{Esquema de Codificación:} El certificado se codifica como una lista explícita de los índices binarios de los vértices seleccionados o como un vector binario de longitud $|V|$ sobre el alfabeto $\{0, 1\}$.
+        \item \textbf{Cota Polinomial:} El tamaño del certificado cumple $|u| \le O(|V| \log |V|)$, el cual está acotado por un polinomio $p(|x|)$ respecto a la longitud de la representación binaria de la entrada $x = |\langle G, K \rangle|$.
+    \end{itemize}
+
+    \subsubsection*{2. Algoritmo del Verificador Determinista $M(x, u)$}
+
+    La máquina de Turing determinista $M$ recibe la pareja de entrada $x = (G, K)$ y el certificado candidato $u = C$ y ejecuta la siguiente secuencia de pasos:
+
+    \begin{enumerate}[label=\arabic*., leftmargin=*]
+        \item Calcula la cardinalidad del conjunto $C$. Si $|C| > K$ o si $C$ contiene elementos fuera de $V(G)$, la máquina \textbf{rechaza} inmediatamente devolviendo \texttt{0}.
+        \item Inicializa un conjunto de nodos cubiertos $S = C$.
+        \item Para cada vértice $u \in C$, recorre sus listas de adyacencia en la gráfica $G$ y agrega todos sus vecinos inmediatos al conjunto $S$.
+        \item Compara la cantidad de nodos en $S$ con el total de vértices $|V(G)|$. Si $S = V(G)$ (es decir, todo nodo $v \notin C$ tiene al menos un vecino en $C$), la máquina \textbf{acepta} devolviendo \texttt{1}; de lo contrario, \textbf{rechaza} devolviendo \texttt{0}.
+    \end{enumerate}
+
+    \subsubsection*{3. Análisis de Complejidad en Tiempo}
+
+    \begin{itemize}[leftmargin=*]
+        \item El análisis de cardinalidad y validez en el Paso 1 toma tiempo $O(|V|)$.
+        \item El recorrido de los vértices de $C$ y el marcado de sus vecinos en los Pasos 2 y 3 toma un tiempo proporcional al grado de los nodos examinados, acotado a lo más por el número de aristas de la gráfica $O(|V| + |E|)$.
+        \item El Paso 4 consiste en comparar el número de nodos marcados con $|V|$, lo cual toma tiempo $O(|V|)$.
+    \end{itemize}
+
+    El tiempo total de ejecución del verificador $M$ está acotado por $O(|V| + |E|)$ operaciones deterministas, lo cual representa una función polinomial en el tamaño del ejemplar de entrada $|\langle G, K \rangle|$.
+
+    \subsubsection*{Conclusión}
+    Si $(G, K) \in \text{DOM}$, existe al menos un subconjunto de vértices $C$ con $|C| \le K$ que domina a $G$. Dicho conjunto sirve como certificado $u$ de tamaño polinomial que hace que el verificador responda $M((G, K), C) = 1$.
+
+    Si $(G, K) \notin \text{DOM}$, no existe ningún conjunto de tamaño $\le K$ capaz de dominar a $G$. Por ende, para cualquier certificado candidato $u$, el verificador responderá $M((G, K), u) = 0$.
+
+    Dado que se definió un certificado de tamaño polinomial y un verificador determinista de tiempo polinomial, queda demostrado que $\text{DOM} \in \text{\textbf{NP}}$.
 
     \vspace{0.5cm}
     \item \textbf{L} = $\{ \langle G \rangle \mid G \text{ es una gráfica no dirigida que NO contiene ciclos Eulerianos} \}$
     
     \subsection*{Solución}
-    % Escribe tu respuesta aquí
+    \subsubsection*{Definición Formal del Lenguaje $L$}
+    El lenguaje del problema se define como:
+    \[ L = \{ \langle G \rangle \mid G \text{ es una gráfica no dirigida que NO contiene ciclos Eulerianos} \} \]
+
+    Un \textbf{ciclo Euleriano} en una gráfica no dirigida es un ciclo que recorre cada arista de $G$ exactamente una vez.
+
+    \subsubsection*{Teorema de Euler}
+
+    Por el \textbf{Teorema de Euler}:
+    \begin{quote}
+    Una gráfica conexa $G$ contiene un ciclo Euleriano si y solo si el grado de todos sus vértices es \textbf{par}.
+    \end{quote}
+
+    Por lo tanto, su condición de negación lógica establece que una gráfica $G$ \textbf{NO contiene un ciclo Euleriano} si y solo si cumple al menos una de las siguientes dos condiciones:
+    \begin{enumerate}[label=\arabic*., leftmargin=*]
+        \item Existe al menos un vértice $v \in V(G)$ cuyo \textbf{grado es impar} ($\text{grado}(v) \pmod 2 \neq 0$).
+        \item La gráfica $G$ es \textbf{desconexa} (sus vértices no aislados están divididos en dos o más componentes conexas distintas).
+    \end{enumerate}
+
+    \subsubsection*{Clasificación del Problema}
+
+    Gracias al teorema de Euler, el lenguaje \textbf{$L$ pertenece a la clase $\mathbf{P}$}, ya que es posible decidir determinísticamente si una gráfica no contiene ciclos Eulerianos mediante un algoritmo de tiempo polinomial.
+
+    \vspace{0.3cm}
+    \noindent\textbf{P.D. que $L$ pertenece a P mediante una máquina determinista decidible}
+
+    \subsubsection*{1. Algoritmo Determinista de Decisión $M(\langle G \rangle)$}
+
+    Dada la codificación de una gráfica no dirigida $G = (V, E)$:
+
+    \begin{itemize}[leftmargin=*]
+        \item Recorre la lista de adyacencia o matriz de adyacencia de $G$ y calcula el grado de cada vértice $v \in V$.
+        \item Si encuentra algún vértice $v$ con \textbf{grado impar}, la máquina \textbf{acepta} inmediatamente (devuelve \texttt{1}), confirmando que $G \in L$.
+        \item Si todos los vértices tienen grado par, selecciona un vértice no aislado $s \in V$ y ejecuta BFS o DFS para marcar todos los vértices alcanzables desde $s$.
+        \item Si el número de vértices marcados es menor que el número de vértices no aislados en $G$ (lo que indica que la gráfica es desconexa), la máquina \textbf{acepta} (devuelve \texttt{1}).
+        \item Si todos los vértices tienen grado par y pertenecen a una sola componente conexa, la gráfica $G$ sí posee un ciclo Euleriano, por lo que la máquina \textbf{rechaza} (devuelve \texttt{0}).
+    \end{itemize}
+
+    \subsubsection*{2. Análisis de Complejidad en Tiempo}
+
+    \begin{itemize}[leftmargin=*]
+        \item El cálculo de los grados de todos los vértices toma tiempo $O(|V| + |E|)$.
+        \item La comprobación de grados impares requiere recorrer los $|V|$ valores de grado, lo cual toma tiempo $O(|V|)$.
+        \item El algoritmo BFS/DFS para verificar la conectividad de la gráfica se ejecuta en tiempo $O(|V| + |E|)$.
+    \end{itemize}
+
+    El tiempo total de ejecución es $O(|V| + |E|)$, el cual está acotado por un polinomio respecto al tamaño de la entrada $|\langle G \rangle|$. Por ende:
+    \[ L \in \mathbf{P} \]
+
+    \subsubsection*{Conclusión}
+
+    Dado que la clase determinista $\mathbf{P}$ está contenida tanto en $\mathbf{NP}$ como en $\mathbf{coNP}$ ($\mathbf{P} \subseteq \mathbf{NP} \cap \mathbf{coNP}$):
+
+    Como $L \in \mathbf{P}$, se puede usar el algoritmo determinista $M$ como un verificador trivial que ignora cualquier certificado, lo que demuestra que \textbf{$L \in \mathbf{NP}$}.
+
+    Por otra parte, al ser $\mathbf{P}$ cerrada bajo complemento ($\mathbf{P} = \text{co}\mathbf{P}$), el complemento de $L$ también está en $\mathbf{P}$, lo que implica directamente que \textbf{$L \in \mathbf{coNP}$}.
 
     \vspace{0.5cm}
     \item \textbf{HAM\_MOD} = $\{ \langle G_1, G_2 \rangle \mid G_1 \text{ tiene un ciclo Hamiltoniano y } G_2 \text{ no tiene un ciclo Hamiltoniano} \}$
     
     \subsection*{Solución}
-    % Escribe tu respuesta aquí
+    \subsubsection*{Clasificación del Problema}
+
+    A diferencia de los otros problemas que se han trabajado en clase directamente o tan siquiera se ha mencionado su respectiva clase de complejidad. Para esta ocasión nos enfrentamos con una modificación en la que si bien parte de un problema que ya conocemos, dicho cambio se realizó con maña para recordar que existen otras clases de complejidad a parte de $\mathbf{P}$, $\mathbf{NP}$ y $\mathbf{coNP}$.
+
+    Siendo que, decidimos clasificar a $\text{HAM\_MOD}$ dentro de la clase de tiempo exponencial determinista ($\mathbf{EXP}$) de acuerdo a las siguientes razones (la idea nos la dio el profesor al final de la clase del día 27/10/26, simplemente la desarrollamos de una manera más formal y propia):
+
+    \vspace{0.3cm}
+    \noindent\textbf{Por qué NO pertenece a $\mathbf{P}$}
+
+    Para que un problema pertenezca a la clase $\mathbf{P}$, debe existir un algoritmo determinista capaz de decidir cualquier ejemplar en tiempo polinomial. En el caso de $\text{HAM\_MOD}$:
+    \begin{itemize}[leftmargin=*]
+        \item No se conoce ningún algoritmo determinista en tiempo polinomial, propiedad estructural ni teorema eficiente (como el Teorema de Euler para ciclos eulerianos) que permita decidir si una gráfica general posee o no un ciclo Hamiltoniano.
+        \item Dado que el problema del Ciclo Hamiltoniano es un problema emblemático $\mathbf{NP}$, determinar si $G_1$ tiene ciclo y $G_2$ no lo tiene requeriría resolver dos problemas intratables en un solo paso determinista. Por ende, \textbf{no hay evidencia de que $\text{HAM\_MOD} \in \mathbf{P}$}.
+    \end{itemize}
+
+    \vspace{0.3cm}
+    \noindent\textbf{La componente del problema que pertenece en $\mathbf{NP}$ ($G_1$)}
+
+    La primera condición de la pareja exige que la gráfica $G_1$ posea un ciclo Hamiltoniano. 
+    Esta parte del problema pertenece a la clase \textbf{$\mathbf{NP}$}, ya que si la respuesta para $G_1$ es afirmativa, existe un \textbf{certificado corto} (la permutación ordenada de los vértices de $G_1$) que un verificador determinista puede comprobar en tiempo polinomial $O(|V_1|)$.
+
+    \vspace{0.3cm}
+    \noindent\textbf{La componente del problema que pertenece en $\mathbf{coNP}$ ($G_2$)}
+
+    La segunda condición exige que la gráfica $G_2$ \textbf{NO} posea ningún ciclo Hamiltoniano.
+    Esta condición pertenece a la clase \textbf{$\mathbf{coNP}$} (el complemento de un problema $\mathbf{NP}$). Para confirmar que $G_2$ no tiene ciclos de forma determinista o para descalificar una respuesta falsa, se evalúa con el cuantificador universal ($\forall$), donde se debe garantizar que \textit{ninguna} de las posibles permutaciones de vértices forme un ciclo válido.
+
+    \vspace{0.3cm}
+    \noindent\textbf{Por qué no cabe únicamente en $\mathbf{NP}$ ni en $\mathbf{coNP}$}
+
+    El lenguaje $\text{HAM\_MOD}$ combina simultáneamente una condición existencial ($\exists$ para $G_1$) y una condición universal ($\forall$ para $G_2$) sobre dos instancias independientes.
+    Si quisiéramos clasificar a $\text{HAM\_MOD}$ dentro de \textbf{$\mathbf{NP}$}, necesitaríamos un certificado polinomial para probar que $G_2$ \textit{no} tiene ciclo Hamiltoniano, lo cual requeriría que $\mathbf{coNP} \subseteq \mathbf{NP}$.
+    De igual forma, si quisiéramos clasificarlo únicamente en \textbf{$\mathbf{coNP}$}, requeriríamos que $\mathbf{NP} \subseteq \mathbf{coNP}$.
+    Bajo la conjetura ampliamente aceptada de que $\mathbf{NP} \neq \mathbf{coNP}$, un problema que combina ambas condiciones no puede ser contenido de forma única en ninguna de las dos clases, quedando fuera de la unión de $\mathbf{NP} \cup \mathbf{coNP}$.
+
+    \vspace{0.3cm}
+    \noindent\textbf{Conclusión del análisis}
+
+    Dado que tanto $\mathbf{NP}$ como $\mathbf{coNP}$ están contenidas en la clase de tiempo exponencial determinista ($\mathbf{NP} \subseteq \mathbf{EXP}$ y $\mathbf{coNP} \subseteq \mathbf{EXP}$), cualquier problema definido por este tipo de condiciones se puede \textbf{decidir mediante un algoritmo determinista de fuerza bruta}.
+
+    \subsubsection*{P.D. que $\text{HAM\_MOD}$ pertenece a EXP mediante una máquina determinista decidible}
+
+    \begin{enumerate}[label=\arabic*., leftmargin=*]
+        \item \textbf{Construcción del Decisor Determinista $M((G_1, G_2))$:}
+        \begin{itemize}[leftmargin=*]
+            \item \textbf{Fase 1 (Verificar $G_1$):} Explora de forma determinista las $|V_1|!$ posibles permutaciones de vértices de $G_1$. Si encuentra al menos una permutación que forme un ciclo Hamiltoniano válido, continúa con la fase 2; si explora todas sin éxito, \textbf{Rechaza}.
+            \item \textbf{Fase 2 (Verificar $G_2$):} Explora de forma determinista las $|V_2|!$ posibles permutaciones de vértices de $G_2$. Si comprueba que \textbf{ninguna} permutación forma un ciclo Hamiltoniano, \textbf{Acepta}; si encuentra alguna que sí forma ciclo, \textbf{Rechaza}.
+        \end{itemize}
+
+        \item \textbf{Análisis de Complejidad de Tiempo:}\\
+        La exploración de $G_1$ toma tiempo $O(|V_1|! \cdot |V_1|) = O(2^{c_1 |V_1| \log |V_1|})$.
+
+        La exploración de $G_2$ toma tiempo $O(|V_2|! \cdot |V_2|) = O(2^{c_2 |V_2| \log |V_2|})$.
+
+        El tiempo total del algoritmo es la suma de ambos tiempos exponenciales:
+        \[ T(n) = O(2^{n^k}) \]
+        donde $n = |\langle G_1, G_2 \rangle|$ es el tamaño de la entrada.
+    \end{enumerate}
+
+    \subsubsection*{Conclusión final}
+    Dado que no existe un algoritmo de tiempo polinomial determinista conocido, y al combinar dos condiciones asimétricas ($\mathbf{NP}$ y $\mathbf{coNP}$) sobre instancias distintas que pueden resolverse exhaustivamente en tiempo exponencial, se conjetura que la clase de complejidad adecuada para $\text{HAM\_MOD}$ es \textbf{$\mathbf{EXP}$}.
 
     \vspace{0.5cm}
     \item \textbf{CONECTIVIDAD} = $\{ \langle G \rangle \mid G \text{ es una gráfica conexa} \}$
     
     \subsection*{Solución}
-    % Escribe tu respuesta aquí
+    \subsubsection*{Definición Formal del Lenguaje $\text{CONECTIVIDAD}$}
+
+    El lenguaje del problema se define en su versión de decisión como:
+    \[ \text{CONECTIVIDAD} = \{ \langle G \rangle \mid G \text{ es una gráfica no dirigida y conexa} \} \]
+
+    Una gráfica no dirigida $G = (V, E)$ es \textbf{conexa} si para todo par de vértices $u, v \in V$, existe al menos un camino (ruta) en $G$ que conecta a $u$ con $v$.
+
+    \subsubsection*{Clasificación de Complejidad}
+
+    El problema \textbf{$\text{CONECTIVIDAD}$ pertenece a la clase $\mathbf{P}$}. 
+
+    Dado que se cuenta con algoritmos deterministas de exploración de gráficas que pueden verificar la conexidad en tiempo lineal respecto al número de vértices y aristas, el problema es decidible en tiempo polinomial determinista.
+
+    \vspace{0.3cm}
+    \noindent\textbf{P.D. que $\text{CONECTIVIDAD}$ pertenece a P mediante una máquina determinista decidible}
+
+    \subsubsection*{1. Algoritmo Determinista de Decisión $M(\langle G \rangle)$}
+
+    Dada la codificación estándar de una gráfica no dirigida $G = (V, E)$ (por ejemplo, mediante listas de adyacencia):
+    \begin{itemize}[leftmargin=*]
+        \item Si $0 \le |V| \le 1$, la gráfica es trivialmente conexa, por lo que la máquina \textbf{Acepta} (devuelve \texttt{1}).
+        \item Selecciona un vértice inicial arbitrario $s \in V$.
+        \item Inicializa un arreglo de marcas o un conjunto de nodos visitados $S = \{s\}$.
+        \item Ejecuta BFS o DFS comenzando en $s$:
+        \begin{itemize}[leftmargin=*]
+            \item Mientras existan nodos no visitados, toma un nodo $u \in S$ no procesado, examina todos sus vecinos $v$ en $G$ y los añade al conjunto $S$.
+        \end{itemize}
+        \item Compara la cardinalidad del conjunto de nodos visitados $|S|$ con el total de vértices $|V|$.
+        \item Si $|S| = |V|$ (es decir, todos los nodos de $G$ fueron alcanzados desde $s$), la máquina \textbf{Acepta} (devuelve \texttt{1}).
+        \item Si $|S| < |V|$ (existen nodos inalcanzables desde $s$), la máquina \textbf{Rechaza} (devuelve \texttt{0}).
+    \end{itemize}
+
+    \subsubsection*{2. Análisis de Complejidad de Tiempo}
+
+    La inicialización toma tiempo $O(|V|)$.
+    
+    El algoritmo de exploración (BFS/DFS) visita cada vértice a lo más una vez y examina cada arista dos veces (una por cada uno de sus extremos en una gráfica no dirigida).
+    
+    Por lo tanto, el tiempo total de ejecución está acotado por:
+    \[ T(n) = O(|V| + |E|) \]
+    Como $|V| + |E|$ es proporcional a la longitud de la cadena de entrada $n = |\langle G \rangle|$, la función de complejidad de tiempo es polinomial $O(n)$. Por ende:
+    \[ \text{CONECTIVIDAD} \in \mathbf{P} \]
+
+
+    \subsubsection*{Conclusión}
+
+    Al ser un lenguaje perteneciente a la clase determinista $\mathbf{P}$:
+
+    Como $\mathbf{P} \subseteq \mathbf{NP}$, el algoritmo determinista $M$ actúa como un verificador que ignora cualquier certificado, manteniendo la complejidad de tiempo $O(|V| + |E|)$.
+
+    Por otro lado, como la clase $\mathbf{P}$ es cerrada bajo complemento ($\mathbf{P} = \text{co}\mathbf{P}$), el complemento $\overline{\text{CONECTIVIDAD}}$ (las gráficas desconexas) también pertenece a $\mathbf{P}$, concluyendo que \textbf{$\text{CONECTIVIDAD} \in \mathbf{coNP}$}.
 
     \vspace{0.5cm}
     \item \textbf{(*)} \textbf{CONJ\_INDEP} = $\{ \langle G, k \rangle \mid \text{la gráfica } G \text{ tiene un conjunto independiente de tamaño al menos } k \}$ \\
