@@ -25,12 +25,11 @@ Se sabe que solo dos de estas afirmaciones son verdaderas. ¿Qué oficio desempe
     \textbf{Nota:} Si el problema elegido no es uno de los vistos en clase, demuestra que el problema está en NP.
     
     \subsection*{Solución}
-    % Escribe tu respuesta aquí
     Primero sabemos por las proposiciones que la ultima sucede, pues todos son vecinos, sin embargo, sucede que el policia y el bombero son vecinos de Juan, de este modo 
     
     \textit{Nota: Si el problema elegido no es uno de los vistos en clase, demuestra que el problema está en $\text{NP}$.}\\
 
-     Se pueden tener varias proposiciones logicas para este problema; visto de esta forma, se tiene la siguiente estructura:
+    Se pueden tener varias proposiciones logicas para este problema; visto de esta forma, se tiene la siguiente estructura:
     \begin{enumerate}
         \item $p \rightarrow   q$
         \item $m \rightarrow   q$
@@ -51,7 +50,7 @@ Se sabe que solo dos de estas afirmaciones son verdaderas. ¿Qué oficio desempe
     \textbf{Datos:} Proposiciones logicas en conjuncion booleana, $p \rightarrow   q$, $m \rightarrow   q$, $B \wedge S \rightarrow  b$, $p \wedge b \rightarrow  J$, $b \wedge q \wedge p$\\
     \textbf{Respuesta:} $(\neg p \vee q) \wedge (\neg m \vee q) \wedge (\neg B \vee \neg S \vee b) \wedge (\neg p \vee \neg b \vee J) \wedge (b \wedge q \wedge p) = 1$ \\
 
-   Para la solución única del acertijo, definimos los valores de verdad de las variables atómicas según las profesiones asignadas:
+    Para la solución única del acertijo, definimos los valores de verdad de las variables atómicas según las profesiones asignadas:
 
 \begin{itemize}
     \item $p = 0$: Bruno no es policía; el policía es Juan.
@@ -105,7 +104,7 @@ Se sabe que solo dos de estas afirmaciones son verdaderas. ¿Qué oficio desempe
 
     Proponemos un algoritmo determinista de verificacion $(x,u)$ 
     \begin{verbatim}
-       result = 1
+        result = 1
         // Evaluar cada cláusula C_i bajo la asignación dada por u
         for (i = 0; i < m; i++):
             eval_clausula = 0
@@ -131,22 +130,20 @@ Se sabe que solo dos de estas afirmaciones son verdaderas. ¿Qué oficio desempe
     \item Da una representación visual (diagrama, figura, imagen, etc..) del ejemplar concreto, de acuerdo al problema del inciso anterior.
     
     \subsection*{Solución}
-    % Escribe tu respuesta aquí 
     Se puede mediante graficas representar el problema y cada proposicion.
-     \begin{figure}
+    \begin{figure}[H]
         \centering
-        \includegraphics[width=0.5\linewidth]{tt.jpg}
+        \includegraphics[width=0.8\linewidth]{imagenes/tt.jpg}
     \end{figure}
 
-     \begin{figure}
+    \begin{figure}[H]
         \centering
-        \includegraphics[width=0.5\linewidth]{ttt.jpg}
+        \includegraphics[width=0.8\linewidth]{imagenes/ttt.jpg}
     \end{figure}
 
     \item Resuelve el acertijo exhibiendo un certificado.
     
     \subsection*{Solución}
-    % Escribe tu respuesta aquí
     Decimos que $L \in NP \iff \exists M$ Determinista $| \exists x $, $|u| = n^k$  $M(x,a) = 1$.\\
 
     Definimos el certificado $u$ como el vector binario de asignación de verdad para las 9 variables proposicionales $u = (Bm, Bp, Bb, Jm, Jp, Jb, Sm, Sp, Sb) \in \{0,1\}^9$:$$u = (1, 0, 0, 0, 1, 0, 0, 0, 1)$$
