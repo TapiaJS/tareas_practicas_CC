@@ -6,3 +6,72 @@
 \begin{tcolorbox}[enunciado]
 Demostrar que el problema pertenece a $NP$.
 \end{tcolorbox}
+
+\subsection{Solución}
+
+Antes de pasar a demostrar que la versión de decisión del problema $\text{MOCHILA} \in \text{NP}$, lo expresamos en su versión canónica:
+
+\vspace{0.3cm}
+\noindent\textbf{MOCHILA}
+
+\textbf{Parámetros (Datos de entrada):}
+\begin{itemize}[leftmargin=*]
+    \item Un conjunto de $n$ pedidos $I = \{1, 2, \dots, n\}$.
+    \item Para cada pedido $i \in I$, un peso $w_i \in \mathbb{Z}^+$ y una ganancia $v_i \in \mathbb{Z}^+$.
+    \item Una capacidad máxima de peso para la mochila $W \in \mathbb{Z}^+$.
+    \item Una ganancia meta $V \in \mathbb{Z}^+$.
+\end{itemize}
+
+\textbf{Pregunta:} ¿Existe un subconjunto de pedidos $S \subseteq \{1, 2, \dots, n\}$ tal que el peso total no supere $W$ y la ganancia total sea de al menos $V$?
+
+\vspace{0.3cm}
+{\color{unamBlue!80!black} \subsubsection*{P.D. que $\text{MOCHILA} \in \text{NP.}$}}
+
+\textbf{Definición del Lenguaje:}
+\[ \text{MOCHILA} = \left\{ x = (n, (w_1, v_1), \dots, (w_n, v_n), W, V) \;\middle|\; \exists S \subseteq \{1, \dots, n\} \text{ t.q. } \sum_{i \in S} w_i \le W \text{ y } \sum_{i \in S} v_i \ge V \right\} \]
+
+\subsubsection*{1. Definición del Certificado (Testigo) $u$ y Esquema de Codificación}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Certificado ($u$):} El certificado es la especificación del subconjunto de pedidos seleccionados $S \subseteq \{1, 2, \dots, n\}$.
+    \item \textbf{Esquema de Codificación:} Se codifica como una \textbf{cadena} $u = (b_1, b_2, \dots, b_n) \in \{0, 1\}^n$, donde:
+    \[ b_i = \begin{cases} 1 & \text{si el pedido } i \in S \text{ (se incluye en la mochila)} \\ 0 & \text{si el pedido } i \notin S \text{ (se excluye)} \end{cases} \]
+    \item \textbf{Cota de Tamaño del Certificado:} La cadena $u$ requiere exactamente $n$ bits de almacenamiento. Dado que la representación del ejemplar $x$ incluye la lista de los $n$ pedidos, la longitud del certificado satisface $|u| = n \le |x|$. Por lo tanto, el tamaño del certificado está acotado polinomialmente por $p(|x|) = O(|x|)$.
+\end{itemize}
+
+\subsubsection*{2. Algoritmo del Verificador Determinista $M(x, u)$}
+
+El verificador determinista $M$ toma como entrada la cadena del ejemplar $x = (n, (w_1, v_1), \dots, (w_n, v_n), W, V)$ y el certificado candidato $u = (b_1, b_2, \dots, b_n)$:
+
+\begin{itemize}[leftmargin=*]
+    \item Declara e inicializa \texttt{peso\_acumulado = 0} y \texttt{ganancia\_acumulada = 0}.
+    \item Recorre desde $i = 1$ hasta $n$:
+    \begin{itemize}[leftmargin=*]
+        \item Si $b_i == 1$:
+        \begin{itemize}[leftmargin=*]
+            \item \texttt{peso\_acumulado = peso\_acumulado + w\_i}
+            \item \texttt{ganancia\_acumulada = ganancia\_acumulada + v\_i}
+        \end{itemize}
+    \end{itemize}
+    \item Comprueba si se cumplen simultáneamente ambas condiciones:
+    \[ \text{\texttt{peso\_acumulado}} \le W \quad \text{Y} \quad \text{\texttt{ganancia\_acumulada}} \ge V \]
+    \item Si \textbf{ambas} condiciones son verdaderas, la máquina \textbf{Acepta} (retorna \texttt{1}).
+    \item En caso contrario (si el peso supera $W$ o la ganancia es menor a $V$), la máquina \textbf{Rechaza} (retorna \texttt{0}).
+\end{itemize}
+
+\subsubsection*{Análisis de Complejidad de Tiempo del Verificador}
+
+El ciclo de acumulación recorre los $n$ elementos de la cadena, realizando una suma para el peso y una para la ganancia por cada iteración. Esto toma \textbf{$O(n)$ operaciones de suma}.\\
+La comprobación final requiere únicamente 2 comparaciones numéricas, lo cual toma \textbf{$O(1)$}.\\
+Por lo tanto, el tiempo total de ejecución del verificador $M$ es \textbf{$O(n)$}, lo cual representa un tiempo estrictamente \textbf{polinomial} con respecto al tamaño de la entrada $|x|$.
+
+\subsubsection*{Demostración de Correctitud}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Correctitud para el ``SÍ'' ($x \in \text{MOCHILA}$):} Si la respuesta al ejemplar $x$ es afirmativa, existe al menos una combinación válida de pedidos $S^*$. La cadena de $S^*$ sirve como certificado $u$ de tamaño polinomial que hace que $M(x, u) = 1$.
+    \item \textbf{Correctitud para el ``NO'' ($x \notin \text{MOCHILA}$):} Si la respuesta es negativa, ninguna combinación de pedidos logra cumplir ambas condiciones al mismo tiempo. Por consiguiente, para cualquier certificado $u \in \{0, 1\}^n$ ingresado, el verificador devolverá $M(x, u) = 0$.
+\end{itemize}
+
+\subsubsection*{Conclusión}
+
+Al haber definido un certificado de tamaño polinomial $u \in \{0, 1\}^n$ y un verificador determinista $M$ de tiempo polinomial $O(n)$, queda demostrado formalmente que \textbf{$\text{MOCHILA} \in \mathbf{NP}$}.
