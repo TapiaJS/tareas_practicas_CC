@@ -2,7 +2,8 @@ import random
 import sys
 
 BITS = 16
-VALOR_MAX = (2**BITS) - 1 #Valor máximo representable: 65535.
+VALOR_MAX_VW = (2**BITS) - 1 #Valor máximo representable: 65535.
+VALOR_MAX_WVI = VALOR_MAX_VW // 15
 
 def binarizar(decimal, bits=BITS):
     """
@@ -17,7 +18,7 @@ def generar_cadena_ejemplar():
     E -> (valor, valor), E | epsilon
     A -> valor numérico <= 65535
 
-    La regla E tiene un 2% de proabilidad de derivar en epsilon (detenerse).
+    La regla E tiene un 5% de proabilidad de derivar en epsilon (detenerse).
     """
     pedidos = []
     while True:
@@ -25,13 +26,13 @@ def generar_cadena_ejemplar():
         if random.random() < 0.02 and len(pedidos) > 0:
             break
         #Generación para los valores de los pedidos.
-        w_i = random.randint(1, VALOR_MAX)
-        v_i = random.randint(1, VALOR_MAX)
+        w_i = random.randint(1, VALOR_MAX_WVI)
+        v_i = random.randint(1, VALOR_MAX_WVI)
         pedidos.append((w_i, v_i))
 
     #Generación de la capacidad y ganancia.
-    W = random.randint(1, VALOR_MAX)
-    V = random.randint(1, VALOR_MAX)
+    W = random.randint(VALOR_MAX_WVI, VALOR_MAX_VW)
+    V = random.randint(1, VALOR_MAX_VW)
 
     #Codificación binaria.
     cadena_binaria = ""

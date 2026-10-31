@@ -11,3 +11,40 @@ Para cada ejemplar:
     \item proponer al menos 2 certificados interesantes (por ejemplo, que considere una respuesta parcialmente correcta, que contenga cierta redundancia, etc).
 \end{itemize}
 \end{tcolorbox}
+
+\subsection{Certificados}
+Las letras de cada certificado, hacen alusión al tipo de certificado que es.
+Si contiene una V es que es válido.
+Si contiene una F es que es inválido.
+El interesante del ejemplar 1, es un certificado modificado. Se borro el bit inical de dicho certificado, a la hora de querer ejecutarlo con el verificador, el verificador lo rechaza.
+El interesante del ejemplar 2, se forzó al generador de certificados, a que imprimeran puros 0, por ende, es inválido, porque no alcanza la meta impuesta.
+El ejemplar 3 fue forzado para que siempre diera falso, se generó de manera aleatoria, y los ultimos 16 bits, se cambiaron por puros unos, haciendo que la ganancia fuera inalcanzable con el modelo actual.
+Entonces al generar 3 certificados, todos dieron falso. 
+
+\subsection{Pruebas}
+Generación de Ejemplares:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\linewidth]{imagenes/ejecuciones/1.png}
+    \label{fig:placeholder}
+\end{figure}
+
+Se usará el ejemplar1.txt.
+Generación de certificado:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\linewidth]{imagenes/ejecuciones/2.png}
+    \label{fig:placeholder}
+\end{figure}
+
+Verificador: 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\linewidth]{imagenes/ejecuciones/3.png}
+    \label{fig:placeholder}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\linewidth]{imagenes/ejecuciones/4.png}
+    \label{fig:placeholder}
+\end{figure}

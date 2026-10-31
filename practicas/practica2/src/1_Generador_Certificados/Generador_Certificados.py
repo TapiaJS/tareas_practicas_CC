@@ -30,11 +30,12 @@ def desbinarizar_ejemplar(binarios, bits=BITS):
 
     return pedidos, W, V
 
-def generar_certificado_aleatorio(num_pedidos):
+def generar_certificado_aleatorio(num_pedidos, prob_tomar=0.25):
     """
-    Fenera un arreglo de 0's y 1's con 50% de probabilidad para cada pedido.
+    Genera un arreglo de 0's y 1's asignando 1 con una probabilidad de prob_tomar. 
+    Por defecto del 25%.
     """
-    return [random.choice([0, 1]) for _ in range(num_pedidos)]
+    return [1 if random.random() < prob_tomar else 0 for _ in range(num_pedidos)]
 
 def crear_certificado():
     nombre_ejemplar = input("Ingrese el nombre del archivo del ejemplar: ").strip()

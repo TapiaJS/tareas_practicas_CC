@@ -1,3 +1,4 @@
+
 % ============================================================
 % Ejercicio 3
 % ============================================================
@@ -15,3 +16,60 @@ El programa debe imprimir como salida:
     \item Respuesta a la pregunta: ¿el ejemplar, con el certificado dado, satisface la condición de pertenencia al lenguaje correspondiente?
 \end{itemize}
 \end{tcolorbox}
+
+\subsection{Algoritmo de Verificación}
+El algoritmo primero revisa que la cardinalidad del certificado sea la misma con la cantidad del ejemplar, pues de otra manera el certificado no sería el correcto para el ejemplar.
+Extrae W y V para tenerlos a la mano.
+Ahora recorre de manera paralela Las tuplas del ejemplar junto con el certificado. Si el valor actual del certificado es 0, lo ignora y pasa al siguiente paso.
+Si el valor actual del certificado es 1, entonces suma el peso y la ganancia actual, de igual manera verifica que el peso no exceda el de la mochila.
+Si se llega a pasar, se detiene y devuelve no.
+Si llega al final, verifica que haya pasado la meta, si no la paso, rechaza. Si el peso no se excede y cumple la meta, entonces devuelve si.
+
+\begin{algorithm}[H]
+\caption{Verificador de Certificados para el Problema de la Mochila}
+\KwIn{Cadena binaria del ejemplar $I$, Cadena binaria del certificado $c$}
+\KwOut{Respuesta sobre la pertenencia al lenguaje (SÍ / NO)}
+
+\BlankLine
+\tcp{Fase 1: Decodificación del Ejemplar}
+$(P, W, V) \leftarrow \text{DesbinarizarEjemplar}(I)$ \tcp*{$P$: lista de tuplas $(w_i, v_i)$}
+$n \leftarrow \text{Longitud}(P)$\;
+
+\BlankLine
+\tcp{Fase 2: Verificación de Estructura / Sintaxis}
+\If{$\text{Longitud}(c) \neq n$}{
+    \Return{\textbf{NO} (Error de longitud en el certificado)}\;
+}
+
+\BlankLine
+\tcp{Fase 3: Recorrido en Paralelo y Evaluación Semántica}
+$peso\_acumulado \leftarrow 0$\;
+$ganancia\_acumulada \leftarrow 0$\;
+
+\For{$i \leftarrow 1$ \KwTo $n$}{
+    $bit \leftarrow c[i]$\;
+    $(w_i, v_i) \leftarrow P[i]$\;
+    
+    \If{$bit = \text{'1'}{}$}{
+        $peso\_acumulado \leftarrow peso\_acumulado + w_i$\;
+        $ganancia\_acumulada \leftarrow ganancia\_acumulada + v_i$\;
+        
+        \tcp{Corte temprano en caso de exceso de peso}
+        \If{$peso\_acumulado > W$}{
+            \Return{\textbf{NO} (El peso acumulado excede la capacidad $W$)}\;
+        }
+    }
+    \ElseIf{$bit \neq \text{'0'}{}$}{
+        \Return{\textbf{NO} (Carácter inválido en el certificado)}\;
+    }
+}
+
+\BlankLine
+\tcp{Fase 4: Decisión Final de Pertenencia}
+\If{$peso\_acumulado \le W$ \KwAnd $ganancia\_acumulada \ge V$}{
+    \Return{\textbf{SÍ} (El certificado satisface las condiciones del lenguaje)}\;
+}
+\Else{
+    \Return{\textbf{NO} (La ganancia acumulada no alcanza la meta $V$)}\;
+}
+\end{algorithm}

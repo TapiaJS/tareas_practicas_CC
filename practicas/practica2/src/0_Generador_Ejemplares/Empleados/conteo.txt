@@ -1,6 +1,0 @@
-1 113
-2 137
-3 133
-
-El número de la derecha es la cantidad de pedidos.
-Estos son los ejemplares que se usarán en la práctica.
