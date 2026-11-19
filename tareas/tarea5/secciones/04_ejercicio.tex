@@ -13,14 +13,63 @@ Demuestra la equivalencia de estos problemas mostrando las reducciones $CHD \leq
     \item \textbf{Problema:}  CICLO HAMILTONIANO NO DIRIGIDO (CHND)\\
     \textbf{Ejemplar:}  Una gráfica no dirigida.\\
     \textbf{Pregunta:} ¿Existe un ciclo no dirigido que pase por todos los vértices exactamente una vez?
-    \item \textbf{Problema:} 3SAT-IGUALDAD. \\ 
-    \textbf{Ejemplar:} Una fórmula booleana $\phi$ en FNC en la cual el número de cláusulas es igual al número de variables. \\
-    \textbf{Pregunta:} ¿Existe una asignación que satisface $\phi$?
-    \item \textbf{Problema:} 3SAT BALANCEADO. \\
-    \textbf{Ejemplar:} Una fórmula booleana $\phi$ en FNC en la cual cada cláusula contiene 3 literales, y cada variable en $\phi$ aparece negada y sin negación el mismo número de veces. \\
-    \textbf{Pregunta:} ¿Existe una asignación que satisface $\phi$?
 \end{itemize}
 \end{tcolorbox}
 
 % ------------------------- Solución -------------------------
 \section{Respuestas}
+
+
+Esto sucede pues podemos pasar de uno dirigido a uno no dirigido de manera facil. \textbf{$\text{CHND} \le_p \text{CHD}$} se toma como tecnica de reduccion el diseño de componentes, ya que facilitamos la manera en como se ve la grafica.\\
+
+De esta manera, proponemos la función $f: \Sigma_1^* \rightarrow \Sigma_2^*$ tal que $f(\langle G \rangle) = \langle G' \rangle$. Sabemos que cada arista no dirigida $\{v_i, v_j\} \in E$ permite el tránsito en ambos sentidos, esto quiere decir que el vértice $v_i$ tenga una arista dirigida hacia $v_j$, y que $v_j$ tenga una arista dirigida hacia $v_i$. Por lo tanto, se requieren ambas direcciones: $(v_i, v_j) \land (v_j, v_i)$.\\
+
+Esto en una matriz de adyacencia se representa con dos valores binarios, $0$ para indicar que no existe una arista dirigida entre $(v_i, v_j)$, y $1$ para indicar que sí existe. Dado que existe una arista no dirigida $e = \{v_i, v_j\} \in E(G)$, para transformarla a su versión dirigida deben existir ambas aristas dirigidas $(v_i, v_j) \in E(G')$ y $(v_j, v_i) \in E(G')$; así, a partir de $G = (V, E)$ se construye la gráfica dirigida $G' = (V', E')$ donde $V' = V$ y $E' = \{ (v_i, v_j), (v_j, v_i) \mid \{v_i, v_j\} \in E \}$.\\
+
+Para demostrar que se puede construir en tiempo polinomial, como hemos mencionada se puede construir una matriz de adyacencia, tal que para cada $v_1,v_2...v_n$ le corresponde un valor para cada $v_1,v_2,..v_n$ de los vetices de la grafica, esto excepto la diagonal
+
+$$A = \begin{pmatrix} 0 & 1 & 0 & 1 \\ 1 & 0 & 1 & 0 \\ 0 & 1 & 0 & 1 \\ 1 & 0 & 1 & 0 \end{pmatrix}$$
+
+Dado que es una matriz para poder poner el valor a las aristas faltantes de $G'$ se toma como $O(n^2)$ donde $n$ es el conjuno de vertices de la matriz.\\
+
+Finalmente hay que demostrar que $x \in L_1 \leftrightarrow f(x) \in L_2$. 
+\begin{enumerate}
+    \item $x \in L_1 \rightarrow f(x) \in L_2$\\
+
+    Supongamos que $G = (V, E)$ tiene un ciclo hamiltoniano $C = (v_{i_1}, v_{i_2}, \dots, v_{i_n}, v_{i_1})$ con $n \ge 3$. Para cada par de vértices consecutivos en el ciclo existe la arista no dirigida $\{v_{i_k}, v_{i_{k+1}}\} \in E(G)$. Por construcción de $G'$, tanto la arista dirigida $(v_{i_k}, v_{i_{k+1}})$ como $(v_{i_{k+1}}, v_{i_k})$ pertenecen a $E(G')$. En particular, siguiendo el orden del recorrido original, todas las aristas dirigidas $(v_{i_1}, v_{i_2}), (v_{i_2}, v_{i_3}), \dots, (v_{i_n}, v_{i_1})$ existen en $E(G')$, formando un ciclo hamiltoniano dirigido en $G'$. Por lo tanto, $f(x) \in L_2$.\\
+    
+    \item $x \notin L_1 \rightarrow f(x) \notin L_2$\\
+
+    Por contrapositiva supongamos que $G'$ posee un ciclo hamiltoniano dirigido $C' = (v_{i_1}, v_{i_2}, \dots$,  $ v_{i_n}, v_{i_1})$. Como cada arista dirigida $(v_{i_k}, v_{i_{k+1}}) \in E(G')$ fue creada únicamente a partir de una arista no dirigida $\{v_{i_k}, v_{i_{k+1}}\} \in E(G)$, y al ser un ciclo simple de longitud $n \ge 3$ no puede recorrer una arista y regresar por la misma sin repetir vértices, la misma secuencia de vértices constituye un ciclo hamiltoniano válido en $G$. Así, si en $G$ no hay un ciclo hamiltoniano ($x \notin L_1$), $G'$ por lo tanto $f(x) \notin L_2$.
+
+    Por 1 y por 2,  $\text{CHND} \le_p \text{CHD}$. 
+    
+\end{enumerate}
+
+    Para demostrar \textbf{$\text{CHD} \le_p \text{CHND}$}, lo podemos realizar nuevamente por diseño de componentes. Al igual que el caso anterior proponemos la función $f: \Sigma_1^* \rightarrow \Sigma_2^*$ tal que $f(\langle G \rangle) = \langle G' \rangle$. Sabemos que una grafica dirigida que contiene un ciclo hamiltoniano tiene un camino tal que $C = (v_{1}, v_{2}, \dots, v_{n}, v_{1})$ en $G = (V,E)$. Como para cada vertice $v_i \in G(V)$ existe al menos una arista para formar el ciclo hamiltotiano se podria agregar dos nuevos vértices en lugar de eliminar una arista, tal que $(u')$ y $(v') $ a  $(G)$ formando el conjunto de vertices $\{u'_i, v_i, v'_i\}$ en $G'$.\\
+
+    Para cada vértice $v_i \in V$, se añaden dos aristas no dirigidas en $G'$ para conectar los tres vértices internamente: $\{u'_i, v_i\} \in E'$ y $\{v_i, v'_i\} \in E'$. Posteriormente, por cada arista dirigida $(v_i, v_j) \in E$ en la gráfica original $G$, se añade una arista no dirigida en $G'$ entre el nodo de salida de $v_i$ y el nodo de entrada de $v_j$, tal que $\{v'_i, u'_j\} \in E'$.\\
+
+    \textbf{Complejidad}: Si $G$ tiene $n = |V|$ vértices y $m = |E|$ aristas, la grafica $G'$ resultante contiene $|V'| = 3n$ vértices y $|E'| = 2n + m$ aristas. Por lo tanto se ejecuta en tiempo $O(n + m)$.\\
+
+
+    Finalmente hay que demostrar que $x \in L_1 \leftrightarrow f(x) \in L_2$. 
+    \begin{enumerate}
+        \item $x \in L_1 \rightarrow f(x) \in L_2$\\
+        
+        Si $G$ tiene un ciclo hamiltoniano dirigido $C = (v_1, v_2, \dots, v_n, v_1)$, entonces por cada arista dirigida $(v_i, v_{i+1}) \in E$ y $(v_n, v_1) \in E$ existe la arista no dirigida $\{v'_i, u'_{i+1}\} \in E'$ y $\{v'_n, u'_1\} \in E'$ en $G'$. Podemos construir el siguiente ciclo no dirigido en $G'$:
+        
+        $$u'_1 - v_1 - v'_1 - u'_2 - v_2 - v'_2 - \dots - u'_n - v_n - v'_n - u'_1$$
+        
+        Este camino recorre exactamente los $3n$ vértices de $G'$ sin repetir ninguno y regresa al punto de partida, formando un ciclo hamiltoniano no dirigido válido en $G'$.
+        
+
+        
+        \item $x \notin L_1 \rightarrow f(x) \notin L_2$\\
+
+        Supongamos que $G'$ posee un ciclo hamiltoniano no dirigido $C'$. Para cualquier vértice $v_i \in V$, el nodo intermedio $v_i$ en $G'$ solo tiene grado $2$ (sus únicos vecinos son $u'_i$ y $v'_i$). Por lo tanto, cualquier ciclo hamiltoniano $C'$ que visite $v_i$ debe necesariamente usar las aristas $\{u'_i, v_i\}$ y $\{v_i, v'_i\}$, atravesando ese conjunto de vertices corto por completo en la secuencia $u'_i - v_i - v'_i$.\\
+        
+        Como las aristas externas únicamente conectan nodos de salida $v'_i$ con nodos de entrada $u'_j$, tras salir por $v'_i$ la única forma de pasar por el otro corto conjunto de vertices en $G'$ es a través de una arista externa $\{v'_i, u'_j\} \in E'$, la cual existe si y solo si $(v_i, v_j) \in E$ en la gráfica $G$, asimismo, si $C'$ recorriera los tripletes en sentido inverso, basta invertir esa orientación de $C'$. Entonces, la secuencia visitada por $C'$ en $G'$ fuerza un orden de vértices $v_{i_1}, v_{i_2}, \dots, v_{i_n}$ conectado por aristas dirigidas válidas $(v_{i_k}, v_{i_{k+1}}) \in E$, lo que constituye un ciclo hamiltoniano dirigido en $G$.\cite{sipser2013introduction}\\
+
+        De esta forma por 1 y 2 $\text{CHD} \le_p \text{CHND}$
+    \end{enumerate}
