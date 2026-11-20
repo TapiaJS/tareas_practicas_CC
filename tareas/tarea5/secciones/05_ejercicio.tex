@@ -10,5 +10,13 @@ Investiga en qué consisten las reducciones de Cook y da un ejemplo detallado ¿
 % ------------------------- Solución -------------------------
 \section{Respuestas}
 \subsection{a}
+Una \textbf{reducción de Cook} (o reducción de Turing en tiempo polinomial, denotada $A \le_T^P B$) de un problema $A$ a un problema $B$ es un algoritmo que decide la pertenencia a $A$ operando en tiempo polinomial mediante una máquina de Turing con oráculo (es decir, una máquina que realiza llamadas de procedimiento gratuitas en un solo paso a una subrutina que decide el problema $B$)\\
+
+El algoritmo que resuelve $A$ puede consultar el oráculo de $B$ múltiples veces a lo largo de su cómputo.Las instancias consultadas a $B$ se pueden generar dinámicamente según los resultados de consultas previas. El algoritmo puede procesar, combinar y manipular lógicamente, por ejemplo, negar o aplicar disyunciones a las respuestas recibidas de $B$ para determinar el resultado final de $A$.\\
+
+Por lo tanto, la reducción de Cook representa una forma general para formalizar que un problema $A$ no es más difícil de resolver que $B$, puesto que asegura que si $B$ admite una solución en tiempo polinomial, entonces $A$ también se resuelve en tiempo polinomial.\\
+
+
+Con respecto a las \textbf{reducciones de Karp} se caracteriza por utilizar una función de mapeo $f(x)$ computable en tiempo polinomial, que transforma una instancia del problema $A$ en una instancia del problema $B$, realizando una única consulta implícita. Se mantiene la definición $x \in A \iff f(x) \in B$. A diferencia de la reducción de Cook, no permite realizar múltiples consultas. Además, no es cerrada bajo complemento, ya que $A \leq_m^P B$ no implica necesariamente que $A \leq_m^P \overline{B}$, salvo que se cumpla $\text{NP} = \text{coNP}$. Finalmente, aunque es una reducción más restrictiva, puede requerir más tiempo de ejecución que una reducción de Cook, pues existen problemas para los cuales las reducciones de Karp requieren un tiempo de al menos $n^k$.cite{Longpre1990}\\
 
 \subsection{b}
