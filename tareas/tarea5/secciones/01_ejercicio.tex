@@ -113,10 +113,10 @@ Si $\phi$ es satisfacible, existe una asignación de verdad $\tau: X \to \{0, 1\
 \noindent\textbf{$(\Leftarrow)$ Si $f(\phi) \in \text{3SAT BALANCEADO}$, entonces $\phi \in \text{3SAT-IGUALDAD}$:}\\
 Si $\psi$ es satisfacible, existe una asignación $\tau'$ que satisface simultáneamente todas las cláusulas de $\psi$. Dado que las cláusulas originales de $\phi$ forman un subconjunto directo de las cláusulas de $\psi$, la restricción $\tau = \tau'|_X$ satisface obligatoriamente todas las cláusulas de $\phi$. Por lo tanto, $\phi$ es satisfacible.
 
-\textbf{Nota:} La notación $\tau = \tau'|_X$ se lee como ``$\tau$ es la restricción de la función $\tau'$ al conjunto $X$'' y significa, en términos prácticos, que tomamos la asignación completa $\tau'$ y nos quedamos únicamente con los valores de verdad asignados a las variables originales en $X$, ignorando por completo las variables auxiliares.}
+\textbf{Nota:} La notación $\tau = \tau'|_X$ se lee como ``$\tau$ es la restricción de la función $\tau'$ al conjunto $X$'' y significa, en términos prácticos, que tomamos la asignación completa $\tau'$ y nos quedamos únicamente con los valores de verdad asignados a las variables originales en $X$, ignorando por completo las variables auxiliares.
 
 \vspace{0.3cm}
-\noindent\textbf{4. Ejemplo Ilustrativo de la Transformación}
+\noindent\textbf{4. Ejemplo de la Transformación}
 
 Consideremos el ejemplar de \texttt{3SAT-IGUALDAD} con $n = 3$ variables y $m = 3$ cláusulas:
 \[ \phi = (x_1 \lor x_2 \lor x_3) \land (\neg x_1 \lor x_2 \lor x_3) \land (x_1 \lor x_2 \lor \neg x_3) \]
@@ -148,5 +148,91 @@ Consideremos el ejemplar de \texttt{3SAT-IGUALDAD} con $n = 3$ variables y $m = 
         \item Cada una de las $14$ variables auxiliares ($a_{2,1}, b_{2,1}$ y $a'_i, b'_i, c'_i, d'_i$ para $i \in \{1, 2, 3\}$): $1$ positiva, $1$ negada.
     \end{itemize}
 \end{enumerate}
+
+\subsubsection*{Parte 2: $\text{3SAT BALANCEADO} \le_p \text{3SAT-IGUALDAD}$}
+
+Manteniendo las convenciones establecidas en la Parte 1, partimos de un ejemplar de \texttt{3SAT BALANCEADO}; una fórmula $\psi$ en FNC donde cada cláusula contiene exactamente $3$ variables distintas y cada variable aparece el mismo número de veces positiva y negada. La cual, transformaremos en un ejemplar $\phi = g(\psi)$ de \texttt{3SAT-IGUALDAD}, donde cada cláusula tiene $3$ variables distintas y el total de variables coincide exactamente con el total de cláusulas.
+
+\vspace{0.3cm}
+\noindent\textbf{Técnicas de Reducción Utilizadas}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Diseño de componentes:} Se construyen pequeños bloques de cláusulas con variables auxiliares nuevas que modifican en distinta proporción el número total de variables y de cláusulas sin restringir las asignaciones de verdad de la fórmula original.
+
+    \item \textbf{Reemplazo / extensión local:} Se añaden iterativamente dichos bloques para compensar la diferencia exacta entre el número de variables y el número de cláusulas.
+\end{itemize}
+
+\vspace{0.3cm}
+\noindent\textbf{1. Construcción de la Transformación (Función $g$)}
+
+Sea $\psi$ un ejemplar de \texttt{3SAT BALANCEADO} en FNC sobre un conjunto de $n$ variables $X = \{x_1, x_2, \dots, x_n\}$ y con $m$ cláusulas de $3$ variables distintas. (Notemos que si $m = 0$, entonces $n = 0$; y si $m \ge 1$, cada cláusula tiene $3$ variables distintas, por lo que $n \ge 3$ y existen al menos las variables $x_1, x_2, x_3$).
+
+Comparamos $n$ y $m$ para construir $\phi = g(\psi)$ mediante los siguientes casos:
+
+\begin{enumerate}[label=\arabic*., leftmargin=*]
+    \item \textbf{Caso 1 ($n = m$):}\\
+    La fórmula $\psi$ ya posee la misma cantidad de variables ($N$) que de cláusulas ($M$). Definimos directamente $\phi = \psi$ ($N = M = n$).
+
+    \item \textbf{Caso 2 ($n > m$, déficit de $d = n - m$ cláusulas):}\\
+    Para igualar ambas cantidades sin violar la definición estricta de \texttt{3-SAT} ni restringir la satisfacibilidad, introducimos $d$ bloques auxiliares. En cada bloque $j \in \{1, \dots, d\}$, creamos \textbf{1 variable auxiliar nueva} ($z_j$) y agregamos \textbf{2 cláusulas} de $3$ variables distintas:
+    \[ C_j^{(1)} = (z_j \lor x_1 \lor x_2) \quad \text{y} \quad C_j^{(2)} = (z_j \lor \neg x_1 \lor \neg x_2) \]
+    \begin{itemize}[leftmargin=*]
+        \item \textit{Conteo resultante:} Cada bloque suma \textcolor{red}{$+1$ variable} y \textcolor{blue}{$+2$ cláusulas} (reduciendo en $1$ la brecha $n - m$). Al agregar $d = n - m$ bloques, obtenemos:
+        \[ N = n + \textcolor{red}{d} = 2n - m \quad \text{variables}, \qquad M = m + \textcolor{blue}{2d} = 2n - m \quad \text{cláusulas} \]
+        \item \textit{Satisfacibilidad:} Asignando $z_j = 1$, ambas cláusulas $C_j^{(1)}$ y $C_j^{(2)}$ evalúan a verdadero sin importar los valores de verdad de $x_1$ y $x_2$.
+    \end{itemize}
+
+    \item \textbf{Caso 3 ($n < m$, exceso de $e = m - n$ cláusulas):}\\
+    De forma simétrica, introducimos $e$ bloques auxiliares. En cada bloque $j \in \{1, \dots, e\}$, creamos \textbf{2 variables auxiliares nuevas} ($u_j, v_j$) y agregamos \textbf{1 cláusula} de $3$ variables distintas:
+    \[ E_j = (x_1 \lor u_j \lor v_j) \]
+    \begin{itemize}[leftmargin=*]
+        \item \textit{Conteo resultante:} Cada bloque suma \textcolor{red}{$+2$ variables} y \textcolor{blue}{$+1$ cláusula} (reduciendo en $1$ el exceso $m - n$). Al agregar $e = m - n$ bloques, obtenemos:
+        \[ N = n + \textcolor{red}{2e} = 2m - n \quad \text{variables}, \qquad M = m + \textcolor{blue}{e} = 2m - n \quad \text{cláusulas} \]
+        \item \textit{Satisfacibilidad:} Asignando $u_j = 1$ (y $v_j = 0$), la cláusula $E_j$ evalúa a verdadero sin imponer restricciones sobre $x_1$.
+    \end{itemize}
+\end{enumerate}
+
+La fórmula resultante $\phi = g(\psi)$ es la conjunción de las cláusulas originales de $\psi$ junto con las cláusulas auxiliares generadas.
+
+\vspace{0.3cm}
+\noindent\textbf{2. Complejidad en Tiempo Polinomial}
+
+\begin{itemize}[leftmargin=*]
+    \item Recorrer $\psi$ para contabilizar el número de variables $n$ y de cláusulas $m$ toma tiempo $O(n + m)$.
+    \item En el Caso 2, se generan $d = n - m < n$ variables y $2d$ cláusulas nuevas en tiempo $O(n)$.
+    \item En el Caso 3, se generan $2e = 2(m - n) < 2m$ variables y $e$ cláusulas nuevas en tiempo $O(m)$.
+\end{itemize}
+
+En todos los escenarios, construir $\phi = g(\psi)$ requiere tiempo \textbf{$O(n + m)$}, lo cual es estrictamente lineal (y por ende polinomial) respecto al tamaño de la entrada.
+
+\vspace{0.3cm}
+\noindent\textbf{3. Demostración de Correctitud}
+
+Por construcción, en todos los casos cada cláusula de $\phi$ posee $3$ variables distintas y el número total de variables coincide con el número total de cláusulas ($N = M$), por lo que $\phi$ es siempre un ejemplar bien formado de \texttt{3SAT-IGUALDAD}.
+
+\vspace{0.2cm}
+\noindent\textbf{$(\Rightarrow)$ Si $\psi \in \text{3SAT BALANCEADO}$, entonces $g(\psi) \in \text{3SAT-IGUALDAD}$:}\\
+Si $\psi$ es satisfacible, existe una asignación $\tau: X \to \{0, 1\}$ que satisface todas sus cláusulas. Extendemos $\tau$ a una asignación $\tau'$ sobre todas las variables de $\phi$ fijando $z_j = 1$ para cada $j \in \{1, \dots, d\}$ (si se aplicó el Caso 2), o bien $u_j = 1$ y $v_j = 0$ para cada $j \in \{1, \dots, e\}$ (si se aplicó el Caso 3). Bajo $\tau'$, todas las cláusulas originales de $\psi$ evalúan a $1$ y todas las cláusulas auxiliares evalúan a $1$ por contener al literal $z_j$ o $u_j$ en verdadero. Así, $\phi = g(\psi)$ es satisfacible.
+
+\vspace{0.2cm}
+\noindent\textbf{$(\Leftarrow)$ Si $g(\psi) \in \text{3SAT-IGUALDAD}$, entonces $\psi \in \text{3SAT BALANCEADO}$:}\\
+Si $\phi$ es satisfacible, existe una asignación $\tau'$ que satisface simultáneamente todas las cláusulas de $\phi$. Dado que las cláusulas de $\psi$ constituyen un subconjunto directo de las cláusulas de $\phi$, la restricción $\tau = \tau'|_X$ satisface obligatoriamente todas las cláusulas de $\psi$. En consecuencia, $\psi$ es satisfacible.
+
+\vspace{0.3cm}
+\noindent\textbf{4. Ejemplos de la Transformación}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Ejemplo para el Caso 2 ($n > m$):}\\
+    Sea la fórmula balanceada $\psi_1$ con $n = 3$ variables ($x_1, x_2, x_3$) y $m = 2$ cláusulas (cada variable aparece $1$ vez positiva y $1$ vez negada):
+    \[ \psi_1 = (x_1 \lor x_2 \lor x_3) \land (\neg x_1 \lor \neg x_2 \lor \neg x_3) \]
+    Aquí $d = n - m = 3 - 2 = 1$. Introducimos $1$ variable nueva ($z_1$) y $2$ cláusulas auxiliares, obteniendo $\phi_1 = g(\psi_1)$ con $N = 4$ variables y $M = 4$ cláusulas:
+    \[ \phi_1 = (x_1 \lor x_2 \lor x_3) \land (\neg x_1 \lor \neg x_2 \lor \neg x_3) \land (z_1 \lor x_1 \lor x_2) \land (z_1 \lor \neg x_1 \lor \neg x_2) \]
+
+    \item \textbf{Ejemplo para el Caso 3 ($n < m$):}\\
+    Sea la fórmula balanceada $\psi_2$ con $n = 3$ variables ($x_1, x_2, x_3$) y $m = 4$ cláusulas (cada variable aparece $2$ veces positiva y $2$ veces negada):
+    \[ \psi_2 = (x_1 \lor x_2 \lor x_3) \land (x_1 \lor \neg x_2 \lor \neg x_3) \land (\neg x_1 \lor x_2 \lor \neg x_3) \land (\neg x_1 \lor \neg x_2 \lor x_3) \]
+    Aquí $e = m - n = 4 - 3 = 1$. Introducimos $2$ variables nuevas ($u_1, v_1$) y $1$ cláusula auxiliar, obteniendo $\phi_2 = g(\psi_2)$ con $N = 5$ variables y $M = 5$ cláusulas:
+    \[ \phi_2 = (x_1 \lor x_2 \lor x_3) \land (x_1 \lor \neg x_2 \lor \neg x_3) \land (\neg x_1 \lor x_2 \lor \neg x_3) \land (\neg x_1 \lor \neg x_2 \lor x_3) \land (x_1 \lor u_1 \lor v_1) \]
+\end{itemize}
 
 \subsection{b}
