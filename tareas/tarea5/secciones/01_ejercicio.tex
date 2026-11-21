@@ -20,7 +20,133 @@ Considera el siguiente par de problemas:
 \end{tcolorbox}
 
 % ------------------------- Solución -------------------------
-\section{Respuestas}
+\section*{Respuestas}
 \subsection{a}
+
+Para demostrar que los problemas \textbf{\texttt{3SAT-IGUALDAD}} y \textbf{\texttt{3SAT BALANCEADO}} son polinomialmente equivalentes ($\text{3SAT-IGUALDAD} \equiv_p \text{3SAT BALANCEADO}$), debemos construir \textbf{dos reducciones polinomiales de Karp}:
+
+\begin{enumerate}[label=\arabic*., leftmargin=*]
+    \item $\text{3SAT-IGUALDAD} \le_p \text{3SAT BALANCEADO}$
+    \item $\text{3SAT BALANCEADO} \le_p \text{3SAT-IGUALDAD}$
+\end{enumerate}
+
+\subsubsection*{Parte 1: $\text{3SAT-IGUALDAD} \le_p \text{3SAT BALANCEADO}$}
+
+\vspace{0.3cm}
+\noindent\textbf{Consideraciones sobre la Estructura de las Fórmulas}
+
+Aunque en la definición de \texttt{3SAT-IGUALDAD} no se especifica explícitamente que cada cláusula contenga $3$ literales, en la definición de \texttt{3SAT BALANCEADO} sí se establece dicha condición. Dado que ambos problemas son variantes restringidas de \texttt{3-SAT}, se asume que ambos cumplen con la propiedad de que cada cláusula posee exactamente $3$ literales.
+
+Se adopta la definición estricta de \texttt{3-SAT}, la cual exige que cada cláusula sea una disyunción de \textbf{3 variables distintas} (sin repetición de variables dentro de una misma cláusula).
+
+
+\vspace{0.3cm}
+\noindent\textbf{Técnicas de Reducción Utilizadas}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Diseño de componentes:} Se construyen bloques auxiliares independientes con variables nuevas para ajustar localmente el conteo de literales de cada variable desbalanceada sin restringir su valor de verdad.
+
+    \item \textbf{Reemplazo / extensión local:} Cada variable se procesa de manera individual agregando una cantidad acotada de cláusulas según su déficit específico de apariciones.
+\end{itemize}
+
+\vspace{0.3cm}
+\noindent\textbf{1. Construcción de la Transformación (Función $f$)}
+
+Sea $\phi$ un ejemplar de \texttt{3SAT-IGUALDAD} en Forma Normal Conjuntiva (FNC) sobre un conjunto de $n$ variables $X = \{x_1, x_2, \dots, x_n\}$ y con $m$ cláusulas de $3$ variables distintas, donde $m = n$.
+
+Para cada variable $x_i$ ($i = 1, \dots, n$), contabilizamos su número de apariciones positivas ($p_i$) y su número de apariciones negadas ($q_i$) en $\phi$. Definimos su desbalance como $d_i = |p_i - q_i|$:
+
+\begin{itemize}[leftmargin=*]
+    \item Si $d_i = 0$, la variable ya está balanceada y no requiere modificaciones.
+    \item Si $d_i > 0$, identificamos el literal faltante $L_i$:
+    \[ L_i = \begin{cases} \neg x_i & \text{si } p_i > q_i \\ x_i & \text{si } q_i > p_i \end{cases} \]
+\end{itemize}
+
+Para agregar exactamente $d_i$ apariciones del literal $L_i$ manteniendo $3$ variables distintas por cláusula y conservando el balance $1:1$ en todas las variables nuevas, descomponemos $d_i = 2k_i + r_i$ (con $k_i = \lfloor d_i / 2 \rfloor$ y $r_i = d_i \bmod 2 \in \{0, 1\}$) e incorporamos las siguientes subestructuras:
+
+\begin{enumerate}[label=\arabic*., leftmargin=*]
+    \item \textbf{Subestructura A (para aportar $+2$ apariciones de $L_i$):}\\
+    Agregamos $k_i$ bloques. En cada bloque $j \in \{1, \dots, k_i\}$, introducimos \textbf{2 variables auxiliares nuevas} ($a_{i,j}, b_{i,j}$) y \textbf{2 cláusulas} de $3$ variables distintas:
+    \[ C_{i,j}^{(1)} = (L_i \lor a_{i,j} \lor b_{i,j}) \quad \text{y} \quad C_{i,j}^{(2)} = (L_i \lor \neg a_{i,j} \lor \neg b_{i,j}) \]
+    \begin{itemize}[leftmargin=*]
+        \item \textit{Balance y satisfacibilidad:} Aporta $+2$ literales $L_i$. Las variables $a_{i,j}$ y $b_{i,j}$ aparecen $1$ vez positiva y $1$ vez negada cada una. Asignando $a_{i,j} = 1$ y $b_{i,j} = 0$, ambas cláusulas evalúan a verdadero independientemente del valor de verdad de $x_i$.
+    \end{itemize}
+
+    \item \textbf{Subestructura B (para aportar $+1$ aparición de $L_i$ cuando $d_i$ es impar):}\\
+    Si $r_i = 1$, introducimos \textbf{4 variables auxiliares nuevas} ($a'_i, b'_i, c'_i, d'_i$) y agregamos un bloque de \textbf{3 cláusulas} de $3$ variables distintas:
+    \[ D_i^{(1)} = (L_i \lor a'_i \lor b'_i), \quad D_i^{(2)} = (\neg a'_i \lor c'_i \lor d'_i), \quad D_i^{(3)} = (\neg b'_i \lor \neg c'_i \lor \neg d'_i) \]
+    \begin{itemize}[leftmargin=*]
+        \item \textit{Balance y satisfacibilidad:} Aporta exactamente $+1$ literal $L_i$ y evita cualquier repetición de variables dentro de cada cláusula. Cada una de las $4$ variables auxiliares aparece $1$ vez positiva y $1$ vez negada. Asignando $a'_i = 1$, $b'_i = 0$, $c'_i = 1$, $d'_i = 0$, las tres cláusulas evalúan a verdadero ($D_i^{(1)}$ por $a'_i = 1$, $D_i^{(2)}$ por $c'_i = 1$ y $D_i^{(3)}$ por $\neg b'_i = 1$) sin importar el valor asignado a $x_i$.
+    \end{itemize}
+\end{enumerate}
+
+La fórmula resultante $\psi = f(\phi)$ es la conjunción de las $m$ cláusulas originales de $\phi$ junto con todas las cláusulas generadas por las subestructuras A y B.
+
+\vspace{0.3cm}
+\noindent\textbf{2. Complejidad en Tiempo Polinomial}
+
+\begin{itemize}[leftmargin=*]
+    \item Recorrer las $m = n$ cláusulas de $\phi$ (de $3$ literales cada una) para calcular $p_i$ y $q_i$ toma tiempo $O(n)$.
+    \item Como $\phi$ tiene $3n$ literales en total ($3 \times m = 3 \times n$), la suma de los desbalances satisface $\sum_{i=1}^n d_i \le 3n$. Esto significa que, sin importar cómo sea $\phi$, la cantidad total de literales faltantes que debemos compensar en toda la fórmula nunca superará $3n$, tomando tiempo $O(n)$.
+    \item Cada unidad de desbalance añade como máximo $3$ cláusulas y $4$ variables auxiliares, por lo que $\psi$ contiene a lo más:
+    \begin{itemize}[leftmargin=*]
+        \item \textbf{Total de cláusulas en $\psi$:}
+        \[ \underbrace{n}_{\text{originales}} + \underbrace{3 \cdot (3n)}_{\text{auxiliares}} = n + 9n = 10n \]
+
+        \item \textbf{Total de variables en $\psi$:}
+        \[ \underbrace{n}_{\text{originales}} + \underbrace{4 \cdot (3n)}_{\text{auxiliares}} = n + 12n = 13n \]
+    \end{itemize}
+\end{itemize}
+
+Por lo tanto, el tiempo de ejecución de $f(\phi)$ es \textbf{$O(n)$}, lo cual es estrictamente polinomial respecto al tamaño de la entrada.
+
+\vspace{0.3cm}
+\noindent\textbf{3. Demostración de Correctitud}
+
+Primero verificamos que $\psi = f(\phi)$ es un ejemplar válido de \texttt{3SAT BALANCEADO}: todas las cláusulas tienen $3$ variables distintas; cada variable original $x_i$ termina con $\max(p_i, q_i)$ apariciones positivas y $\max(p_i, q_i)$ negadas; y cada variable auxiliar aparece $1$ vez positiva y $1$ vez negada.
+
+\vspace{0.2cm}
+\noindent\textbf{$(\Rightarrow)$ Si $\phi \in \text{3SAT-IGUALDAD}$, entonces $f(\phi) \in \text{3SAT BALANCEADO}$:}\\
+Si $\phi$ es satisfacible, existe una asignación de verdad $\tau: X \to \{0, 1\}$ que satisface todas las cláusulas originales. Extendemos $\tau$ a una asignación $\tau'$ sobre todas las variables de $\psi$ fijando $a_{i,j} = 1$, $b_{i,j} = 0$ en cada Subestructura A, y $a'_i = 1$, $b'_i = 0$, $c'_i = 1$, $d'_i = 0$ en cada Subestructura B. Bajo $\tau'$, todas las cláusulas originales evalúan a $1$ (pues $\tau'$ coincide con $\tau$ en $X$) y todas las cláusulas auxiliares evalúan a $1$ por construcción. En consecuencia, $\psi = f(\phi)$ es satisfacible.
+
+\vspace{0.2cm}
+\noindent\textbf{$(\Leftarrow)$ Si $f(\phi) \in \text{3SAT BALANCEADO}$, entonces $\phi \in \text{3SAT-IGUALDAD}$:}\\
+Si $\psi$ es satisfacible, existe una asignación $\tau'$ que satisface simultáneamente todas las cláusulas de $\psi$. Dado que las cláusulas originales de $\phi$ forman un subconjunto directo de las cláusulas de $\psi$, la restricción $\tau = \tau'|_X$ satisface obligatoriamente todas las cláusulas de $\phi$. Por lo tanto, $\phi$ es satisfacible.
+
+\textbf{Nota:} La notación $\tau = \tau'|_X$ se lee como ``$\tau$ es la restricción de la función $\tau'$ al conjunto $X$'' y significa, en términos prácticos, que tomamos la asignación completa $\tau'$ y nos quedamos únicamente con los valores de verdad asignados a las variables originales en $X$, ignorando por completo las variables auxiliares.}
+
+\vspace{0.3cm}
+\noindent\textbf{4. Ejemplo Ilustrativo de la Transformación}
+
+Consideremos el ejemplar de \texttt{3SAT-IGUALDAD} con $n = 3$ variables y $m = 3$ cláusulas:
+\[ \phi = (x_1 \lor x_2 \lor x_3) \land (\neg x_1 \lor x_2 \lor x_3) \land (x_1 \lor x_2 \lor \neg x_3) \]
+
+\begin{enumerate}[label=\arabic*., leftmargin=*]
+    \item \textbf{Conteo inicial y subestructuras requeridas:}
+    \begin{itemize}[leftmargin=*]
+        \item $x_1$: $p_1 = 2, q_1 = 1 \implies d_1 = 1$ (falta $1$ literal $\neg x_1 \implies 1$ Subestructura B con $a'_1, b'_1, c'_1, d'_1$).
+        \item $x_2$: $p_2 = 3, q_2 = 0 \implies d_2 = 3$ (faltan $3$ literales $\neg x_2 \implies 1$ Subestructura A con $a_{2,1}, b_{2,1}$ y $1$ Subestructura B con $a'_2, b'_2, c'_2, d'_2$).
+        \item $x_3$: $p_3 = 2, q_3 = 1 \implies d_3 = 1$ (falta $1$ literal $\neg x_3 \implies 1$ Subestructura B con $a'_3, b'_3, c'_3, d'_3$).
+    \end{itemize}
+
+    \item \textbf{Fórmula resultante $\psi = f(\phi)$ ($14$ cláusulas y $17$ variables):}
+    \[
+    \begin{aligned}
+    \psi =\;& (x_1 \lor x_2 \lor x_3) \land (\neg x_1 \lor x_2 \lor x_3) \land (x_1 \lor x_2 \lor \neg x_3) \\
+    &\land (\neg x_1 \lor a'_1 \lor b'_1) \land (\neg a'_1 \lor c'_1 \lor d'_1) \land (\neg b'_1 \lor \neg c'_1 \lor \neg d'_1) \\
+    &\land (\neg x_2 \lor a_{2,1} \lor b_{2,1}) \land (\neg x_2 \lor \neg a_{2,1} \lor \neg b_{2,1}) \\
+    &\land (\neg x_2 \lor a'_2 \lor b'_2) \land (\neg a'_2 \lor c'_2 \lor d'_2) \land (\neg b'_2 \lor \neg c'_2 \lor \neg d'_2) \\
+    &\land (\neg x_3 \lor a'_3 \lor b'_3) \land (\neg a'_3 \lor c'_3 \lor d'_3) \land (\neg b'_3 \lor \neg c'_3 \lor \neg d'_3)
+    \end{aligned}
+    \]
+
+    \item \textbf{Verificación del balance en $\psi$:}
+    \begin{itemize}[leftmargin=*]
+        \item $x_1$: $2$ positivas, $2$ negadas.
+        \item $x_2$: $3$ positivas, $3$ negadas.
+        \item $x_3$: $2$ positivas, $2$ negadas.
+        \item Cada una de las $14$ variables auxiliares ($a_{2,1}, b_{2,1}$ y $a'_i, b'_i, c'_i, d'_i$ para $i \in \{1, 2, 3\}$): $1$ positiva, $1$ negada.
+    \end{itemize}
+\end{enumerate}
 
 \subsection{b}
