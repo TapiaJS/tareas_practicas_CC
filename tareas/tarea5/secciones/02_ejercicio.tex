@@ -23,16 +23,372 @@ Considera la demostración vista en clase del Teorema de Cook-Levin.
 % ------------------------- Solución -------------------------
 \section{Respuestas}
 \subsection{1}
+    No, ya que el teorema establece ventanas validas de 2 renglones x 3 columnas, pues la codificación de las configuraciones podría cambiar en 3 posiciones consecutivas con una sola transición. principalmente tenemos que\\ 
+    
+    $P_{i,j} = P_{celda} \land P_{incio} \land P_{aceptacion} \land P_{mov}$\\
+    
+    Para cada fila se tiene el estado siguiente, el simbolo actual, simbolo de remplazo en la cinta. Si quitamos la primera o ultima columna para hacer una ventana valida de 3 x 2 estariamos perdiendo informacion con respecto a las posibles configuraciones posbiles que se pueden realizar en $P_{mov}$.
+    
+    Es decir que a partir de 2 movimientos se pueda determinar un tabluex satisfacible en esa venta de 3 x 2 sin determinar si se realizo un cambio de simbolo al final de esta transicion o se mantuvo, lo que provocaria una inconstistencia al momento de analizar cada ventana valida.
 
+    Pues en un solo paso, el cabezal de una máquina de Turing solo puede desplazarse una celda hacia la izquierda o una celda hacia la derecha. Las 3 columnas constituye el mínimo necesario para registrar el movimiento del cabezal.
 \subsection{2}
+Sí, pues al agregar una tercera fila es decir, evaluar dos transiciones consecutivas de la Máquina de Turing sobre 3 columnas contiguas se conserva toda la información  necesaria sin perder los bordes laterales, lo que mantiene el tamaño polinomial al verificar la satisfacibilidad dentro de las ventanas válidas en $P_{\mathrm{mov}} = \bigwedge_{1 \le i,j \le n^k - 2} (\text{ventana válida en } (i,j))$. Por lo tanto, solo se tendría que obtener todas las ventanas válidas posibles de $3 \times 3$ que cumplen con las reglas de transición hasta la tercera fila la cual seria la configuración $i+2$. De esta manera, la fórmula se establecería de la siguiente manera:
+
+    $$\begin{aligned} P_{\mathrm{mov}} = \bigwedge_{1 \le i,j \le n^k - 2} \Big\{ \, & (x_{i,j,a_1} \,\wedge\, x_{i,j+1,a_2} \,\wedge\, x_{i,j+2,a_3} \\ & \wedge\, x_{i+1,j,a_4} \,\wedge\, x_{i+1,j+1,a_5} \,\wedge\, x_{i+1,j+2,a_6} \\ & \wedge\, x_{i+2,j,a_7} \,\wedge\, x_{i+2,j+1,a_8} \,\wedge\, x_{i+2,j+2,a_9}) \\ & \vee \\ & (x_{i,j,b_1} \,\wedge\, x_{i,j+1,b_2} \,\wedge\, x_{i,j+2,b_3} \\ & \wedge\, x_{i+1,j,b_4} \,\wedge\, x_{i+1,j+1,b_5} \,\wedge\, x_{i+1,j+2,b_6} \\ & \wedge\, x_{i+2,j,b_7} \,\wedge\, x_{i+2,j+1,b_8} \,\wedge\, x_{i+2,j+2,b_9}) \\ & \vee\, \cdots \,\Big\} \end{aligned}$$
 
 \subsection{3}
 
+   Porque cada subfórmula garantiza una condición estructural indispensable del cuadro de cómputo (tableau), de forma que la fórmula global $P = P_{\text{celda}} \land P_{\text{inicio}} \land P_{\text{aceptación}} \land P_{\text{mov}}$ sea satisfacible si y solo si existe un cómputo válido de la Máquina de Turing $N$ que acepta la cadena $w$.\\
+
+    Tenemos que $P_{\text{mov}} = \bigwedge_{1 \le i,j \le n^k - 2} (\text{ventana válida en } (i,j))$, la cual verifica que el paso de cada fila (la cual son las configuraciones) a la siguiente respete las transiciones legales definidas por $\delta$ en $N$.\\
+    
+    Para $P_{\text{celda}} = \bigwedge_{1 \le i,j \le n^k} \left[ \left(\bigvee_{s \in C} x_{i,j,s}\right) \land \left(\bigwedge_{s \neq t} (\neg x_{i,j,s} \lor \neg x_{i,j,t})\right) \right]$, esta subfórmula nos garantiza que toda celda tiene al menos un símbolo y a lo sumo un símbolo del alfabeto del tableau $C$, es decir, exactamente un símbolo por celda.\\
+
+    Al igual que $P_{inicio}$, muestra el símbolo exacto $s$ que se encuentra en cada posición $(1,j)$ de la primera fila;, esto quiere decir que la primera fila de la tabla es igual a la configuración inicial de N en w..\\
+
+        $$
+        \begin{aligned}
+        P_{\mathrm{inicio}} =\;&
+        x_{1,1,\#}
+        \;\wedge\;
+        x_{1,2,q_0}
+        \;\wedge\;
+        x_{1,3,w_1}
+        \;\wedge\;
+        x_{1,4,w_2}
+        \;\wedge\; \cdots \\
+        &\wedge\;
+        x_{1,n+2,w_n}
+        \;\wedge\;
+        x_{1,n+3,\square}
+        \;\wedge\; \cdots \\
+        &\wedge\;
+        x_{1,n^k-1,\square}
+        \;\wedge\;
+        x_{1,n^k,\#}.
+        \end{aligned}
+        $$
+
+    Finalmente, la última subfórmula la cual es $P_{\text{aceptación}}$ nos permite verificar que se alcanza el estado de aceptación si al menos una celda del cuadro contiene el estado $q_a$, expresada como $\bigvee_{1 \leq i,j \leq n^k} x_{i,j,q_a}$; de esta manera podemos saber si la cadena fue aceptada o no por dicha MT.\\
+
+    Cada subformula corresponde a una restricción necesaria que debe cumplirse simultáneamente, ya que, como se debe de verificar que exista una tautologia, no se podría colocar unificadamente en una sola formula cada regla o existirian inconsistencias, por ejemplo, si para la formula $P_{celda}$ se tomara la disyuncion $\bigvee$, para unificar $P_{mov}$, entonces podrian existir negaciones de las clausulas, con sus contrapositivas, lo que ocasionaría que se cancelasen, lo cual, alteraria el resultado de la formula real y el computo seria invalido.\\
+    
+    Ahora, si quitáramos alguna de las reglas, como por ejemplo $P_{\text{celda}}$, una celda podría quedar vacía o contener múltiples símbolos a la vez, ahora si quitáramos $P_{\text{inicio}}$, el cómputo podría comenzar en una configuración arbitraria distinta de $w$, por lo que con esto podría empezar directamente en $q_a$; si quitáramos $P_{\text{mov}}$, las filas podrían saltar  entre estados sin seguir la función de transición $\delta$, finalmente si quitáramos $P_{\text{aceptación}}$, cualquier cómputo válido que rechace o no termine también satisfaría la fórmula, haciendo que el resultado fuera inválido.\\
+
+    Por lo tanto las subfórmulas codifican las 4 condiciones necesarias para que exista un cuadro de aceptación para el cómputo de $N$ con la entrada $w$.
+
 \subsection{4}
+    Por definición de la clase NP, existen una función polinomial $p$ y una máquina de Turing $M$ que opera en tiempo polinomial, tales que:
+$x \in L \iff \exists u \in \{0, 1\}^{p(|x|)}$ tal que $M(x, u) = 1$.\\
 
+Para demostrar que SAT es NP-dificil, debemos presentar una función $f$, computable en tiempo polinómico, que transforme cualquier $x \in \{0, 1\}^*$ en una fórmula en forma normal conjuntiva (CNF) $\omega_x$, de modo que $x \in L$ si y solo si $\omega_x$ es satisfacible. Entonces de esta manera se puede fijar una entrada $x$ de longitud $n$, un certificado $u$ de longitud $p(n)$, y definimos $y = x \circ u$, cuya longitud es $n + p(n)$.\\
+
+Se propondrá un conjunto de variables booleanas (que codifican los bits de $y$ y el estado de la máquina en cada paso), a las cuales se les atribuirán 2 posibles valores, verdadero ($1$) o falso ($0$), estructuradas en un conjunto de cláusulas.\\
+
+Se asume que $M$ es una máquina de dos cintas una de entrada de solo lectura para $y$ y otra de trabajo, y hay que tomar tambien en cuenta la posición de sus cabezales en el paso $i$ que depende únicamente de $i$ y de la longitud de la entrada, no del contenido de las cintas. Cada paso $i \in \{0, \dots, T(n)\}$ se representa mediante una 'captura' $z_i \in \{0,1\}^c$ que codifica el estado actual y los símbolos leídos bajo ambos cabezales, donde $c = \vert{}Q\vert{} \times \vert{}\Gamma\vert{} \times \vert{}\Gamma\vert{}$ es una constante independiente de $n$. \\
+
+\textbf{Construcción}
+
+La fórmula $\omega_x(y, z_0, \dots, z_{T(n)})$ se construye como la conjunción de cuatro subfórmulas en CNF:\\ 
+
+Fijación de $x$ y libertad de $u$: Cláusulas que exigen que los primeros $n$ bits de $y$ coincidan exactamente con la entrada dada $x$. Los $p(n)$ bits restantes ($y_{n+1}, \dots, y_{n+p(n)}$) se dejan completamente libres para que cualquier asignación de verdad actúe como un certificado candidato $u$.\\
+
+Configuración inicial ($z_0$): Cláusulas que obligan a que $z_0$ codifique el estado inicial $q_0$ con los cabezales en su posición de arranque. La cadena $z_0$ codifica la 'captura' inicial $< s, \vdash,  \vdash>$ de M.\\
+
+Transiciones locales deterministas ($z_i$): Dado que $M$ es determinista y modifica a lo sumo un símbolo por paso en la cinta de trabajo, cada instantánea $z_i$ depende únicamente de la instantánea inmediata anterior $z_{i-1}$, de la última instantánea $z_{\text{prev}(i)}$ en que el cabezal de trabajo estuvo en esa misma celda, y del bit leído en la cinta de entrada $y_{\text{pos}(i)}$. Esto se expresa mediante una función determinista $z_i = F(z_{i-1}, z_{\text{prev}(i)}, y_{\text{pos}(i)})$ para todo $1 \le i \le T(n)$.\\
+
+Condición de aceptación ($z_{T(n)}$): Cláusulas que exigen que la última 'captura' $z_{T(n)}$ corresponda a un estado de parada donde $M$ produce como salida $1$.\\
+
+\textbf{Complejidad en Tiempo}
+
+Como mencionamos anteriormente convertir directamente la función booleana $u \mapsto M(x,u)$ a CNF produciría una fórmula de tamaño exponencial $p(n)2^{p(n)}$.\\ 
+
+Pero si descomponemos el cómputo en $O(n)$ en pasos locales lo reducimos a manera polinomial. \\   
+
+Al fijar los primeros $n$ bits de $y$ requiere $4n$ símbolos.  Las condiciones de inicio $z_0$ y aceptación $z_{T(n)}$ requieren tamaño constante $c2^c$ cada una.\\
+
+Dado que cada paso de transición $z_i = F(\dots)$ involucra solo $3c + 1$ variables booleanas, esto hace que su tabla de verdad convertida a CNF ocupa un tamaño constante $(3c+1)2^{3c+1}$. \\
+
+En conjunto, $\omega_x$ tiene tamaño $d \cdot (n + O(n))$ para una constante $d$ que depende solo de $M$. Dado que $O(n)$ es un polinomio en $n$, la fórmula tiene tamaño polinomial y el algoritmo de reducción $f$ la genera en tiempo polinomial sin necesidad de evaluar las $2^{p(n)}$ posibles asignaciones de $u$
+
+    Comprobamos la equivalencia. ($\Rightarrow$): Si $x \in L$, existe un certificado $u \in \{0,1\}^{p(n)}$ tal que $M(x,u) = 1$. Al asignar $y = x \circ u$ y dar a $z_0, \dots, z_{T(n)}$ los valores exactos de las instantáneas generadas por $M$ durante esa ejecución, se satisfacen las cuatro condiciones y $\omega_x$ resulta satisfacible.
+    
+    Ahora para la otra parte  ($\Leftarrow$) si $\omega_x$ es satisfacible, existe una asignación $(y, z_0, \dots, z_{T(n)})$ que hace verdaderas todas sus cláusulas. Por la primera condición, $y$ tiene la forma $x \circ u$ para algún $u \in \{0,1\}^{p(n)}$; por la segunda y tercera, la secuencia $z_i$ corresponde fielmente a la única ejecución por parte de  $M$ sobre $(x, u)$, finalmente la ultima condición, tal   ejecución termina aceptando $M(x,u) = 1$, lo que implica $x \in L$.
+
+    Por lo tanto $SAT$ es $NP-Dificil$.
+    \cite{SinhaChaturvedi2014}
 \subsection{5}
-\subsubsection{1}
+\subsubsection{1} y \subsubsection{2} 
+Tomando el inciso c) del ejecicio 3 de la tarea 2 tenemos la siguiente maquina que descirbe el lenguaje \( L_M = \{0^n 1^m \mid n \geq 0, m \geq 1\} \): 
 
-\subsubsection{2}
+\[
+\begin{aligned}
+\delta(q_0, 0) &= (q_0, \sqcup, \rightarrow); \\
+\delta(q_0, 1) &= (q_1, \sqcup, \rightarrow); \\
+\delta(q_1, 1) &= (q_1, \sqcup, \rightarrow); \\
+\delta(q_1, \sqcup) &= (q_a, \sqcup, \leftarrow).
+\end{aligned}
+\]
+
+Teniendo la M debemos de proporner las posibles ventanas legales para la formula $P_{mov}$ dentro del teorema de Cook. Las ventanas legales son las siguientes:\\
+
+Para $\delta(q_0, 0) = (q_0, \sqcup, \rightarrow)$ donde se sobrescribe $0$ con $\sqcup$ y avanza a la derecha:$$\begin{array}{ccc} \begin{array}{|c|c|c|} \hline q_0 & 0 & 0 \\ \hline \sqcup & q_0 & 0 \\ \hline \end{array} & \begin{array}{|c|c|c|} \hline q_0 & 0 & 1 \\ \hline \sqcup & q_0 & 1 \\ \hline \end{array} & \begin{array}{|c|c|c|} \hline q_0 & 0 & \sqcup \\ \hline \sqcup & q_0 & \sqcup \\ \hline \end{array} \end{array}$$
+
+
+Para $\delta(q_0, 1) = (q_1, \sqcup, \rightarrow)$ y $\delta(q_1, 1) = (q_1, \sqcup, \rightarrow)$:$$\begin{array}{ccc} \begin{array}{|c|c|c|} \hline q_0 & 1 & 1 \\ \hline \sqcup & q_1 & 1 \\ \hline \end{array} & \begin{array}{|c|c|c|} \hline q_0 & 1 & \sqcup \\ \hline \sqcup & q_1 & \sqcup \\ \hline \end{array} & \begin{array}{|c|c|c|} \hline q_1 & 1 & \sqcup \\ \hline \sqcup & q_1 & \sqcup \\ \hline \end{array} \end{array}$$
+
+Para $\delta(q_1, \sqcup) = (q_a, \sqcup, \leftarrow)$ y ventanas donde lee $\#$:$$\begin{array}{ccc} \begin{array}{|c|c|c|} \hline \sqcup & q_1 & \sqcup \\ \hline q_a & \sqcup & \sqcup \\ \hline \end{array} & \begin{array}{|c|c|c|} \hline \# & q_1 & \sqcup \\ \hline \# & q_a & \sqcup \\ \hline \end{array} & \begin{array}{|c|c|c|} \hline \sqcup & 0 & 1 \\ \hline \sqcup & 0 & 1 \\ \hline \end{array} \end{array}$$
+
+Ahora para las ventanas invalidas tenemos:
+
+$$\begin{array}{ccc} \begin{array}{|c|c|c|} \hline q_0 & 0 & \sqcup \\ \hline q_0 & 1 & \sqcup \\ \hline \end{array} & \begin{array}{|c|c|c|} \hline q_1 & 1 & \sqcup \\ \hline q_0 & 1 & \sqcup \\ \hline \end{array} & \begin{array}{|c|c|c|} \hline 1 & 0 & 1 \\ \hline 0 & 1 & 1 \\ \hline \end{array} \end{array}$$
+
+Para cada posición $(i,j)$ del cuadro, la subfórmula $P_{\mathrm{mov}}$ exige mediante disyunción ($\vee$) que la ventana de $2 \times 3$ coincida con alguna de las configuraciones legales anteriores. Por ejemplo, para las primeras ventanas válidas listadas:
+$$\begin{aligned}
+P_{\mathrm{mov}} = \bigwedge_{i,j} \Big[ \,
+& (x_{i,j,q_0} \wedge x_{i,j+1,0} \wedge x_{i,j+2,0} \wedge x_{i+1,j,\sqcup} \wedge x_{i+1,j+1,q_0} \wedge x_{i+1,j+2,0}) \\
+\vee\; & (x_{i,j,q_0} \wedge x_{i,j+1,1} \wedge x_{i,j+2,\sqcup} \wedge x_{i+1,j,\sqcup} \wedge x_{i+1,j+1,q_1} \wedge x_{i+1,j+2,\sqcup}) \\
+\vee\; & (x_{i,j,\sqcup} \wedge x_{i,j+1,q_1} \wedge x_{i}\\
+\vee \dots \Big]
+\end{aligned}$$
 
 \subsubsection{3}
+
+\textbf{Cadenas validas}\\
+
+Suponemos la cadena \textbf{$w=11000$}, realizamos el computo para alguna de las subformulas en donde es acepta la cadena de entrada, para esto el cómputo requiere $3$ filas y $5$ columnas (delimitadas por $\#$):
+
+\[
+\begin{array}{|c|c|c|c|c|}
+\hline
+\# & q_0 & 1 & \sqcup & \# \\
+\hline
+\# & \sqcup & q_1 & \sqcup & \# \\
+\hline
+\# & q_a & \sqcup & \sqcup & \# \\
+\hline
+\end{array}
+\]
+
+Formula de configuración inicial ($P_{\mathrm{inicio}}$):
+\[
+\begin{aligned}
+P_{\mathrm{inicio}} ={}&
+x_{1,1,\#} \wedge x_{1,2,q_0}
+\wedge x_{1,3,1} \\
+&\wedge x_{1,4,\sqcup}
+\wedge x_{1,5,\#}
+\end{aligned}
+\]
+
+Formula para evitar mas de dos simbolos en cada celda ($P_{\mathrm{celda}}$):
+
+\[
+\begin{aligned}
+P_{\mathrm{celda}} ={}&
+\left(\bigvee_{s \in C} x_{2,3,s}\right)\\
+&\wedge (\neg x_{2,3,q_1} \vee \neg x_{2,3,0})\\
+&\wedge (\neg x_{2,3,q_1} \vee \neg x_{2,3,1})\\
+&\wedge \cdots
+\end{aligned}
+\]
+
+Formula de movimiento ($P_{\mathrm{mov}}$):
+
+\[
+\begin{aligned}
+P_{\mathrm{mov}} ={}&
+(x_{1,1,\#} \wedge x_{1,2,q_0}
+\wedge x_{1,3,1}\\
+&\wedge x_{2,1,\#}
+\wedge x_{2,2,\sqcup}
+\wedge x_{2,3,q_1})\\
+&\wedge\\
+&(x_{2,2,\sqcup}
+\wedge x_{2,3,q_1}
+\wedge x_{2,4,\sqcup}\\
+&\wedge x_{3,2,q_a}
+\wedge x_{3,3,\sqcup}
+\wedge x_{3,4,\sqcup})
+\end{aligned}
+\]
+
+La de aceptación ($P_{\mathrm{acept}}$):
+
+\[
+P_{\mathrm{acept}} =
+\bigvee_{\substack{1 \leq i \leq 3\\
+1 \leq j \leq 5}}
+x_{i,j,q_a}
+\]
+
+Como se cumple que $x_{3,2,q_a}=\text{1}$, todas las subfórmulas se satisfacen simultáneamente y la fórmula global
+es satisfacible.\\
+
+Si suponemos la cadena \textbf{$w=000111$} nos podría generar el siguiente cuadro $8 \times 10$ 
+
+\[
+\begin{array}{|c|c|c|c|c|c|c|c|c|c|}
+\hline
+\# & q_0 & 0 & 0 & 0 & 1 & 1 & 1 & \sqcup & \# \\
+\hline
+\# & \sqcup & q_0 & 0 & 0 & 1 & 1 & 1 & \sqcup & \# \\
+\hline
+\# & \sqcup & \sqcup & q_0 & 0 & 1 & 1 & 1 & \sqcup & \# \\
+\hline
+\# & \sqcup & \sqcup & \sqcup & q_0 & 1 & 1 & 1 & \sqcup & \# \\
+\hline
+\# & \sqcup & \sqcup & \sqcup & \sqcup & q_1 & 1 & 1 & \sqcup & \# \\
+\hline
+\# & \sqcup & \sqcup & \sqcup & \sqcup & \sqcup & q_1 & 1 & \sqcup & \# \\
+\hline
+\# & \sqcup & \sqcup & \sqcup & \sqcup & \sqcup & \sqcup & q_1 & \sqcup & \# \\
+\hline
+\# & \sqcup & \sqcup & \sqcup & \sqcup & \sqcup & q_a & \sqcup & \sqcup & \# \\
+\hline
+\end{array}
+\]
+
+La configuración inicial queda expresada mediante:
+
+\[
+\begin{aligned}
+P_{\mathrm{inicio}} ={}&
+x_{1,1,\#} \wedge x_{1,2,q_0}
+\wedge x_{1,3,0} \wedge x_{1,4,0}\\
+&\wedge x_{1,5,0} \wedge x_{1,6,1}
+\wedge x_{1,7,1} \wedge x_{1,8,1}\\
+&\wedge x_{1,9,\sqcup}
+\wedge x_{1,10,\#}
+\end{aligned}
+\]
+
+Por otro lado, la condición de aceptación
+($P_{\mathrm{acept}}$) se satisface gracias a
+la literal:
+
+\[
+x_{8,6,q_a}=\text{1}
+\]
+
+\textbf{Cadenas no validas}\\
+
+Suponemos la cadena $w=1010101$ si leemos el primer $1$, la máquina entra en $q_1$ y encuentra un $0$, al no estar dentor de las ventanas validas conduce al estado de rechazo $q_r$:
+
+\[
+\begin{array}{|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+\# & q_0 & 1 & 0 & 1 & 0 & 1 & 0 & 1 & \sqcup & \# \\
+\hline
+\# & \sqcup & q_1 & 0 & 1 & 0 & 1 & 0 & 1 & \sqcup & \# \\
+\hline
+\# & \sqcup & \sqcup & q_r & 1 & 0 & 1 & 0 & 1 & \sqcup & \# \\
+\hline
+\end{array}
+\]
+
+Formula de configuración inicial ($P_{\mathrm{inicio}}$):
+
+\[
+\begin{aligned}
+P_{\mathrm{inicio}} ={}&
+x_{1,1,\#} \wedge x_{1,2,q_0}
+\wedge x_{1,3,1} \wedge x_{1,4,0}\\
+&\wedge x_{1,5,1} \wedge x_{1,6,0}
+\wedge x_{1,7,1} \wedge x_{1,8,0}\\
+&\wedge x_{1,9,1} \wedge x_{1,10,\sqcup}
+\wedge x_{1,11,\#}
+\end{aligned}
+\]
+
+Formula de movimiento ($P_{\mathrm{mov}}$):
+
+\[
+\begin{aligned}
+P_{\mathrm{mov}} ={}&
+x_{2,2,\sqcup} \wedge x_{2,3,q_1}
+\wedge x_{2,4,0}\\
+&\wedge x_{3,2,\sqcup}
+\wedge x_{3,3,0}
+\end{aligned}
+\]
+
+La de aceptación ($P_{\mathrm{acept}}$):
+
+\[
+P_{\mathrm{acept}} =
+\bigvee_{\substack{1 \leq i \leq 3\\
+1 \leq j \leq 11}}
+x_{i,j,q_a}
+=
+\text{0}
+\]
+
+Debido a que $P_{\mathrm{inicio}}$,
+$P_{\mathrm{celda}}$ y $P_{\mathrm{mov}}$
+fuerzan deterministamente la llegada al estado $q_r$,
+ninguna celda del cuadro contiene $q_a$.
+Por consiguiente, $P_{\mathrm{acept}}$ es falsa
+y toda la fórmula $P$ resulta insatisfacible.\\
+
+Ahora para la cadena $w=11000$ tras consumir los dos $1$
+iniciales, el estado $q_1$ lee el primer $0$
+y pasa al estado de rechazo $q_r$:
+
+\[
+\begin{array}{|c|c|c|c|c|c|c|c|c|}
+\hline
+\# & q_0 & 1 & 1 & 0 & 0 & 0 & \sqcup & \# \\
+\hline
+\# & \sqcup & q_1 & 1 & 0 & 0 & 0 & \sqcup & \# \\
+\hline
+\# & \sqcup & \sqcup & q_1 & 0 & 0 & 0 & \sqcup & \# \\
+\hline
+\# & \sqcup & \sqcup & 0 & q_r & 0 & 0 & \sqcup & \# \\
+\hline
+\end{array}
+\]
+
+Formula de configuración inicial $P_{\mathrm{inicio}}$):
+
+\[
+\begin{aligned}
+P_{\mathrm{inicio}} ={}&
+x_{1,1,\#} \wedge x_{1,2,q_0}
+\wedge x_{1,3,1} \wedge x_{1,4,1}\\
+&\wedge x_{1,5,0} \wedge x_{1,6,0}
+\wedge x_{1,7,0}\\
+&\wedge x_{1,8,\sqcup}
+\wedge x_{1,9,\#}
+\end{aligned}
+\]
+
+Formula de movimiento ($P_{\mathrm{mov}}$):
+
+\[
+\begin{aligned}
+P_{\mathrm{mov}} ={}&
+x_{2,3,\sqcup} \wedge x_{2,4,q_1}
+\wedge x_{2,5,0}\\
+&\wedge x_{3,3,\sqcup}
+\wedge x_{3,4,0}
+\wedge x_{3,5,q_r}
+\end{aligned}
+\]
+
+Fallo en la condición de aceptación para ($P_{\mathrm{acept}}$):
+
+\[
+P_{\mathrm{acept}} =
+\bigvee_{\substack{1 \leq i \leq 4\\
+1 \leq j \leq 9}}
+x_{i,j,q_a}
+=
+\text{0}
+\]
+
+Nuevamente, $P_{\mathrm{inicio}}$,
+$P_{\mathrm{celda}}$ y $P_{\mathrm{mov}}$
+determinan un cómputo que alcanza el estado de rechazo
+$q_r$. Por tanto, \(x_{i,j,q_a}=\text{0}\). Dado que la condición de aceptación no se satisface, entonces la fórmula completa es insatisfacible.
