@@ -236,3 +236,106 @@ Si $\phi$ es satisfacible, existe una asignación $\tau'$ que satisface simultá
 \end{itemize}
 
 \subsection{b}
+Para demostrar que tanto \texttt{3SAT-IGUALDAD} como \texttt{3SAT BALANCEADO} son problemas \textbf{$\mathbf{NP}\text{-Completos}$}, debemos probar dos condiciones para cada uno:
+
+\begin{enumerate}[label=\arabic*., leftmargin=*]
+    \item Que pertenecen a la clase \textbf{$\mathbf{NP}$}.
+    \item Que son \textbf{$\mathbf{NP}\text{-Difíciles}$}, lo cual demostraremos reduciendo un problema ya conocido como $\mathbf{NP}\text{-Completo}$ (\texttt{3-SAT}) hacia ellos en tiempo polinomial.
+\end{enumerate}
+
+Mantendremos las mismas convenciones del Inciso 1.a: ambos problemas son restricciones de \texttt{3-SAT} bajo su definición estricta (cada cláusula es una disyunción de \textbf{3 variables distintas}).
+
+\subsubsection*{1. Pertenencia a la clase $\mathbf{NP}$}
+
+Utilizaremos la definición de $\mathbf{NP}$ basada en certificados y verificadores deterministas de tiempo polinomial.
+
+\vspace{0.3cm}
+\noindent\textbf{A. \texttt{3SAT-IGUALDAD} $\in \mathbf{NP}$}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Certificado:} Dada una fórmula $\phi$ con $n$ variables $X = \{x_1, \dots, x_n\}$ y $m$ cláusulas, el certificado es una cadena binaria $u \in \{0, 1\}^n$ que codifica una asignación de verdad $\tau: X \to \{0, 1\}$. La longitud del certificado ($n$) es estrictamente polinomial respecto al tamaño de la entrada $|\phi|$.
+
+    \item \textbf{Verificador determinista ($V_1(\phi, u)$):}
+    \begin{itemize}[leftmargin=*]
+        \item Recorre $\phi$ en tiempo $O(|\phi|)$ para comprobar que está en Forma Normal Conjuntiva (FNC), que cada cláusula contiene exactamente $3$ variables distintas y que el total de variables coincide con el total de cláusulas ($n = m$). Si no cumple, rechaza ($0$).
+        \item Sustituye los valores de verdad dictados por $u$ en cada una de las $m$ cláusulas de $\phi$. Evaluar cada cláusula toma tiempo constante $O(1)$, por lo que revisar las $m = n$ cláusulas toma tiempo $O(n)$.
+        \item Acepta ($1$) si y sólo si todas las cláusulas evalúan a verdadero.
+    \end{itemize}
+\end{itemize}
+
+Dado que $V_1$ opera en tiempo polinomial $O(|\phi|)$ y $\phi \in \text{3SAT-IGUALDAD} \iff \exists u \in \{0, 1\}^n$ tal que $V_1(\phi, u) = 1$, se concluye que \textbf{\texttt{3SAT-IGUALDAD} $\in \mathbf{NP}$}.
+
+\vspace{0.3cm}
+\noindent\textbf{B. \texttt{3SAT BALANCEADO} $\in \mathbf{NP}$}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Certificado:} Dada una fórmula $\psi$ con $n$ variables $X = \{x_1, \dots, x_n\}$ y $m$ cláusulas, el certificado es igualmente una asignación de verdad $u \in \{0, 1\}^n$ de longitud polinomial.
+
+    \item \textbf{Verificador determinista ($V_2(\psi, u)$):}
+    \begin{itemize}[leftmargin=*]
+        \item Recorre $\psi$ en tiempo $O(|\psi|)$ para verificar que está en FNC, que cada cláusula posee $3$ variables distintas y que, contabilizando las apariciones positivas ($p_i$) y negadas ($q_i$) de cada variable $x_i$, se cumple $p_i = q_i$ para todo $i \in \{1, \dots, n\}$. Si alguna condición falla, rechaza ($0$).
+        \item Evalúa las $m$ cláusulas bajo la asignación $u$ en tiempo $O(m)$.
+        \item Acepta ($1$) si y sólo si todas las cláusulas evalúan a verdadero.
+    \end{itemize}
+\end{itemize}
+
+Dado que $V_2$ opera en tiempo polinomial $O(|\psi|)$ y $\psi \in \text{3SAT BALANCEADO} \iff \exists u \in \{0, 1\}^n$ tal que $V_2(\psi, u) = 1$, se concluye que \textbf{\texttt{3SAT BALANCEADO} $\in \mathbf{NP}$}.
+
+\subsubsection*{2. \texttt{3SAT-IGUALDAD} es $\mathbf{NP}\text{-Completo}$}
+
+Por el Teorema de Cook-Levin, se sabe que \texttt{3-SAT} (incluso bajo la restricción estricta de $3$ variables distintas por cláusula) es un problema $\mathbf{NP}\text{-Completo}$. Demostraremos que $\text{3-SAT} \le_p \text{3SAT-IGUALDAD}$ utilizando la técnica de \textbf{diseño de componentes y reemplazo / extensión local}.
+
+\vspace{0.3cm}
+\noindent\textbf{1. Construcción de la Transformación (Función $h$)}
+
+Sea $\varphi$ un ejemplar arbitrario de \texttt{3-SAT} en FNC sobre un conjunto de $n$ variables $X = \{x_1, \dots, x_n\}$ y con $m$ cláusulas de $3$ variables distintas. (Si $m = 0$, entonces $n = 0$ y la fórmula vacía ya cumple $n = m$; si $m \ge 1$, al tener cada cláusula $3$ variables distintas se garantiza que $n \ge 3$, por lo que siempre existen las variables $x_1, x_2, x_3$).
+
+Construimos $\phi = h(\varphi)$ distinguiendo tres casos:
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Caso 1 ($n = m$):} Definimos directamente $\phi = \varphi$.
+
+    \item \textbf{Caso 2 ($n > m$, déficit de $d = n - m$ cláusulas):} Creamos $d$ variables auxiliares nuevas $z_1, \dots, z_d$ y agregamos $2d$ cláusulas de $3$ variables distintas:
+    \[ \bigwedge_{j=1}^{d} \Big[ (z_j \lor x_1 \lor x_2) \land (z_j \lor \neg x_1 \lor \neg x_2) \Big] \]
+    Así, $\phi$ tiene $N = n + d = 2n - m$ variables y $M = m + 2d = 2n - m$ cláusulas.
+
+    \item \textbf{Caso 3 ($n < m$, exceso de $e = m - n$ cláusulas):} Creamos $2e$ variables auxiliares nuevas $u_1, v_1, \dots, u_e, v_e$ y agregamos $e$ cláusulas de $3$ variables distintas:
+    \[ \bigwedge_{j=1}^{e} (x_1 \lor u_j \lor v_j) \]
+    Así, $\phi$ tiene $N = n + 2e = 2m - n$ variables y $M = m + e = 2m - n$ cláusulas.
+\end{itemize}
+
+\vspace{0.3cm}
+\noindent\textbf{2. Tiempo Polinomial y Correctitud}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Complejidad:} Contar $n$ y $m$ y generar a lo mucho $2|n - m|$ cláusulas auxiliares toma tiempo \textbf{$O(n + m)$}, lo cual es polinomial en $|\varphi|$.
+\end{itemize}
+
+\vspace{0.2cm}
+\noindent\textbf{$(\Rightarrow)$ Si $\varphi \in \text{3-SAT}$, entonces $h(\varphi) \in \text{3SAT-IGUALDAD}$:}\\
+Sea $\tau: X \to \{0, 1\}$ una asignación que satisface a $\varphi$. Extendemos $\tau$ a una asignación $\tau'$ sobre todas las variables de $\phi$ fijando $z_j = 1$ (en el Caso 2) o $u_j = 1, v_j = 0$ (en el Caso 3). Bajo $\tau'$, todas las cláusulas originales evalúan a $1$ y todas las cláusulas auxiliares evalúan a $1$, por lo que $\phi = h(\varphi)$ es satisfacible.
+
+\vspace{0.2cm}
+\noindent\textbf{$(\Leftarrow)$ Si $h(\varphi) \in \text{3SAT-IGUALDAD}$, entonces $\varphi \in \text{3-SAT}$:}\\
+Si $\phi$ es satisfacible mediante una asignación $\tau'$, dado que las cláusulas de $\varphi$ son un subconjunto directo de las cláusulas de $\phi$, la restricción $\tau = \tau'|_X$ satisface obligatoriamente todas las cláusulas de $\varphi$.
+
+Por lo tanto, $\text{3-SAT} \le_p \text{3SAT-IGUALDAD}$, lo que prueba que \texttt{3SAT-IGUALDAD} es $\mathbf{NP}\text{-Difícil}$. Dado que también pertenece a $\mathbf{NP}$, \textbf{\texttt{3SAT-IGUALDAD} es $\mathbf{NP}\text{-Completo}$}.
+
+\subsubsection*{3. \texttt{3SAT BALANCEADO} es $\mathbf{NP}\text{-Completo}$}
+
+Para demostrar la $\mathbf{NP}\text{-Dificultad}$ de \texttt{3SAT BALANCEADO}, aprovechamos la propiedad de \textbf{transitividad de las reducciones polinomiales} ($\le_p$):
+
+\begin{enumerate}[label=\arabic*., leftmargin=*]
+    \item En la sección anterior demostramos que:
+    \[ \text{3-SAT} \le_p \text{3SAT-IGUALDAD} \]
+
+    \item En el \textbf{Inciso 1.a (Parte 1)} demostramos mediante una transformación en tiempo polinomial $f$ que:
+    \[ \text{3SAT-IGUALDAD} \le_p \text{3SAT BALANCEADO} \]
+
+    \item Como la relación $\le_p$ es transitiva (si $A \le_p B$ y $B \le_p C$, entonces $A \le_p C$), al componer ambas funciones obtenemos una reducción polinomial $(f \circ h)$ tal que:
+    \[ \text{3-SAT} \le_p \text{3SAT BALANCEADO} \]
+\end{enumerate}
+
+\textit{(Nota: De manera equivalente, la misma función $f$ construida en el Inciso 1.a con las Subestructuras A y B reduce directamente cualquier fórmula de \texttt{3-SAT} estricto a \texttt{3SAT BALANCEADO}, pues en ningún paso dependió de que $m = n$).}
+
+Dado que \texttt{3-SAT} es $\mathbf{NP}\text{-Completo}$, se sigue que \texttt{3SAT BALANCEADO} es $\mathbf{NP}\text{-Difícil}$. Al haber probado en la Sección 1 que \texttt{3SAT BALANCEADO} $\in \mathbf{NP}$, concluimos que \textbf{\texttt{3SAT BALANCEADO} es $\mathbf{NP}\text{-Completo}$}.
