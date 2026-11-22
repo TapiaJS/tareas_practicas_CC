@@ -14,8 +14,95 @@ Decimos que una clase de complejidad $C$ es cerrada bajo reducciones si se cumpl
 \end{tcolorbox}
 
 % ------------------------- Solución -------------------------
-\section{Respuestas}
-\subsection{P}
-\subsection{NP}
-\subsection{CO-NP}
-\subsection{EXP}
+\subsection{Respuestas}
+
+\subsubsection*{Definición y Cota de Tamaño de una Reducción $\le_p$}
+
+Decimos que $L \le_p L'$ si existe una función computable en tiempo polinomial $f: \Sigma^* \to \Sigma^*$ tal que, para toda cadena $x \in \Sigma^*$:
+\[ x \in L \iff f(x) \in L' \]
+
+Sea $M_f$ una Máquina de Turing determinista que calcula $f(x)$ en tiempo $O(n^a)$ para entradas de longitud $n = |x|$ y alguna constante $a > 0$. Dado que en cada paso de cómputo $M_f$ puede escribir a lo más un símbolo en su cinta de salida, la longitud de la cadena transformada satisface $|f(x)| \le c_1 n^a$ para alguna constante $c_1 > 0$ y todo $n \ge 1$.
+
+\subsubsection*{1. La clase $\mathbf{P}$ es cerrada bajo reducciones}
+
+\noindent\textbf{Afirmación:} Si $L \le_p L'$ y $L' \in \mathbf{P}$, entonces $L \in \mathbf{P}$.
+
+\vspace{0.2cm}
+\noindent\textbf{Demostración:}
+
+Como $L' \in \mathbf{P} = \bigcup_{c>0} \text{TIME}(n^c)$, existe una Máquina de Turing determinista $M_{L'}$ y una constante $b > 0$ tales que $M_{L'}$ decide $L'$ en tiempo $O(m^b)$ sobre entradas de longitud $m$.
+
+Construimos una Máquina de Turing determinista $M_L$ para decidir $L$ que opera de la siguiente manera dada una entrada $x$ de longitud $n$:
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Paso 1:} Ejecuta $M_f$ sobre $x$ para obtener $y = f(x)$.
+    \item \textbf{Paso 2:} Ejecuta $M_{L'}$ sobre $y$. Si $M_{L'}$ acepta, $M_L$ acepta; si $M_{L'}$ rechaza, $M_L$ rechaza.
+\end{itemize}
+
+\noindent\textbf{Correctitud:} Por la equivalencia de la reducción y la correctitud de $M_{L'}$, se cumple que $M_L$ acepta a $x \iff M_{L'}$ acepta a $f(x) \iff f(x) \in L' \iff x \in L$.
+
+\vspace{0.2cm}
+\noindent\textbf{Tiempo de ejecución:} El Paso 1 toma tiempo $O(n^a)$ y produce una cadena $y$ de longitud $m = |y| \le c_1 n^a$. El Paso 2 toma tiempo $O(m^b) = O((c_1 n^a)^b) = O(n^{ab})$. El tiempo total de $M_L$ es:
+\[ T(n) = O(n^a + n^{ab}) = O(n^{\max(a, ab)}) \]
+
+Como $\max(a, ab)$ es una constante positiva, $M_L$ decide $L$ en tiempo polinomial, por lo que \textbf{$L \in \mathbf{P}$}. 
+
+\subsubsection*{2. La clase $\mathbf{NP}$ es cerrada bajo reducciones}
+
+\noindent\textbf{Afirmación:} Si $L \le_p L'$ y $L' \in \mathbf{NP}$, entonces $L \in \mathbf{NP}$.
+
+\vspace{0.2cm}
+\noindent\textbf{Demostración:}
+
+Como $L' \in \mathbf{NP} = \bigcup_{c>0} \text{NTIME}(n^c)$, existe una Máquina de Turing No Determinista $N_{L'}$ y una constante $b > 0$ tales que $N_{L'}$ decide $L'$ en tiempo no determinista $O(m^b)$ para entradas de longitud $m$.
+
+Construimos una Máquina de Turing No Determinista $N_L$ para decidir $L$ que, dada una entrada $x$ de longitud $n$:
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Paso 1 (Determinista):} Simula a $M_f$ sobre $x$ para calcular $y = f(x)$.
+    \item \textbf{Paso 2 (No determinista):} Simula a $N_{L'}$ sobre $y$ y acepta si y sólo si la rama de cómputo de $N_{L'}$ acepta.
+\end{itemize}
+
+\noindent\textbf{Correctitud:} Existe una ruta de cómputo de aceptación en $N_L(x)$ si y sólo si existe una ruta de cómputo de aceptación en $N_{L'}(f(x))$, lo cual ocurre si y sólo si $f(x) \in L' \iff x \in L$.
+
+\vspace{0.2cm}
+\noindent\textbf{Tiempo de ejecución:} La fase determinista toma $O(n^a)$ pasos y genera $|y| \le c_1 n^a$. La fase no determinista toma a lo más $O(|y|^b) = O(n^{ab})$ pasos en cada rama de cómputo. Así, la longitud máxima de cualquier ruta de cómputo de $N_L(x)$ está acotada por $O(n^a + n^{ab}) = O(n^{\max(a, ab)})$, por lo que \textbf{$L \in \mathbf{NP}$}. 
+
+\subsubsection*{3. La clase $\mathbf{coNP}$ es cerrada bajo reducciones}
+
+\noindent\textbf{Afirmación:} Si $L \le_p L'$ y $L' \in \mathbf{coNP}$, entonces $L \in \mathbf{coNP}$.
+
+\vspace{0.2cm}
+\noindent\textbf{Demostración:}
+
+Por definición, $\mathbf{coNP} = \{ A \mid \overline{A} \in \mathbf{NP} \}$. Dado que $L' \in \mathbf{coNP}$, se tiene por definición que su complemento $\overline{L'} \in \mathbf{NP}$.
+
+Por hipótesis, existe una función $f$ computable en tiempo polinomial tal que para toda cadena $x \in \Sigma^*$, $x \in L \iff f(x) \in L'$. Tomando la negación lógica en ambos lados de la doble condicional, obtenemos:
+\[ x \notin L \iff f(x) \notin L' \iff x \in \overline{L} \iff f(x) \in \overline{L'} \]
+
+La expresión anterior establece exactamente que $\overline{L} \le_p \overline{L'}$ mediante la misma función $f$ de tiempo polinomial.
+
+Como $\overline{L'} \in \mathbf{NP}$ y ya demostramos en el punto anterior que la clase $\mathbf{NP}$ es cerrada bajo reducciones polinomiales, se deduce que $\overline{L} \in \mathbf{NP}$.
+
+Aplicando nuevamente la definición de $\mathbf{coNP}$, el hecho de que $\overline{L} \in \mathbf{NP}$ implica directamente que \textbf{$L \in \mathbf{coNP}$}. 
+
+\subsubsection*{4. La clase $\mathbf{EXP}$ es cerrada bajo reducciones}
+
+\noindent\textbf{Afirmación:} Si $L \le_p L'$ y $L' \in \mathbf{EXP}$, entonces $L \in \mathbf{EXP}$.
+
+\vspace{0.2cm}
+\noindent\textbf{Demostración:}
+
+La clase $\mathbf{EXP}$ se define como $\mathbf{EXP} = \bigcup_{c>0} \text{TIME}(2^{n^c})$. Como $L' \in \mathbf{EXP}$, existe una Máquina de Turing determinista $M_{L'}$ y una constante $b > 0$ tales que $M_{L'}$ decide $L'$ en tiempo $O(2^{m^b})$ sobre entradas de longitud $m$.
+
+Definimos la Máquina de Turing determinista $M_L$ que, dada una entrada $x$ de longitud $n$, primero calcula $y = f(x)$ mediante $M_f$ y después ejecuta $M_{L'}$ sobre $y$, devolviendo su misma respuesta.
+
+\vspace{0.2cm}
+\noindent\textbf{Correctitud:} $M_L(x) = 1 \iff M_{L'}(f(x)) = 1 \iff f(x) \in L' \iff x \in L$.
+
+\vspace{0.2cm}
+\noindent\textbf{Tiempo de ejecución:} Calcular $y = f(x)$ requiere $O(n^a)$ pasos y garantiza $m = |y| \le c_1 n^a$. Simular $M_{L'}$ sobre $y$ requiere un tiempo acotado por:
+\[ O\left(2^{m^b}\right) = O\left(2^{(c_1 n^a)^b}\right) = O\left(2^{c_1^b n^{ab}}\right) \]
+
+Para todo $n \ge c_1^b$, se cumple que $c_1^b n^{ab} \le n \cdot n^{ab} = n^{ab + 1}$. Por lo tanto, el tiempo total de ejecución de $M_L$ satisface:
+\[ T(n) = O\left(n^a + 2^{n^{ab + 1}}\right) = O\left(2^{n^{ab + 1}}\right) \]
+
+Dado que $k = ab + 1 > 0$ es una constante, $L \in \text{TIME}(2^{n^k}) \subseteq \mathbf{EXP}$, demostrando que \textbf{$L \in \mathbf{EXP}$}. 
