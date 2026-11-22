@@ -21,7 +21,7 @@ Considera la demostración vista en clase del Teorema de Cook-Levin.
 \end{tcolorbox}
 
 % ------------------------- Solución -------------------------
-\section{Respuestas}
+\subsection*{Respuestas}
 \subsection{1}
     No, ya que el teorema establece ventanas validas de 2 renglones x 3 columnas, pues la codificación de las configuraciones podría cambiar en 3 posiciones consecutivas con una sola transición. principalmente tenemos que\\ 
     
@@ -39,7 +39,7 @@ Sí, pues al agregar una tercera fila es decir, evaluar dos transiciones consecu
 
 \subsection{3}
 
-   Porque cada subfórmula garantiza una condición estructural indispensable del cuadro de cómputo (tableau), de forma que la fórmula global $P = P_{\text{celda}} \land P_{\text{inicio}} \land P_{\text{aceptación}} \land P_{\text{mov}}$ sea satisfacible si y solo si existe un cómputo válido de la Máquina de Turing $N$ que acepta la cadena $w$.\\
+    Porque cada subfórmula garantiza una condición estructural indispensable del cuadro de cómputo (tableau), de forma que la fórmula global $P = P_{\text{celda}} \land P_{\text{inicio}} \land P_{\text{aceptación}} \land P_{\text{mov}}$ sea satisfacible si y solo si existe un cómputo válido de la Máquina de Turing $N$ que acepta la cadena $w$.\\
 
     Tenemos que $P_{\text{mov}} = \bigwedge_{1 \le i,j \le n^k - 2} (\text{ventana válida en } (i,j))$, la cual verifica que el paso de cada fila (la cual son las configuraciones) a la siguiente respete las transiciones legales definidas por $\delta$ en $N$.\\
     

@@ -8,18 +8,18 @@ Investiga en qué consisten las reducciones de Cook y da un ejemplo detallado ¿
 \end{tcolorbox}
 
 % ------------------------- Solución -------------------------
-\section{Respuestas}
- \subsection{Reducciones de Cook (Reducciones de Turing en tiempo polinomial).}
- Denotadas como: $A\leq _T^PB$ \\
- De manea formal, un conjunto $A$ es reducible según Cook a un conjunto $B$ si existe una máquina de Turing con oráculo $M$ que decide pertenencia al conjunto $A$ en un tiempo acotado por tiempo polinomial, usando al conjunto $B$ como oráculo. \\
- En otras palabras, puede resolver una instancia de $A$, el programa puede consultar múltiples veces al oráculo ($B$) para obtener respuestas de manera inmediata y usarlas para tomar una desición final.
+\subsection*{Respuestas}
+\subsection{Reducciones de Cook (Reducciones de Turing en tiempo polinomial).}
+Denotadas como: $A\leq _T^PB$ \\
+De manea formal, un conjunto $A$ es reducible según Cook a un conjunto $B$ si existe una máquina de Turing con oráculo $M$ que decide pertenencia al conjunto $A$ en un tiempo acotado por tiempo polinomial, usando al conjunto $B$ como oráculo. \\
+En otras palabras, puede resolver una instancia de $A$, el programa puede consultar múltiples veces al oráculo ($B$) para obtener respuestas de manera inmediata y usarlas para tomar una desición final.
 
- \subsection{Ejemplo.}
- Tomemos de base el problema: ENCONTRAR EL TAMAÑO MÁXIMO DE UN CLIQUE y reducirlo al problema: DECIDIR SI EXISTE UN CLIQUE DE TAMAÑO K.
- \textbf{$A (Optimización \ MAX -CLIQUE)$: Dado un grafo $G$ con n vértices, calcular el número exacto de vértices del clique más grande que contiene $G$.} \\
- \textbf{$B (Desición\ DESICIÓN-CLIQUE)$} Un oráculo que recibe una gráfica $G$ y un número entero $k$, y responde instantáneamente $SÍ$, si $G$ tiene un clique de al menos tamaño k, o $NO$ en caso contrario.\\
- Se busca diseñar un algoritmo que resuelva $A$ en tiempo polinomial usando las llamadas al oráculo $B$. Como un clique, no puede tener menos de 1 vértice ni más de n vértices, se puede usar búsqueda binaria haciendo consultas al oráculo.\\
- Supongamos que tenemos una gráfica $G$ con $n=8$ vértices y se busca averiguar su clique máximo. (El máximo real será 5, el algoritmo desconoce esa información). \\
+\subsection{Ejemplo.}
+Tomemos de base el problema: ENCONTRAR EL TAMAÑO MÁXIMO DE UN CLIQUE y reducirlo al problema: DECIDIR SI EXISTE UN CLIQUE DE TAMAÑO K.
+\textbf{$A (Optimización \ MAX -CLIQUE)$: Dado un grafo $G$ con n vértices, calcular el número exacto de vértices del clique más grande que contiene $G$.} \\
+\textbf{$B (Desición\ DESICIÓN-CLIQUE)$} Un oráculo que recibe una gráfica $G$ y un número entero $k$, y responde instantáneamente $SÍ$, si $G$ tiene un clique de al menos tamaño k, o $NO$ en caso contrario.\\
+Se busca diseñar un algoritmo que resuelva $A$ en tiempo polinomial usando las llamadas al oráculo $B$. Como un clique, no puede tener menos de 1 vértice ni más de n vértices, se puede usar búsqueda binaria haciendo consultas al oráculo.\\
+Supongamos que tenemos una gráfica $G$ con $n=8$ vértices y se busca averiguar su clique máximo. (El máximo real será 5, el algoritmo desconoce esa información). \\
 \textbf{Paso 1, Primera consulta.}
 Punto medio entre 1 y 8.
 \begin{itemize}
@@ -46,8 +46,8 @@ Punto medio entre 1 y 8.
 En tiempo $\lceil log_2(8)  \rceil = 3$ llamadas al oráculo, el algoritmo concluye que el tamaño del clique máximo es 5. \\
 Realizado en tiempo polinomial, cumpliendo la condicional de la reducción de Cook.
 
- \subsection{Diferencias frente a las reducciones de Karp.} 
- Karp, transforma una instancia $x$ mediante una función computable en tiempo polinomial $f(x)$ en una instancia única de $B$, de tal forma que: $x\in A \iff f(x)\in B$ permitiendo una traducción directa.\\
- En cambio Cook es una noción más general, pues permite varias consultas adaptativas al conjunto $B$ y procesar sus respuestas dentro de tiempo polinomial.\\
- Con ello, las reducciones de Cook son más rápidas que las de Karp; pues Cook lleva tiempo lineal, mientras que las de karp en, al menos tiempo $n^k$.
- Además, Karp solo funciona entre problemas de decisión,
+\subsection{Diferencias frente a las reducciones de Karp.} 
+Karp, transforma una instancia $x$ mediante una función computable en tiempo polinomial $f(x)$ en una instancia única de $B$, de tal forma que: $x\in A \iff f(x)\in B$ permitiendo una traducción directa.\\
+En cambio Cook es una noción más general, pues permite varias consultas adaptativas al conjunto $B$ y procesar sus respuestas dentro de tiempo polinomial.\\
+Con ello, las reducciones de Cook son más rápidas que las de Karp; pues Cook lleva tiempo lineal, mientras que las de karp en, al menos tiempo $n^k$.
+Además, Karp solo funciona entre problemas de decisión,
